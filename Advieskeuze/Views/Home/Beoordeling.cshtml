@@ -1,0 +1,30 @@
+﻿<div class="grid pt1">
+  <div class="grid-cell100">
+    <h1>We horen graag jouw mening!</h1>
+    <p>Jouw mening is belangrijk! Vertel ons wat jij van onze website vindt en wat verbeterpunten kunnen zijn. Op die manier kunnen we onze website blijven optimaliseren.</p>
+  </div>
+  <div class="grid-cell100">
+    @using (Html.BeginForm()) {
+      @Html.Honeypot("FirstName")
+      <h2>Score<span class="rood">*</span></h2>
+      <div class="waarderingAntwoord">
+        <div class="score-vraag">
+          <input id="value1" data-val="true" data-val-number="Dit veld moet een getal bevatten." data-val-required="Dit veld is verplicht." name="score" value="1" type="radio"><label for="value1">1</label>
+          <input id="value2" data-val="true" data-val-number="Dit veld moet een getal bevatten." data-val-required="Dit veld is verplicht." name="score" value="2" type="radio"><label for="value2">2</label>
+          <input id="value3" data-val="true" data-val-number="Dit veld moet een getal bevatten." data-val-required="Dit veld is verplicht." name="score" value="3" type="radio"><label for="value3">3</label>
+          <input id="value4" data-val="true" data-val-number="Dit veld moet een getal bevatten." data-val-required="Dit veld is verplicht." name="score" value="4" type="radio"><label for="value4">4</label>
+          <input id="value5" data-val="true" data-val-number="Dit veld moet een getal bevatten." data-val-required="Dit veld is verplicht." name="score" value="5" type="radio"><label for="value5">5</label>
+          <div class="clear"></div>
+        </div>
+      </div>
+      <div class="clear"></div>
+      <br />
+      <div>
+        <h2>Toelichting</h2>
+        <div>Minimaal 20 tekens</div>
+        <textarea id="toelichting" name="toelichting" minlength="20"></textarea>
+      </div>
+      @Html.SubmitButton("Verzenden")
+    }
+  </div>
+</div>

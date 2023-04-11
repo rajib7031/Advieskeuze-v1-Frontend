@@ -1,0 +1,53 @@
+﻿@using SharedCode
+@model Advieskeuze.Models.Base.LocatieModel
+@{
+  string cdn = GewrapteSettings.CDNUrl;
+}
+
+<div class="white-bg border-bottom">
+  <div class="grid">
+    <div class="grid-cell100 nopadding">
+      <div class="fl">
+        <span class="breadcrumbs">
+          @Html.RouteLink("Home", AdvieskeuzeRoutes.Home()) <span class="light-text"> &nbsp;>&nbsp; </span>
+        </span>
+        @if (AdvieskeuzeViewContext.CurrentProductgroep != null) {
+          <span class="breadcrumbs">
+            @Html.RouteLink(AdvieskeuzeViewContext.CurrentProductgroep.Naam, AdvieskeuzeRoutes.ProductgroepHome(AdvieskeuzeViewContext.CurrentProductgroep)) <span class="light-text"> &nbsp;>&nbsp; </span>
+          </span>
+          @Html.RouteLink("Zoekresultaat", AdvieskeuzeRoutes.Zoekresultaat(AdvieskeuzeViewContext.CurrentProductgroep)) <span class="light-text"> &nbsp;>&nbsp; </span>
+        }
+        @Html.RouteLink(Model.Locatie.Naam, AdvieskeuzeRoutes.ShowLocatie(Model.Locatie))
+      </div>
+      <div class="fr">
+        <span class="light-text"> &lt;&nbsp; </span>
+        @Html.RouteLink("Terug naar de kantoorpagina", AdvieskeuzeRoutes.ShowLocatie(Model.Locatie))
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
+
+<div class="grid pt1" itemscope itemtype="http://schema.org/LocalBusiness">
+  <div class="grid-cell50">
+    <h1>Review door @Model.Beoordeling.Naam</h1>
+    @if (Model.Beoordeling.AdviesDatum.HasValue) {
+      <div class="fl mt1">
+        Het adviesgesprek vond plaats in @Model.Beoordeling.AdviesDatum.Value.ToString("MMMM yyyy").<br />
+        De review is afkomstig van @Model.Review.Campagne.Organisatie.Naam.
+      </div>
+    }
+    <div class="clear"></div>
+  </div>
+  <div class="grid-cell50">
+    <h2 itemprop="name">@Model.Locatie.Naam</h2>
+    <p>@Model.Locatie.Naam heeft @Html.RouteLink(Model.BeoordelingCount.ToString() + " reviews", AdvieskeuzeRoutes.ShowBeoordelingen(Model.Locatie)) op Advieskeuze.nl.</p>
+    @Html.RouteLink("Bekijk kantoorpagina", AdvieskeuzeRoutes.ShowLocatie(Model.Locatie), new { @class = "base-button button-solid-green fr mt1" })
+    <div class="clear"></div>
+  </div>
+
+  <div class="grid-cell100">
+    @Html.Partial("Controls/_Review", new Tuple<AdvieskeuzeCode.DataModel.Beoordeling, bool, bool, bool>(Model.Review, false, false, false))
+  </div>
+</div>
+

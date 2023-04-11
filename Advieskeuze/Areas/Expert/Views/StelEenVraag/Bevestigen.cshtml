@@ -1,0 +1,18 @@
+﻿@using SharedCode.Mvc
+@model Advieskeuze.Areas.Expert.Models.HomeModel
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h1>Bevestigen</h1>
+    @if (Model.Vraag == null) {
+      <p>Uw vraag is niet gevonden.</p>
+    }
+    else {
+      <p>Bedankt voor het bevestigen van je vraag.</p>
+      <p>Je ontvangt een e-mail zodra er één of meerdere antwoorden zijn gegeven op uw vraag.</p>
+      <hr />
+      <h2>Gestelde vraag</h2>
+      <p>@Html.ShowMultilineText(Model.Vraag.Omschrijving)</p>
+    }
+  </div>
+</div>

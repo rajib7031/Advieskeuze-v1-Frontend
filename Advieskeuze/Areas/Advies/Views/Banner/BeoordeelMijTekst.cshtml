@@ -1,0 +1,12 @@
+﻿@using Advieskeuze.Data.Domain.ViewModel.Banner
+@model BannerModelLocatie
+
+@{
+  Layout = "~/Views/Shared/_Banner.cshtml";
+  var kantoorPagina = AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.Beoordeling(Model.KantoorLink));
+}
+
+@if (Model.BannerSettings.VoorbeeldModus) {
+<div id="banner-no-access">Let op! Ongeldig</div>
+}
+<a href="@kantoorPagina" target="_blank">Geef @Model.Kantoor.Naam een review op Advieskeuze.nl</a>

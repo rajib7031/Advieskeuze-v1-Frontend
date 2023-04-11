@@ -1,0 +1,14 @@
+﻿@* Parameter bepaalt of de tekst "Powered by" erbij wordt gerenderd *@
+@using SharedCode
+@model bool
+@{
+  string cdn = GewrapteSettings.CDNUrl;
+}
+<div class="grid">
+  <div class="grid-cell100 nopadding transparent-bg">
+    <div class="fr">
+      <div class="fr"><a href="https://www.advieskeuze.nl" target="_blank"><img src="@cdn/content/base/images/advieskeuze_lr.png" title="Advieskeuze.nl" alt="Advieskeuze.nl" width="120" /></a></div>
+      <div class="fr i mr1 dark-text">powered by</div>
+    </div>
+  </div>
+</div>

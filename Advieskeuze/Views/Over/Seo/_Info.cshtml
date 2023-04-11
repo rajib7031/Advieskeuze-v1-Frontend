@@ -1,0 +1,41 @@
+﻿@using Advieskeuze.Data.Domain.ViewModel.Over
+@model OverRegio
+
+  <div class="grid-cell75">
+    <h2 class="pb05">
+      Advies over @Model.Productgroep.NaamMeervoud.ToLower() in
+      @if (Model.Data.Type == OverRegio.RegioType.Gemeente) {
+        <text>gemeente</text>
+      }
+      @if (Model.Data.Type == OverRegio.RegioType.Provincie) {
+        <text>provincie</text>
+      }
+      @Model.Data.RegioNaam
+    </h2>
+    <div>
+      Zoek door alle @Model.Productgroep.AdviseurNaamMeervoud in @Model.Data.RegioNaam.
+      @if (Model.Data.Type == OverRegio.RegioType.Plaats) {
+        var plaatsData = Model.Data as OverRegio.Plaats;
+        <span>Adviseurs in @Model.Data.RegioNaam scoren gemiddeld een <b>@plaatsData.GemiddeldeScoreDisplay</b>.</span>
+      }
+    </div>
+    <div>
+      Ben je op zoek naar @Html.RouteLink(Model.Productgroep.SlugAdvies, AdvieskeuzeRoutes.Zoekresultaat(Model.Productgroep))?
+    </div>
+  </div>
+<div class="grid-cell25">
+  @Html.RouteLink("Vergelijk " + Model.Productgroep.AdviseurNaamMeervoud, AdvieskeuzeRoutes.Zoekresultaat(Model.Productgroep), new { @class = "base-button button-solid-blue w100p" })
+</div>
+
+<div class="grid-cell100">
+  <ul>
+    <li>Zoek op je eigen postcode/plaats of op kantoornaam</li>
+    <li>Vergelijk de prijs en kwaliteit van alle @Model.Productgroep.AdviseurNaamMeervoud</li>
+    <li>Lees ervaringen van andere klanten</li>
+    <li>Neem gratis contact op met @Model.Productgroep.AdviseurNaamLidwoord @Model.Productgroep.AdviseurNaam</li>
+    <li>Bepaal objectief of je (advies)gesprek goed is gegaan</li>
+    <li>Bekijk bij wie het orientatiegesprek gratis is</li>
+  </ul>
+  <hr />
+  <p><b>@string.Format("{0:n0}", Model.Data.AantalBeoordelingen)</b> reviews door consumenten</p>
+</div>

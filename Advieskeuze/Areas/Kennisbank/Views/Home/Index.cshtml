@@ -1,0 +1,52 @@
+﻿@model Advieskeuze.Areas.Kennisbank.Models.KennisbankModel
+@using AdvieskeuzeCode.Routes
+@using SharedCode
+@using SharedCode.Mvc
+
+@{
+  string cdn = GewrapteSettings.CDNUrl;
+  var borderCounter = 0;
+}
+
+<div class="homevisual kennisbankvisual">
+  <div class="grid pt1">
+    <div class="grid-cell33 mb2 mt2">
+      <h1 class="mb1">Zoek in de kennisbank</h1>
+      @using (Html.BeginForm()) {
+        @Html.TextBox("zoekTerm", "", new { @placeholder = "Vul hier je zoekterm in", @class = "input100" })
+        <input type="submit" value="Zoek" class="mt1" />
+      }
+    </div>
+    <div class="mt1">@String.Format("{0:n0}", Model.AlleArtikelenCount) artikelen in de kennisbank!</div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell50">
+    <h2 class="m05">Kennisbank</h2>
+    <p class="m05">Een dienstverlener kan je helpen bij de belangrijke (financiële) beslissingen in je leven. Maar natuurlijk wil je wel goed voorbereid aan tafel zitten bij je adviseur. Met de artikelen in deze kennisbank helpen we je daarmee verder; eenvoudig doorzoekbaar op onderwerp.</p>
+  </div>
+  <div class="grid-cell50">
+    <h2 class="m05">Advieskeuze.nl</h2>
+    <p class="m05">Een goede dienstverlener vinden is niet altijd makkelijk. Advieskeuze.nl helpt jou als consument de juiste dienstverlener te vinden door betrouwbare kantoorgegevens en klantreviews te tonen van dienstverleners bij jou in de buurt.</p>
+  </div>
+</div>
+
+<div class="grid">
+  @foreach (var a in Model.Categorieen.OrderByDescending(c => c.Artikel.Count())) {
+    borderCounter++;
+    <div class="grid-cell50">
+      <a href="@(Url.RouteUrl(AdvieskeuzeRoutes.KennisbankCategorie(a.Slug)))"><img class="fl m05 mr1" src="@cdn/content/base/images/expertplatform/icons/@(a.Slug).png" width="30" alt="@a.Naam" /></a>
+      <h2 class="m05">@Html.RouteLink(a.Naam, AdvieskeuzeRoutes.KennisbankCategorie(a.Slug))</h2>
+      <div class="clear"></div>
+      <ul class="m05">
+        @foreach (var b in Model.Artikelen.Where(p => p.CategorieID == a.ID)) {
+          <li>@Html.RouteLink(b.Titel, AdvieskeuzeRoutes.Artikel(b.Slug))</li>
+        }
+      </ul>
+    </div>
+    if (borderCounter % 3 == 0) {
+      <div class="clear"></div>
+    }
+  }
+</div>

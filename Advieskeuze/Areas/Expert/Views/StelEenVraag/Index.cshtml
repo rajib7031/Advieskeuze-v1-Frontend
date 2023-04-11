@@ -1,0 +1,29 @@
+﻿@model Advieskeuze.Areas.Expert.Models.VraagModel
+@using SharedCode.Mvc
+
+@{
+  string[] stappen = { "Persoonlijke informatie", "Stel de vraag", "Bedankt" };
+}
+
+<div class="blue-bg">
+  <div class="grid pt1">
+    <div class="grid-cell100 blue-bg voortgangBalk">
+      @for (int i = 1; i <= stappen.Length; i++) {
+        <div class="fl pb05 pt05"><span class="stap mr1 @(Model.PaginaNr == i ? " huidige" : "")"><span class="nummer">@(i)</span>@stappen[i - 1]</span></div>
+      }
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h1>Stel je vraag aan een expert</h1>
+    @using (Html.BeginForm()) {
+      @Html.Honeypot("FirstName")
+      @Html.Partial("Paginas/Pagina" + Model.PaginaNr, ViewData)
+      <div class="clear"></div>
+      @Html.SubmitButton(Model.PaginaNr == stappen.Length ? "Verzenden" : "Verder", false, true)
+    }
+  </div>
+</div>

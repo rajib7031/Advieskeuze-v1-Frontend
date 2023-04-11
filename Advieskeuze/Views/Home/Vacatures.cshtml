@@ -1,0 +1,33 @@
+﻿@using AdvieskeuzeCode.DataModel
+@model List<FaqVraag>
+@{ var count = 1; }
+
+<div class="grid pt1">
+  <div class="grid-cell100">
+    <h1>Werken bij Advieskeuze.nl</h1>
+    @if (Model != null && Model.Any()) {
+      <p>We hebben de volgende vacatures:</p>
+      <ul>
+        @foreach (var v in Model) {
+          <li><a href="#vacature@(count)">@v.Titel</a></li>
+          count++;
+        }
+      </ul>
+    }
+    else {
+      <p>We hebben momenteel geen openstaande vacatures.<br />Je kan uiteraard @Html.RouteLink("contact", AdvieskeuzeRoutes.Contact()) met ons opnemen als je een open sollicicatie wil sturen.</p>
+    }
+  </div>
+
+  @{ count = 1; }
+  @foreach (var v in Model) {
+    <div class="grid-cell100">
+      <a name="vacature@(count)"></a>
+      <div>
+        <h2 class="mb1">@v.Titel</h2>
+        @Html.ShowMultilineText(v.Tekst)
+      </div>
+    </div>
+    count++;
+  }
+</div>

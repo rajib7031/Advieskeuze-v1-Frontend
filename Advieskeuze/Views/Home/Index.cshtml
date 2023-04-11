@@ -1,0 +1,167 @@
+﻿@using SharedCode
+@model Advieskeuze.Data.Domain.ViewModel.Home.HomeFront
+@{
+  var cdn = GewrapteSettings.CDNUrl;
+}
+@*Schema.org informatie als verrijking van de homepage (kan niet op kantoorpagina's omdat de organization dan niet AK.nl is)*@
+<script type="application/ld+json">
+  {"@@context" : "http://schema.org","@@type" : "Organization","name" : "Advieskeuze.nl","logo": "https://www.advieskeus.nl/content/base/images/logo.png","url" : "https://www.advieskeuze.nl","sameAs" : [ "https://www.facebook.com/advieskeuze","http://twitter.com/advieskeuze","https://plus.google.com/+AdvieskeuzeNl","https://www.youtube.com/user/advieskeuze","https://www.linkedin.com/company/advieskeuze-nl"]}
+</script>
+
+<div class="homevisual zoekvisualhome">
+  <div class="grid pt1">
+    <div class="grid-cell50 mb2 mt2">
+      <h1 class="blue-text">Zoek en vind een</h1>
+      <a href="#" id="hypotheek" class="mr1 base-button button-solid-blue homejs mt1">Hypotheekadviseur</a>
+      <a href="#" id="aankoopmakelaar" class="mr1 base-button button-hollow-blue homejs mt1">Aankoopmakelaar</a>
+      <a href="#" id="verzekering" class="base-button button-hollow-blue homejs mt1">Verzekeringsadviseur</a>
+      <input id="search" type="text" class="input100 mt2" placeholder="in postcode of plaats" value="@Model.PlaatsPrefill" />
+      <div>&nbsp;</div>
+      <div class="fr">
+        <a href="#" id="z" class="base-button button-solid-green">Zoek</a>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
+
+<div class="grid pt1">
+  <div class="grid-cell33">
+    <h2>Als particulier op zoek naar een...</h2>
+    <div class="mt1">
+      <ul>
+        <li>@Html.RouteLink("Aankoopmakelaar", AdvieskeuzeRoutes.ProductgroepHome("aankoopmakelaar", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Bankmedewerker", AdvieskeuzeRoutes.ProductgroepHome("bankzaken", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Belastingadviseur", AdvieskeuzeRoutes.ProductgroepHome("belasting", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Duurzaam wonen adviseur", AdvieskeuzeRoutes.ProductgroepHome("duurzaamwonen", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Financieel planner", AdvieskeuzeRoutes.ProductgroepHome("financieleplanning", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Hypotheekadviseur", AdvieskeuzeRoutes.ProductgroepHome("hypotheek", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Kredietadviseur", AdvieskeuzeRoutes.ProductgroepHome("lenen", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Notaris", AdvieskeuzeRoutes.ProductgroepHome("notariaat", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Pensioenadviseur", AdvieskeuzeRoutes.ProductgroepHome("pensioen", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Scheidingsadviseur", AdvieskeuzeRoutes.ProductgroepHome("scheiding", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Taxateur", AdvieskeuzeRoutes.ProductgroepHome("taxatie", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Verkoopmakelaar", AdvieskeuzeRoutes.ProductgroepHome("verkoopmakelaar", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Vermogensadviseur", AdvieskeuzeRoutes.ProductgroepHome("vermogen", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Verzekeringsadviseur", AdvieskeuzeRoutes.ProductgroepHome("verzekering", Model.PlaatsPrefill))</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid-cell33">
+    <h2>Zakelijk op zoek naar advies over...</h2>
+    <div class="mt1">
+      <ul>
+        <li>@Html.RouteLink("Aansprakelijkheidsverzekeringen", AdvieskeuzeRoutes.ProductgroepHome("aansprakelijkheidsverzekering", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Arbeidsongeschiktheidsverzekeringen", AdvieskeuzeRoutes.ProductgroepHome("arbeidsongeschiktheidsverzekering", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Bedrijfsschadeverzekeringen", AdvieskeuzeRoutes.ProductgroepHome("bedrijfsschadeverzekering", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Betalingsrisicoverzekeringen", AdvieskeuzeRoutes.ProductgroepHome("betalingsrisicoverzekering", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Pensioenregelingen", AdvieskeuzeRoutes.ProductgroepHome("pensioenregeling", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Rechtsbijstandverzekeringen", AdvieskeuzeRoutes.ProductgroepHome("rechtsbijstandverzekering", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Verzuimverzekeringen", AdvieskeuzeRoutes.ProductgroepHome("verzuimverzekering", Model.PlaatsPrefill))</li>
+        <li>@Html.RouteLink("Zakelijke financieringen", AdvieskeuzeRoutes.ProductgroepHome("zakelijke-financiering", Model.PlaatsPrefill))</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid-cell33">
+    <div class="w10p">
+      <img src="@cdn/content/flat/images/ster_blauw.png" class="w100p" alt="Aantal bezoekers Advieskeuze.nl" title="Aantal bezoekers Advieskeuze.nl" />
+    </div>
+    <div class="w80p ml1">
+      <strong>@Model.AantalZoekopdrachten.ToString("###,###") bezoekers</strong><br />
+      <em>Per maand op zoek naar een adviseur</em>
+    </div>
+    <div class="clear"></div><br />
+    <div class="w10p">
+      <img src="@cdn/content/flat/images/ster_blauw.png" class="w100p" alt="Reviews en scores" title="Scores en reviews" />
+    </div>
+    <div class="w80p ml1">
+      <strong>@Model.AantalBeoordelingen.ToString("###,###") reviews</strong><br />
+      <em>Onafhankelijke klantervaringen<br />@Html.RouteLink("schrijf zelf een review", AdvieskeuzeRoutes.Beoordeling())</em>
+    </div>
+    <div class="clear"></div><br />
+    <div class="w10p">
+      <img src="@cdn/content/flat/images/locatie_blauw.png" class="w100p" alt="Kantoren" title="Kantoren" />
+    </div>
+    <div class="w80p ml1">
+      <strong>@Model.AantalLocaties.ToString("###,###") bedrijven</strong><br />
+      <em>Dienstverleners door heel Nederland</em>
+    </div>
+    <div class="clear"></div><br />
+    <div class="w10p">
+      <img src="@cdn/content/flat/images/locatie_blauw.png" class="w100p" alt="Adviseurs" title="Adviseurs" />
+    </div>
+    <div class="w80p ml1">
+      <strong>@Model.AantalAdviseurs.ToString("###,###") professionals</strong><br />
+      <em>Medewerkers bij bedrijven</em>
+    </div>
+    <div class="clear"></div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2 class="mb1">Advieskeuze.nl is ook vindbaar via</h2>
+    @foreach (var partnersite in Model.Partnersites) {
+      <a href="@partnersite.PortalUrl" target="_blank">
+        @Html.Image(partnersite.VoorbeeldAfbeelding.ID, partnersite.Titel, "", null, null, true, false, null, new { @class = "zwartwit mb05 mr1" })
+      </a>
+    }
+    <div class="clear"></div>
+    <div>@Html.RouteLink(string.Format("Bekijk alle {0} websites", Model.AantalPartnersites), AdvieskeuzeRoutes.PartnerWebsites())</div>
+  </div>
+</div>
+
+@foreach (var review in Model.Beoordelingen) {
+  <div class="grid">
+    @*<div class="grid-cell100">
+      @Html.Partial("Controls/_ReviewFlat", new Tuple<AdvieskeuzeCode.DataModel.Beoordeling, bool, bool, bool>(review, true, true, true))
+    </div>*@
+  </div>
+}
+
+<div class="grid">
+  <div class="grid-cell50">
+    <h2>Stel een vraag</h2>
+    <p>Op het expertplatform kan je vragen stellen over allerlei financiële onderwerpen die je niet zomaar op het internet kan opzoeken.</p>
+    @Html.RouteLink("Stel een vraag", AdvieskeuzeRoutes.ExpertHome(), new { @class = "base-button button-solid-blue w33p" })
+  </div>
+  <div class="grid-cell50">
+    <h2>Blogs</h2>
+    <p>Dienstverleners delen hun kennis graag via Advieskeuze.nl. Deze blogs zijn openbaar en voor iedereen in te zien.</p>
+    @Html.RouteLink("Lees blogs", AdvieskeuzeRoutes.Blogs(), new { @class = "base-button button-solid-blue w33p" })
+  </div>
+</div>
+
+<div id="scope" class="hidden">hypotheek</div>
+
+<script>
+  queue.wait(function () {
+    setScope();
+    function setScope() {
+      const scope = $("#scope").text();
+      $(".homejs").removeClass("button-solid-blue");
+      $(".homejs").removeClass("button-hollow-blue");
+      $(".homejs").addClass("button-hollow-blue");
+      $("#" + scope).removeClass("button-hollow-blue");
+      $("#" + scope).addClass("button-solid-blue");
+    };
+    $(".homejs").click(function () {
+      var scope = $(this).attr("id");
+      $("#scope").html(scope);
+      setScope();
+    });
+    $("#z").click(function () {
+      toZoekresultaat();
+    });
+    $("#search").keypress(function (event) {
+      if (event.which == 13) {
+        toZoekresultaat();
+      }
+    });
+    function toZoekresultaat() {
+      const search = $("#search").val();
+      const scope = $("#scope").text();
+      document.location.href = "/" + scope + "/zoekresultaat/in/" + search;
+    };
+  });
+</script>

@@ -1,0 +1,78 @@
+﻿@using SharedCode
+@model Advieskeuze.Models.Base.LocatieModel
+
+@{
+  string cdn = GewrapteSettings.CDNUrl;
+}
+
+<div class="white-bg border-bottom">
+  <div class="grid">
+    <div class="grid-cell100 nopadding">
+      <div class="fl">
+        <span class="breadcrumbs">
+          @Html.RouteLink("Home", AdvieskeuzeRoutes.Home()) <span class="light-text"> &nbsp;>&nbsp; </span>
+        </span>
+        @if (AdvieskeuzeViewContext.CurrentProductgroep != null) {
+          <span class="breadcrumbs">
+            @Html.RouteLink(AdvieskeuzeViewContext.CurrentProductgroep.Naam, AdvieskeuzeRoutes.ProductgroepHome(AdvieskeuzeViewContext.CurrentProductgroep)) <span class="light-text"> &nbsp;>&nbsp; </span>
+          </span>
+          @Html.RouteLink("Zoekresultaat", AdvieskeuzeRoutes.Zoekresultaat(AdvieskeuzeViewContext.CurrentProductgroep)) <span class="light-text"> &nbsp;>&nbsp; </span>
+        }
+        @Html.RouteLink(Model.Locatie.Naam, AdvieskeuzeRoutes.ShowLocatie(Model.Locatie))
+      </div>
+      <div class="fr">
+        <span class="light-text"> &lt;&nbsp; </span>
+        @Html.RouteLink("Terug naar de kantoorpagina", AdvieskeuzeRoutes.ShowLocatie(Model.Locatie))
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
+
+<div class="grid pt1">
+  <div class="grid-cell67">
+    <h1>@(Model.Locatie.IsDataGecontroleerd ? "Gecheckt" : "Niet gecheckt") door Advieskeuze.nl</h1>
+    <p>Advieskeuze.nl hecht veel waarde aan betrouwbare informatie. Onze gecheckt-stempel is de manier om dit te garanderen. Als het "gecheckt door Advieskeuze.nl"-logo bij het zoekresultaat staat, dan zijn alle belangrijke gegevens gecontroleerd.</p>
+    <p>Wij controleren of de gegevens van het kantoor nog actueel zijn. Zo weet je zeker dat je op de juiste manier met het kantoor in contact kan komen en dat bijvoorbeeld de genoemde tarieven kloppen. @Model.Locatie.Naam betaalt €100 per jaar voor deze dienst.</p>
+  </div>
+  <div class="grid-cell33">
+    @if (Model.Locatie.IsDataGecontroleerd) {
+      <h1>Wat is er gecontroleerd?</h1>
+    }
+    else {
+      <h1>Wat controleren wij?</h1>
+    }
+    <ul class="mb1">
+      <li>Contactgegevens</li>
+      <li>Tariefinformatie</li>
+      <li>Dienstverleningsdocument</li>
+      <li>Openingstijden</li>
+      <li>Website</li>
+      <li>KVK registratie</li>
+      <li>Keurmerken</li>
+    </ul>
+    @if (Model.Locatie.IsDataGecontroleerd) {
+      <img alt="Gecheckt-stempel" title="Gecheckt-stempel" src="@cdn/content/base/images/badges/gechecktstempel.png" />
+    }
+    else {
+      <div class="redLink">Dit kantoor is niet gecontroleerd</div>
+    }
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2>@Model.Locatie.Naam</h2>
+    @if (Model.Locatie.IsVrij) {
+      <p>Helaas is er over @Model.Locatie.Naam in @Model.Locatie.Plaats nog geen extra informatie toegevoegd.</p>
+    }
+    @if (!string.IsNullOrEmpty(Model.Locatie.Omschrijving)) {
+      <p>@Html.ShowMultilineText(Model.Locatie.Omschrijving)</p>
+    }
+    @if (Model.Locatie.AfbeeldingLogoID.HasValue) {
+      @Html.Image(Model.Locatie.AfbeeldingLogoID, string.Format("Logo van {0}", Model.Locatie.Naam), "", 280)
+      <div class="clear mb1">&nbsp;</div>
+    }
+    @Html.RouteLink("Bekijk de kantoorpagina", AdvieskeuzeRoutes.ShowLocatie(Model.Locatie), new { @class = "base-button button-solid-blue" })
+  </div>
+</div>

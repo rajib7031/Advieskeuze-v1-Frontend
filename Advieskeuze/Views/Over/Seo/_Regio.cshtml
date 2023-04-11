@@ -1,0 +1,64 @@
+﻿@using Advieskeuze.Data.Domain.ViewModel.Over
+@using SharedCode
+@model OverRegio
+
+@switch (Model.Data.Type) {
+  case OverRegio.RegioType.Plaats:
+    var plaatsData = Model.Data as OverRegio.Plaats;
+    <h2 class="pb05">@Model.Productgroep.AdviseurNaamMeervoud.ToUpperFirstChar() in @Model.Data.RegioNaam</h2>
+    <p>
+      Op Advieskeuze.nl kun je eenvoudig @Html.RouteLink("zoeken naar een " + Model.Productgroep.AdviseurNaam, AdvieskeuzeRoutes.Zoekresultaat(Model.Productgroep)).
+      Op deze pagina vind je @Model.Productgroep.AdviseurNaamMeervoud uit de plaats @Model.Data.RegioNaam.<br />
+      Hieronder staan de kantoren die zich in @Model.Data.RegioNaam bevinden.
+    </p>
+    if (!plaatsData.AlleKantoren.Any()) {
+      <div>Er zijn geen kantoren gevonden</div>
+    }
+    else {
+      foreach (var a in plaatsData.AlleKantoren) {
+        @Html.RouteLink(a.Naam, AdvieskeuzeRoutes.ShowLocatie(a))
+        <br />
+      }
+    }
+    break;
+  case OverRegio.RegioType.Gemeente:
+    var gemeenteData = Model.Data as OverRegio.Gemeente;
+    <h2 class="pb05">Plaatsen in @Model.Data.RegioNaam</h2>
+    <p>
+      Op Advieskeuze.nl kun je eenvoudig @Html.RouteLink("zoeken naar een " + Model.Productgroep.AdviseurNaam, AdvieskeuzeRoutes.Zoekresultaat(Model.Productgroep)).
+      Op deze pagina vind je @Model.Productgroep.AdviseurNaamMeervoud uit de hele gemeente @Model.Data.RegioNaam.<br />
+      Hieronder staan de plaatsen in @Model.Data.RegioNaam waar de @Model.Productgroep.AdviseurNaamMeervoud zich bevinden.
+    </p>
+    foreach (var a in gemeenteData.Plaatsen) {
+      @Html.RouteLink(a.Naam, AdvieskeuzeRoutes.OverRegio(Model.Productgroep, Model.Data.ProvincieSlug, Model.Data.GemeenteSlug, a.Slug))
+      <br />
+    }
+    break;
+  case OverRegio.RegioType.Provincie:
+    var provincieData = Model.Data as OverRegio.Provincie;
+    <h2 class="pb05">Gemeenten in @Model.Data.RegioNaam</h2>
+    <p>
+      Op Advieskeuze.nl kun je eenvoudig @Html.RouteLink("zoeken naar een " + Model.Productgroep.AdviseurNaam, AdvieskeuzeRoutes.Zoekresultaat(Model.Productgroep)).
+      Op deze pagina vind je @Model.Productgroep.AdviseurNaamMeervoud uit de hele provincie @Model.Data.RegioNaam.<br />
+      Hieronder staan de gemeenten in @Model.Data.RegioNaam waar de @Model.Productgroep.AdviseurNaamMeervoud zich bevinden.
+    </p>
+    foreach (var a in provincieData.Gemeenten) {
+      @Html.RouteLink(a.Naam, AdvieskeuzeRoutes.OverRegio(Model.Productgroep, Model.Data.ProvincieSlug, a.Slug, null))
+      <br />
+    }
+    break;
+  case OverRegio.RegioType.Landelijk:
+    var landelijkData = Model.Data as OverRegio.Landelijk;
+    <h2 class="pt05 pb05">Provincies in @Model.Data.RegioNaam</h2>
+    <p>
+      Op Advieskeuze.nl kun je eenvoudig @Html.RouteLink("zoeken naar een " + Model.Productgroep.AdviseurNaam, AdvieskeuzeRoutes.Zoekresultaat(Model.Productgroep)).
+      Op deze pagina vind je @Model.Productgroep.AdviseurNaamMeervoud uit heel @Model.Data.RegioNaam.<br />
+      Hieronder staan de provincies in @Model.Data.RegioNaam waar de @Model.Productgroep.AdviseurNaamMeervoud zich bevinden.
+    </p>
+    foreach (var a in landelijkData.Provincies) {
+      @Html.RouteLink(a.Naam, AdvieskeuzeRoutes.OverRegio(Model.Productgroep, a.Slug, null, null))
+      <br />
+    }
+    break;
+}
+

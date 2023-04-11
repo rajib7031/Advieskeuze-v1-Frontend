@@ -1,0 +1,46 @@
+﻿@model Advieskeuze.Areas.Kennisbank.Models.CategorieModel
+@using AdvieskeuzeCode.Routes
+@using SharedCode.Mvc
+@using AdvieskeuzeCode.Mvc
+@using SharedCode
+
+@{
+  string cdn = GewrapteSettings.CDNUrl;
+  var borderCounter = 0;
+}
+
+<div class="homevisual kennisbankvisual">
+  <div class="grid pt1">
+    <div class="grid-cell33 mb2 mt2">
+      <h1 class="mb1">Zoek in de kennisbank</h1>
+      @using (Html.BeginForm()) {
+        @Html.TextBox("zoekTerm", "", new { @placeholder = "Vul hier je zoekterm in", @class = "input100" })
+        <input type="submit" value="Zoek" class="mt1" />
+      }
+    </div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <div class="fl ml05"><h1>@Model.Categorie.Naam</h1></div>
+    <div class="fr mr05">@Model.AlleArtikelenCount artikelen in de kennisbank</div>
+    <div class="clear"></div>
+    <p class="m05">@Html.ShowMultilineText(Model.Categorie.Inhoud)</p>
+  </div>
+</div>
+
+<div class="grid">
+  @foreach (var a in Model.Etalage) {
+    borderCounter++;
+    <div class="grid-cell33">
+      <h2 class="m05"><a href="@(Url.RouteUrl(AdvieskeuzeRoutes.Artikel(a.Slug)))">@a.Titel</a></h2>
+      <a href="@(Url.RouteUrl(AdvieskeuzeRoutes.Artikel(a.Slug)))">@Html.Image(a.AfbeeldingID, a.Titel, "", 81, null, true, null, null, new { @class = "fl mr05 mb05 ml05" })</a>
+      <p class="m05">@a.Samenvatting</p>
+    </div>
+    if (borderCounter % 3 == 0) {
+      <div class="clear"></div>
+    }
+  }
+  <div class="clear"></div>
+</div>

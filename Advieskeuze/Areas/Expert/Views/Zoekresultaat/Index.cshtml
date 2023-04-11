@@ -1,0 +1,111 @@
+﻿@using AdvieskeuzeCode.Routes
+@using SharedCode.Mvc
+@using SharedCode
+@model Advieskeuze.Areas.Expert.Models.ZoekresultaatModel
+
+@{
+  var counter = 1;
+}
+
+<div class="expertvisual zoekvisual h18rem">
+  <div>&nbsp;</div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <div class="fl ml05 mb05">
+      @switch (@Model.ZoekresultaatPaged.TotalItems) {
+        case 0:
+          @Html.Raw("Geen vragen")
+          ;
+          break;
+        case 1:
+          @Html.Raw("1 vraag")
+          ;
+          break;
+        default:
+          @Html.Raw(@Model.ZoekresultaatPaged.TotalItems + " vragen")
+          ;
+          break;
+      }
+      gevonden
+    </div>
+
+    <div class="fr">
+      @if (Model.Onderwerp != null) {
+        @Model.Onderwerp.Naam
+      }
+    </div>
+    <div class="clear"></div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    @using (Html.BeginForm()) {
+      <label for="ZoekTerm">Zoek op trefwoord:</label>
+      @Html.TextBoxFor(m => m.ZoekTerm)
+      @Html.Hidden("onderwerp", Model.Onderwerp.Naam)
+      @Html.SubmitButton("Zoek")
+    }
+    @if (Model.Sleutelwoorden.Any()) {
+      <div class="pr1 pb1 pl1">
+        <div class="l_grijs mb2"></div>
+        <p>Gerelateerde sleutelwoorden: @Html.Raw(string.Join(", ", Model.Sleutelwoorden.Select(s => @Html.RouteLink(s.Term, AdvieskeuzeRoutes.ExpertplatformZoeken(Model.Onderwerp, s.Term)))))</p>
+      </div>
+    }
+    <div class="pr1 pb1 pl1">
+      <h3>Staat uw vraag er niet tussen?</h3>
+      <div>@Html.RouteLink("Stel een vraag", AdvieskeuzeRoutes.ExpertStelEenVraag(), new { @class = "base-button button-solid-green" })</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+      @if (Model.ZoekresultaatPaged.Any()) {
+        foreach (var a in @Model.ZoekresultaatPaged) {
+          int antwoordCount = a.ExpertAntwoord.Count(ea => ea.TeltAntwoord);
+            <div class="fr ml1 em09">
+              @switch (antwoordCount) {
+                case 0:
+                  @("Geen antwoorden");
+                  break;
+                case 1:
+                  @("1 antwoord");
+                  break;
+                default:
+                  @antwoordCount
+                  @(" antwoorden");
+                  break;
+              }
+            </div>
+            <h3>
+              <a href="@(Url.RouteUrl(AdvieskeuzeRoutes.ExpertVraagDetails(a.Slug)))">@a.Titel</a>
+            </h3>
+        <p>@a.Omschrijving.TrimLength(200, "...")</p>
+        <p class="em09">
+          Sleutelwoorden:
+          @if (@a.Sleutelwoord.Any()) {
+            @Html.Raw(string.Join(", ", a.Sleutelwoord.Select(s => @Html.RouteLink(s.Sleutelwoord1, AdvieskeuzeRoutes.ExpertplatformZoeken(s.Sleutelwoord1)))))
+          }
+          else {
+            @("-")
+          }
+        </p>
+        if (counter < Model.ZoekresultaatPaged.Count()) {
+          <hr />
+        }
+        counter++;
+    }
+    if (Model.ZoekresultaatPaged.TotalPages > 1) {
+      <div class="m1">
+        @Html.Pager(Model.ZoekresultaatPaged, queryStringParam: "sorting.page")
+      </div>
+    }
+  }
+  else {
+    <p class="m1">Er zijn geen vragen gevonden.</p>
+  }
+    </div>
+    </div>

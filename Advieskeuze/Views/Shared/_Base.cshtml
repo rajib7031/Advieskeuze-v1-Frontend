@@ -1,0 +1,188 @@
+﻿@using SharedCode
+@{
+  // tijdelijk 2 varianten totdat alle controllers geupgrade zijn
+  var controller = ViewContext.Controller as Advieskeuze.Data.BaseController;
+  string title = String.Empty;
+  string description = String.Empty;
+  string scope = String.Empty;
+  string linkToMain = "/";
+  bool gebruikHiddenCAPostField = false;
+  bool noAnalytics = false;
+  string customStylesheet = null;
+  string customScriptfile = null;
+  string externScriptHeader = null;
+  string externScriptBody = null;
+  if (controller != null) {
+    title = controller.SiteMap.GetTitleFormatted();
+    description = controller.SiteMap.GetDescriptionFormatted();
+    var ca = controller.Environment.CampagneActiviteit;
+    scope = ca.Scope.ToString().ToLower();
+    if (ca.GebruikQueryString()) {
+      linkToMain += "?" + CampagneActiviteitContext.CampagneActiviteitQueryStringName + "=" + ca.QueryStringParameter();
+    }
+    if (ca.Data != null) {
+      if (ca.Data.ExternScriptHeader != null) {
+        externScriptHeader = ca.Data.ExternScriptHeader;
+      }
+      if (ca.Data.ExternScriptBody != null) {
+        externScriptBody = ca.Data.ExternScriptBody;
+      }
+    }
+    customStylesheet = ca.HelperCustomStylesheet();
+    customScriptfile = ca.HelperCustomScriptfile();
+    noAnalytics = ca.HelperNoAnalytics();
+    gebruikHiddenCAPostField = ca.GebruikHiddenPostField();
+  }
+  else {
+    object sitemapTokens = SitemapTitleFormatter.RetrieveFormattingObject();
+    var siteMapNode = SiteMap.CurrentNode ?? SiteMap.RootNode;
+    title = SitemapPropertyGetter.GetTitle(SiteMap.CurrentNode, SiteMap.RootNode).FormatWith(sitemapTokens);
+    description = SitemapPropertyGetter.GetDescription(SiteMap.CurrentNode, SiteMap.RootNode).FormatWith(sitemapTokens);
+    scope = CampagneActiviteitContext.Current.CurrentScope.ToString().ToLower();
+    if (CampagneActiviteitContext.Current.GebruikQueryString) {
+      linkToMain += "?" + CampagneActiviteitContext.CampagneActiviteitQueryStringName + "=" + CampagneActiviteitContext.Current.QueryStringParameter;
+    }
+    if (CampagneActiviteitContext.Current.HelperExternHeaderScript() != null) {
+      externScriptHeader = CampagneActiviteitContext.Current.HelperExternHeaderScript();
+    }
+    if (CampagneActiviteitContext.Current.HelperExternBodyScript() != null) {
+      externScriptBody = CampagneActiviteitContext.Current.HelperExternBodyScript();
+    }
+    customStylesheet = CampagneActiviteitContext.Current.HelperCustomStylesheet();
+    customScriptfile = CampagneActiviteitContext.Current.HelperCustomScriptfile();
+    noAnalytics = CampagneActiviteitContext.Current.HelperNoAnalytics();
+    gebruikHiddenCAPostField = CampagneActiviteitContext.Current.GebruikHiddenPostField;
+  }
+
+  string cdn = GewrapteSettings.CDNUrl;
+  string cdnv = GewrapteSettings.AssemblyVersion;
+}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <title>@title</title>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="description" content="@description" />
+  <meta name="dcterms.rightsHolder" content="Advieskeuze.nl" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+  <link href="/fonts/roboto.css" rel="stylesheet" />
+  <link href="@cdn/content/css/basestyle/@cdnv" rel="stylesheet" type="text/css" />
+  @Html.CampagneActiviteitCssInclude(customStylesheet)
+  <link rel="canonical" href="@AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeViewContext.CanonicalUrlRouteValuesGet())" />
+  <link href="https://plus.google.com/104982358793198988484" rel="publisher" />
+  <script src="@cdn/content/js/LABjs/@cdnv"></script>
+  <script>
+    var queue = $LAB
+      .script("@cdn/content/base/scripts/jquery-3.5.1.min.js").wait()
+      .script("@cdn/content/base/scripts/jquery-ui.min.js")
+      .script("@cdn/content/base/scripts/jquery.validate.min.js")
+      .script("@cdn/content/base/scripts/jquery.validate.unobtrusive.min.js")
+      .script("@cdn/content/base/scripts/messages_nl.min.js")
+      .script("@cdn/content/js/BestReview/@cdnv")
+      .wait(function () {
+        $(function () {
+          commonFunctions();
+          @if (gebruikHiddenCAPostField) {
+            @: $('form').append($('<input></input>').attr('name', 'postcampagneactiviteit').attr('type', 'hidden').attr('value', '@CampagneActiviteitContext.Current.QueryStringParameter'));
+          }
+        });
+      });
+  </script>
+  <meta property='og:type' content='actor' />
+  <meta property='og:title' content='@title' />
+  <meta property='og:image' content='@AdvieskeuzeViewContext.OpenGraphImageUrlGet()' />
+  <meta property='og:url' content='@AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeViewContext.CanonicalUrlRouteValuesGet())' />
+  <meta property='og:site_name' content='Advieskeuze.nl' />
+  <meta property='og:locale' content='nl_NL' />
+  <meta property='og:description' content='@description' />
+  <meta property='fb:app_id' content='319506578064605' />
+  <meta name="msapplication-config" content="none" />
+  @RenderSection("header", false)
+  @if (!noAnalytics) {
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GLWG0ECC9J"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'G-GLWG0ECC9J');
+    </script>
+  }
+  @Html.CampagneActiviteitScriptInclude(customScriptfile)
+  @if (externScriptHeader != null) {
+    @Html.Raw(externScriptHeader)
+  }
+</head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  @if (externScriptBody != null) {
+    <div class="meetpixel">@Html.Raw(externScriptBody)</div>
+  }
+  <div itemprop="url" content="https://www.advieskeuze.nl">
+    <header class="@(CampagneActiviteitContext.Current.GetActieveBranding(AdvieskeuzeCode.DataModel.CampagneActiviteitBranding.Style_VerwijderHeaderFooter) ? "hidden" : "")" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="white-bg">
+        <div class="grid nopadding">
+          <div class="grid-cell100 noborder">
+            @*<a href="/"><img src="@cdn/content/base/images/advieskeuze.png" width="255" title="Logo Advieskeuze.nl" alt="Logo Advieskeuze.nl" /></a>*@
+            <a href="/"><img src="@cdn/content/base/images/advieskeuze_10yr.png" width="300" title="Logo Advieskeuze.nl bestaat 10 jaar" alt="Logo Advieskeuze.nl bestaat 10 jaar" /></a>
+          </div>
+        </div>
+      </div>
+    </header>
+    @if (!title.ToLower().Contains("adviesgesprek")) {
+      @Html.Partial("Campagnes/_Header")
+    }
+    @RenderBody()
+    @Html.Partial("Campagnes/_Footer", scope)
+    <footer class="@(CampagneActiviteitContext.Current.GetActieveBranding(AdvieskeuzeCode.DataModel.CampagneActiviteitBranding.Style_VerwijderHeaderFooter) ? "hidden" : "")" itemscope itemtype="http://schema.org/WPFooter">
+      <div class="grid pt1" itemprop="author" content="Advieskeuze.nl">
+        <div class="grid-cell33 blue-bg">
+          <h3 class="white-text">Over Advieskeuze.nl</h3>
+          <ul>
+            <li>@Html.RouteLink("Over ons", AdvieskeuzeRoutes.OverOns(), new { @class = "white-text" })</li>
+            <li>@Html.RouteLink("Veelgestelde vragen", AdvieskeuzeRoutes.Faq(), new { @class = "white-text" })</li>
+            <li>@Html.RouteLink("Reviewbeleid", AdvieskeuzeRoutes.Reviewbeleid(), new { @class = "white-text" })</li>
+            <li>@Html.RouteLink("Cookiebeleid", AdvieskeuzeRoutes.Cookiebeleid(), new { @class = "white-text" })</li>
+            <li>@Html.RouteLink("Disclaimer en disclosure", AdvieskeuzeRoutes.Disclaimer(), new { @class = "white-text" })</li>
+            <li>@Html.RouteLink("Privacy", AdvieskeuzeRoutes.Privacy(), new { @class = "white-text" })</li>
+            <li>@Html.RouteLink("Sitemap", AdvieskeuzeRoutes.Sitemap(), new { @class = "white-text" })</li>
+          </ul>
+        </div>
+        <div class="grid-cell33 blue-bg">
+          <h3 class="white-text">Inloggen voor bedrijven</h3>
+          <ul>
+            <li><a href="https://extranet.advieskeuze.nl/account/logon" class="white-text">Inloggen</a></li>
+            <li><a href="https://extranet.advieskeuze.nl/locaties/aanmelden" class="white-text">Aanmelden</a></li>
+          </ul>
+        </div>
+        <div class="grid-cell33 blue-bg white-text" itemscope itemtype="http://schema.org/PostalAddress">
+          <h3 class="white-text">Contact</h3>
+          <div itemprop="name">Advieskeuze.nl</div>
+          <div itemprop="streetAddress">Spacelab 41</div>
+          <div><span itemprop="postalCode">3824 MR</span> <span itemprop="addressLocality">Amersfoort</span></div><br />
+          @if (scope != "locatie" && scope != "aanvragen") {
+            @Html.RouteLink("Neem contact op", AdvieskeuzeRoutes.Contact(), new { @class = "white-text" })<br /><br />
+          }
+          <a href="https://www.linkedin.com/company/advieskeuze-nl" class="footerlink linkedin mr05" target="_blank"></a>
+          <a href="https://www.facebook.com/advieskeuze" class="footerlink facebook mr05" target="_blank"></a>
+          <a href="https://www.instagram.com/advieskeuzenl" class="footerlink instagram mr05" target="_blank"></a>
+          <a href="http://twitter.com/advieskeuze" class="footerlink twitter mr05" target="_blank"></a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

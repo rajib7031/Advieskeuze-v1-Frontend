@@ -1,0 +1,29 @@
+﻿@using AdvieskeuzeCode.BI.Advieskeuze.VraagAntwoordModel
+@using Advieskeuze.Data.VraagAntwoord
+@using SharedCode
+@model VraagAntwoordEnginePagina.Vraag
+
+@{
+  var renderHelper = new VraagRenderHelper<VraagAntwoordEnginePagina.Vraag>(Model, ViewData);
+}
+@if (Model.MogelijkeAntwoorden == null || !Model.MogelijkeAntwoorden.Any()) {
+  <p>@Model.Label<br /><b>ERROR:</b> Lijst mist of is leeg, required bij Select</p>
+} else {
+  <div class="vraag">
+    <label>@Model.Label</label>
+  </div>
+  if (Model.Toelichting.IsNotNullOrEmpty()) {
+    @Html.ParseBBToHtml(Model.Toelichting, AdvieskeuzeCode.Util.BBFormatter.Universeel)
+  }
+  
+  if (renderHelper.ListInt) {
+    @Html.DropDownListFor(m => m.ValueInt, Model.MogelijkeAntwoorden, "- Maak een keuze -", Model.Validatie)
+  } else if (renderHelper.ListString) {
+    @Html.DropDownListFor(m => m.ValueString, Model.MogelijkeAntwoorden, "- Maak een keuze -", Model.Validatie)
+  } else if (renderHelper.ListGuid) {
+    @Html.DropDownListFor(m => m.ValueGuid, Model.MogelijkeAntwoorden, "- Maak een keuze -", Model.Validatie)
+  } else {
+    <p><b>ERROR:</b> kan lijsttype niet bepalen of lijsttype niet ondersteund bij Select</p>
+  }
+}
+@Html.ValidationMessage(Model.GetAntwoordFieldName())

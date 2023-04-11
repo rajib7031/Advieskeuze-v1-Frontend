@@ -1,0 +1,38 @@
+﻿@model Advieskeuze.Models.BlogcategorieModel
+@using SharedCode
+@{
+  string cdn = GewrapteSettings.CDNUrl;
+}
+
+<div class="homevisual blogvisual">
+  <div class="grid pt1">
+    <div class="grid-cell33 mb2 mt2">
+      <h1 class="mb1">Vind een blog</h1>
+      @using (Html.BeginForm()) {
+        @Html.TextBox("Zoektermen", null, new { @placeholder = "Typ een onderwerp", @class = "input100" })
+        <input type="submit" value="zoek" class="mt1" />
+      }
+    </div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    @if (Model.Blogcategorie == null) {<div class="fr">@Html.RouteLink("Keer terug naar de blogpagina", AdvieskeuzeRoutes.Blogs())</div>}
+    @if (!String.IsNullOrEmpty(Model.Zoektermen)) {
+      <h1>Zoekresultaten blogs '@Model.Zoektermen' @if (Model.Blogcategorie != null) {<span>: @Html.RouteLink(Model.Blogcategorie.Naam, AdvieskeuzeRoutes.Blogcategorie(Model.Blogcategorie.Slug))</span>}</h1>
+    }
+    else {
+      <h1>Alle blogs @if (Model.Blogcategorie != null) {<span>: @Html.RouteLink(Model.Blogcategorie.Naam, AdvieskeuzeRoutes.Blogcategorie(Model.Blogcategorie.Slug))</span>}</h1>
+    }
+    <p>Op deze pagina vind je blogs van dienstverleners die graag hun kennis via Advieskeuze.nl delen.</p>
+    <ul>
+      @foreach (var blog in Model.Blogs) {
+        <li>@Html.RouteLink(blog.Titel, AdvieskeuzeRoutes.BlogLezen(blog.Slug))</li>
+      }
+    </ul>
+    <hr />
+    <p>Bekijk ook ons @Html.RouteLink("expertplatform", AdvieskeuzeRoutes.ExpertHome()) waar je inhoudelijke vragen kan stellen aan de aangesloten dienstverleners op Advieskeuze.nl.</p>
+    <p class="mt1 i">Schrijf je eigen blog in het <a href="https://extranet.advieskeuze.nl" target="_blank">extranet</a> van Advieskeuze.nl.</p>
+  </div>
+</div>

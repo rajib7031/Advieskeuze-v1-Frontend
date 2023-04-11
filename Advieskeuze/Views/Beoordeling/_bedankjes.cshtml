@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Advieskeuze.Data.Domain.ViewModel.Beoordeling.BeoordelingBevestigen.Bedankje>
+
+<div class="altblock">
+  <div data-rel="cadeautje" class="altblock" style="display: none">
+    <div class="container" id="bedankkeuze">
+    </div>
+  </div>
+</div>
+
+@for (int i = 0; i < Model.Count(); i++) {
+  if (i > 0) {
+    <div class="altblock">
+      <div class="container b">OF</div>
+    </div>
+  }
+  <div class="altblock" data-rel="cadeautje">
+    <div class="container">
+      @{var b = Model.ElementAt(i); }
+      <h2>@b.Naam</h2>
+      @Html.Partial("_bedankje", b)
+    </div>
+  </div>
+}
+
+<script>
+  queue.wait(function () {
+    $(function () {
+      $.validator.unobtrusive.parse("[data-rel=cadeautje] * form"); @* validation inits on page load; set validation manually here because the form is dynamically created after page load *@
+      $.each($("[data-rel=cadeautje] * form"), function (index) {
+        v = $(this).validate();
+        v.settings.submitHandler = function (form) {
+          $.post(form.action, $(form).serialize())
+            .done(function (data) {
+              $("[data-rel=cadeautje]").toggle();
+              $("#bedankkeuze").empty().append("<p>" + data.Bericht + "</p>");
+            })
+            .fail(function (qXHR, textStatus, errorThrown) {
+              $("[data-rel=cadeautje]").toggle();
+              $("#bedankkeuze").empty().append(qXHR.statusText);
+            });
+        };
+      });
+    });
+  });
+</script>

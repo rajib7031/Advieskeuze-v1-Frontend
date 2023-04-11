@@ -1,0 +1,95 @@
+﻿@using AdvieskeuzeCode.DataModel
+@using Advieskeuze.Models
+@model OverKetenModel
+
+@{
+  var cdn = SharedCode.GewrapteSettings.CDNUrl;
+}
+
+<div class="grid pt1">
+  <div class="grid-cell67">
+    <h1>@Model.Company.Name</h1>
+    <p>@Html.ShowMultilineText(Model.Company.Description)</p>
+  </div>
+  <div class="grid-cell33 center">
+    @Html.Image(Model.Company.LogoId, Model.Company.Name, "", 200)
+  </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Company.Relation)) {
+  <div class="grid">
+    <div class="@(Model.ZoekresultaatCampagne == null ? "grid-cell100" : "grid-cell67")">
+      <h2 class="mb1">Samenwerking met Advieskeuze.nl</h2>
+      <div>@Html.ShowMultilineText(Model.Company.Relation)</div>
+      <img src="@cdn/content/base/images/badges/partnervan.png" alt="Partner van Advieskeuze.nl" title="Partner van Advieskeuze.nl" class="fr" />
+    </div>
+    @if (Model.ZoekresultaatCampagne != null) {
+      <div class="grid-cell33">
+        <h2 class="mb1">Zoek een vestiging</h2>
+        @using (Html.BeginForm()) {
+          @Html.TextBox("zoek", "", new { @placeholder = "Vul een postcode of plaats in", @class = "input100" })
+          <input type="submit" value="Zoek" class="mt1 fr" />
+        }
+      </div>
+    }
+  </div>
+}
+
+@if (Model.Company.Locatie.Any()) {
+  <div class="grid">
+    <div class="grid-cell100">
+      <h2 class="mb1">Vestigingen van @Model.Company.Name</h2>
+      @foreach (var locatie in Model.Company.Locatie.OrderBy(a => a.Naam)) {
+        <div class="w33p">
+          @Html.RouteLink(locatie.Naam, AdvieskeuzeRoutes.ShowLocatie(locatie))
+        </div>
+      }
+      <div class="clear"></div>
+      @if (Model.ZoekresultaatCampagne != null) {
+        <div class="fr mt1">
+          @Html.RouteLink("Zoek een vestiging van " + Model.Company.Name, AdvieskeuzeRoutes.GoC(Model.ZoekresultaatCampagne.ExternID))
+        </div>
+        <div class="clear"></div>
+      }
+    </div>
+  </div>
+}
+
+@if (Model.KantorenScore.HasValue && Model.Company.HasBehaviorType(BehaviorType.Banners)) {
+  <div class="grid">
+    <div class="grid-cell100">
+      <h2 class="mb1">Score</h2>
+      <div class="fl" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+        <div class="scoreLarge" itemprop="ratingValue" content="@Model.KantorenScoreDisplay"><span>@Model.KantorenScoreDisplay</span></div>
+        <meta itemprop="worstRating" content="1" />
+        <meta itemprop="bestRating" content="10" />
+        <meta itemprop="reviewCount" content="@Model.AantalTotaal" />
+        <meta itemprop="name" content="@Model.Company.Name" />
+      </div>
+      <div class="fl tooltip">
+        <span><img src="@(cdn)/content/flat/images/icon_info_small.png" title="Info" alt="Info"></span>
+        <span>Een review is een persoonlijke ervaring van een consument. Alle reviews samen leiden tot een rapportcijfer. Houd er rekening mee dat niet alle consumenten hun ervaringen delen. Hierdoor is dit rapportcijfer geen gegeven, maar een subjectieve waarde.</span>
+      </div>
+      <div class="clear"></div>
+      <p>Dit is de gemiddelde score van de kantoren die nu een score hebben. Er zijn in totaal <b>@Model.AantalTotaal</b> goedgekeurde beoordelingen.</p>
+    </div>
+  </div>
+}
+else if (Model.AantalTotaal > 0) {
+  var score = new AdvieskeuzeCode.BI.Common.LocatieModel.KantoorScoreEnBeoordeling();
+  <span class="hidden" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+    <meta itemprop="ratingValue" content="@score.WaardeGeenScoreDisplay(Model.Beoordelingen)" />
+    <meta itemprop="worstRating" content="1" />
+    <meta itemprop="bestRating" content="10" />
+    <meta itemprop="reviewCount" content="@Model.AantalTotaal" />
+    <meta itemprop="name" content="@Model.Company.Name" />
+  </span>
+}
+
+@foreach (var review in Model.Beoordelingen) {
+  <div class="grid">
+    <div class="grid-cell100">
+      @Html.Partial("Controls/_ReviewFlat", new Tuple<AdvieskeuzeCode.DataModel.Beoordeling, bool, bool, bool>(review, true, true, false))
+    </div>
+  </div>
+}

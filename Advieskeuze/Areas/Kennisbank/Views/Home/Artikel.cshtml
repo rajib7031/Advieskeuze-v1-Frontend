@@ -1,0 +1,54 @@
+﻿@using AdvieskeuzeCode.Routes
+@using AdvieskeuzeCode.Mvc
+@using AdvieskeuzeCode.Util
+@using SharedCode.Mvc
+@using Advieskeuze.Areas.Kennisbank.Models
+@model ArtikelModel
+
+<div class="zoekvisual kennisbankvisual h18rem">
+  <div>&nbsp;</div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2>
+      @Html.RouteLink("Kennisbank", AdvieskeuzeRoutes.KennisbankHome()) &gt;
+      @if (Model.Sleutelwoord != null) {
+        @Html.RouteLink("Zoekresultaat", AdvieskeuzeRoutes.ZoekresultaatKennisbank(Model.Sleutelwoord)) @Html.Raw(" &gt; ") @Model.Artikel.Titel
+      }
+      else {
+        @Html.RouteLink(Model.Artikel.Categorie.Naam, AdvieskeuzeRoutes.KennisbankCategorie(Model.Artikel.Categorie.Slug)) @Html.Raw(" &gt; ") @Model.Artikel.Titel
+      }
+    </h2>
+  </div>
+
+  <div class="grid-cell50">
+    <h2>Gerelateerde artikelen:</h2>
+    @if (Model.GerelateerdeArtikelen.Any()) {
+      <ul>
+        @foreach (var artikel in Model.GerelateerdeArtikelen.Take(5)) {
+          <li>@Html.RouteLink(artikel.Titel, AdvieskeuzeRoutes.Artikel(artikel.Slug))</li>
+        }
+      </ul>
+    }
+    else {
+      <p>Er zijn geen gerelateerde artikelen gevonden.</p>
+    }
+  </div>
+  <div class="grid-cell50">
+    <h2>Zoek een adviseur</h2>
+    <p>Vergelijk en vind een financieel adviseur bij jou in de buurt die je kan helpen met een @Html.RouteLink("hypotheek", AdvieskeuzeRoutes.ProductgroepHome("hypotheek")), @Html.RouteLink("verzekeringen", AdvieskeuzeRoutes.ProductgroepHome("verzekering")), @Html.RouteLink("pensioenen", AdvieskeuzeRoutes.ProductgroepHome("pensioen")) of meerdere andere onderwerpen.</p>
+    <div>@Html.RouteLink("Zoek een adviseur", AdvieskeuzeRoutes.Home(), new { @class = "base-button button-solid-blue" })</div>
+  </div>
+
+  <div class="grid-cell100">
+    <div class="fl">@Html.Image(Model.Artikel.AfbeeldingID, @Model.Artikel.Titel, "", 185, null, false)</div>
+    <h1 class="mb1">@Model.Artikel.Titel</h1>
+    <strong>@Model.Artikel.Samenvatting</strong>
+    <hr />
+    @Html.ParseBBToHtml(Model.Artikel.Inhoud, BBFormatter.Kennisbank)
+    <div class="mt2">
+      Bron: <a href="@Model.Artikel.Bron" target="_blank">@UrlFormatter.StripToCleanUrl(Model.Artikel.Bron)</a>
+    </div>
+  </div>
+</div>

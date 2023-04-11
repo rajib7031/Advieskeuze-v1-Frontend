@@ -1,0 +1,151 @@
+﻿@model AdvieskeuzeCode.Searchengine.Models.SearchModel
+@using AdvieskeuzeCode.Searchengine.Filters
+@using SharedCode
+
+@{
+  var cdn = SharedCode.GewrapteSettings.CDNUrl;
+  var api = SharedCode.GewrapteSettings.HostApiUrl;
+  var heeftOrganisatieEnStyle = !string.IsNullOrEmpty(Model.Organisatie) && !string.IsNullOrEmpty(Model.C_Stylesheet);
+}
+
+@if (!heeftOrganisatieEnStyle) {
+  <div class="zoekvisual zoekvisual@(Model.Scope.ZoekenVisualClass)">
+    <div class="grid pt1">
+      <div class="grid-cell33">
+        <h1 class="mb1">@Model.Scope.AdviseurNaamMeervoud.ToUpperFirstChar()</h1>
+        <input id="search_postcodeplaats" type="text" class="input100" placeholder="vul een postcode of plaats in" value="@(Model.GeoLocation)" />
+        <div>&nbsp;</div>
+        <input type="submit" id="btn_postcodeplaats" value="Zoek" class="fr button-solid-green" />
+        <div class="clear"></div>
+      </div>
+    </div>
+  </div>
+}
+
+<div class="grid">
+  <div class="grid-cell25 hide-mobile">
+    @if (heeftOrganisatieEnStyle) {
+      <h3 class="mb1">Postcode of plaats</h3>
+      <input id="search_postcodeplaats" type="text" class="input100" placeholder="vul een postcode of plaats in" value="@(Model.GeoLocation)" />
+      <input type="submit" id="btn_postcodeplaats" value="Zoek" class="fr button-solid-green mt1 mb1" />
+      <div class="clear"></div>
+      <hr class="mt1" />
+    }
+
+    @foreach (var filter in Model.Filters) {
+      if (filter.Key == "tt" && heeftOrganisatieEnStyle) {
+        continue;
+      }
+      if (!string.IsNullOrEmpty(filter.Description)) {
+        if (Model.Filters.ToList().IndexOf(filter) > 0) {
+          <div class="mt1"></div>
+          <hr />
+        }
+        <h3 class="fl">@filter.Description</h3>
+      }
+      if (!string.IsNullOrEmpty(filter.Information)) {
+        <div class="fr tooltip">
+          <span class="mt07"><img src="@(cdn)/content/flat/images/icon_info_small.png" title="Info" alt="Info"></span>
+          <span>@filter.Information</span>
+        </div>
+      }
+      <div class="clear"></div>
+      if (filter.Type == FilterType.SingleCheckbox) {
+        <input id="filter_@(filter.Key)" type="checkbox" class="checkboxFilter" @(!string.IsNullOrEmpty(filter.Value) && filter.Value.ToLower() == "true" ? "checked" : "") /> @filter.DescriptionDetails
+      }
+      if (filter.Type == FilterType.SingleTextbox) {
+        <input id="filter_@(filter.Key)" type="text" class="textboxFilter input100" value="@(string.IsNullOrEmpty(filter.Value) ? "" : filter.Value)" />
+      }
+      if (filter.Type == FilterType.SingleDropdown) {
+        <select id="filter_@(filter.Key)" class="dropdownFilter input100">
+          @foreach (var option in filter.Options) {
+            <option value="@option.Key" @(option.Key == filter.Value ? "selected" : "")>@option.Value</option>
+          }
+        </select>
+      }
+    }
+    <br />
+    <br />
+    @Html.RouteLink("Hoe werkt het zoekresultaat?", AdvieskeuzeRoutes.ZoekresultaatUitleg())
+    @if (CampagneActiviteitContext.Current.GetActieveBranding(AdvieskeuzeCode.DataModel.CampagneActiviteitBranding.Style_PoweredBy)) {
+      <div class="mt5">
+        @Html.Partial("controls/_Poweredby_large", false)
+      </div>
+    }
+  </div>
+
+  <div class="grid-cell100 stickytop hide-desktop">
+    @Html.RouteLink("Filteren", AdvieskeuzeRoutes.ZoekresultaatFilteren(), new { @class = "base-button button-solid-green fl" })
+    <div class="clear"></div>
+  </div>
+
+  <div class="grid-cell75 relative">
+    <select id="sortSelect" name="sortSelect" class="fr" style="width: 250px;">
+      <option value="4" @(Model.Sort == 4 ? "selected" : "")>Sorteer op laatste review</option>
+      <option value="1" @(Model.Sort == 1 ? "selected" : "")>Sorteer op reviews</option>
+      <option value="2" @(Model.Sort == 2 ? "selected" : "")>Sorteer op afstand</option>
+      <option value="3" @(Model.Sort == 3 ? "selected" : "")>Sorteer op naam</option>
+      <option value="6" @(Model.Sort == 6 ? "selected" : "")>Sorteer op prijs</option>
+    </select>
+
+    @if (!string.IsNullOrEmpty(Model.Scope.ReviewSourceDescription)) {
+      <div class="fr tooltip">
+        <span class="mt05 mr05"><img src="@(cdn)/content/flat/images/icon_info_small.png" title="Info" alt="Info"></span>
+        <span>@Model.Scope.ReviewSourceDescription</span>
+      </div>
+    }
+
+    <h2 class="fl pb1 zoek-header">
+      @if (heeftOrganisatieEnStyle && !string.IsNullOrEmpty(Model.C) && Model.C == "tjxsyq") {
+        <span>Adviseurs mobiliteit</span>
+      }
+      else if (heeftOrganisatieEnStyle && !string.IsNullOrEmpty(Model.C) && Model.C == "vjuhia") {
+        <span>Overlijdensrisico- en vermogensadviseurs</span>
+      }
+      else {
+        @Model.Scope.AdviseurNaamMeervoud.ToUpperFirstChar()
+      }
+      in <span class="labelSearch">Nederland</span> (<a href="#" id="aNationwide" class="blue-text">zoek landelijk</a><a href="#" id="aLocal" class="hidden blue-text">zoek lokaal</a>)
+    </h2>
+    <div class="clear"></div>
+
+    <div id="top10" class="hidden">
+      <div class="fl">
+        <h2 id="top10title" class="fl"></h2> <h2 class="fl">&nbsp;@Model.Scope.AdviseurNaamMeervoud in <span class="labelSearch">Nederland</span></h2>
+      </div>
+      <div class="fr">
+        <a href="#" id="top10reset">Reset top 10</a>
+      </div>
+      <div class="clear"></div>
+      <div class="clear"></div>
+      <p id="top10description"></p>
+    </div>
+
+    @if (heeftOrganisatieEnStyle) {
+      // HACK : Tijdelijk totdat Rabo de API implementeert (alternatief is displaynaam toevoegen in de DB)
+      var orgDisplay = Model.Organisatie.Contains("Rabobank") ? "Rabobank" : Model.Organisatie;
+      <p>Zoek een dienstverlener die is aangesloten bij @(orgDisplay).</p>
+    }
+
+    <div style='background-color: #f6f6f6; height:1rem; left: -1rem; right:-1rem; position: absolute;'></div>
+    <img class="resultLoader mt5 mb2 ml3" src="@(cdn)/content/base/images/loading.gif" />
+    <div class="resultContainer hidden">
+      <div id="localresultContainer"></div>
+      <div id="nationwideresultContainer" class="hidden"></div>
+    </div>
+    <div id="pagerDiv" class="center mt2"></div>
+
+  </div>
+</div>
+
+<div id="slugAdvies" class="hidden">@Model.Scope.SlugAdvies</div>
+<div id="sortValue" class="hidden">@Model.Sort</div>
+<div id="cValue" class="hidden">@Model.C</div>
+<div id="scopeValue" class="hidden">@Model.Scope.Slug</div>
+<div id="filterValue" class="hidden"></div>
+<div id="pValue" class="hidden">1</div>
+<div id="sValue" class="hidden">@Model.S</div>
+
+<script type="text/javascript">
+  queue.wait(function(){function e(){var e="";$(".checkboxFilter").each(function(){this.checked?e+=this.id.replace("filter_","")+"_true":e+=this.id.replace("filter_","")+"_false",e+="-"}),$(".dropdownFilter").each(function(){$(this).val().length>0&&(e+=this.id.replace("filter_","")+"_"+$(this).val(),e+="-")}),$(".textboxFilter").each(function(){$(this).val().length>0&&(e+=this.id.replace("filter_","")+"_"+$(this).val(),e+="-")}),e.includes("tt_")?(e.includes("tt_gekozen")?($("#top10title").html("@(Model.Top10GekozenTitle)"),$("#top10description").html("@(Model.Top10GekozenDescription)")):e.includes("tt_beoordeeld")?($("#top10title").html("@(Model.Top10BeoordeeldTitle)"),$("#top10description").html("@(Model.Top10BeoordeeldDescription)")):e.includes("tt_bekeken")&&($("#top10title").html("@(Model.Top10BekekenTitle)"),$("#top10description").html("@(Model.Top10BekekenDescription)")),$("#top10").show(),$("#sortSelect").hide(),$(".zoek-header").hide(),$("#aNationwide").show(),$("#aLocal").hide(),$("#localresultContainer").show(),$("#nationwideresultContainer").hide()):($("#top10").hide(),$("#sortSelect").show(),$(".zoek-header").show()),$.ajax({type:"GET",url:"@(AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.EncryptFilter()))/"+e.slice(0,-1),cache:!1,success:function(e){$("#filterValue").html(e);const i=$("#search_postcodeplaats").val(),o=$("#cValue").text();$("#filterMobile").attr("href","/@(Model.Scope.Slug)/zoekresultaat/filteren/?f="+e+"&geolocation="+i+"&c="+o),t()}})}function t(){$(".resultLoader").show(),$(".resultContainer").hide();const e=$("#search_postcodeplaats").val(),t=$("#cValue").text(),o=$("#filterValue").text(),a=$("#sortValue").text(),l=$("#scopeValue").text(),s=$("#slugAdvies").text(),n=$("#pValue").text(),c=$("#sValue").text();$.ajax({type:"GET",url:"@(api)/searchresultv2/search?scope="+l+"&sort="+a+"&search="+e+"&filter="+o+"&p="+n+"&c="+t+"&s="+c,success:function(a){$(".labelCount").html(a.CountLocal),$(".labelSearch").html(a.City),function(e,t,o){const a=$("#pagerDiv");a.html("");var l=Math.ceil(t/o);l>0&&$("<span>Pagina &nbsp;</span>").appendTo(a);for(i=1;i<=l;i++)i==e?$("<span class='b'>"+i+"&nbsp;&nbsp;</span>").appendTo(a):$("<span class='pagerClick blue-text cursorLink'>"+i+"&nbsp;&nbsp;</span>").appendTo(a)}(n,a.CountLocal,a.ResultsPerPage);const l=$("#localresultContainer"),c=$("#nationwideresultContainer");$(l).empty(),$(c).empty(),$.each(a.Locations,function(i,a){const n=function(e,t,i,o,a){return $("<div class='pt2 relative'>   <div style='float:left;width:120px;'>   "+(""!=t.ThumbnailUrl?"<a href='/"+e+"/"+t.Postcode.toLowerCase()+"/"+t.Slug+"?f="+i+"&g="+o+"&c="+a+"'><img src='"+t.ThumbnailUrl+"' style='max-width: 110px; max-height: 110px;' alt='"+t.Name+"' title='"+t.Name+"' /></a>":"&nbsp;")+"  </div>   <div class='fl w67p'>   <img src='@(cdn)/content/base/images/badges/duimpje.png' alt='Gecheckt door Advieskeuze.nl' title='Gecheckt door Advieskeuze.nl' width='30' "+(t.DataChecked?"class='fl mr05'":"class='hidden'")+"/>   <h3 class='nomargin fl pb05'>   <a href='/"+e+"/"+t.Postcode.toLowerCase()+"/"+t.Slug+"?f="+i+"&g="+o+"&c="+a+"' class='blue-text'>"+t.Name+"</a>   </h3>   <div class='clear'></div>   <div class=''>   <div class='fl'>   <div>"+t.Address+" "+t.City+"</div>   <table class='mb05'>   <tbody>   "+(t.Distance>0?"<tr><td width='70'>Afstand</td><td>: "+t.Distance+"km</td></tr>":"")+"  "+(t.Price>0?"<tr><td width='70'>Tarief</td><td>: € "+t.Price+"</td></tr>":"")+"  <tr><td width='70'>Reviews</td><td>: <span class='darkgray'>"+(0==t.ReviewsScope?"geen":t.ReviewsScope)+"</span><span>"+(null!=t.ReviewDateScope?", meest recente: "+t.ReviewDateScopeDisplay:"")+"</span></td></tr>   </tbody>   </table>   </div>   </div>   </div>   <div class='fr mb1 mt1'>   <a href='/"+e+"/"+t.Postcode.toLowerCase()+"/"+t.Slug+"?f="+i+"&g="+o+"&c="+a+"' class='base-button button-solid-blue w100p'>Meer informatie</a>   <br /><a href='/"+e+"/"+t.Postcode.toLowerCase()+"/"+t.Slug+"/adviesgesprek?f="+i+"&g="+o+"&c="+a+"' class='base-button button-hollow-blue w100p mt1'>Maak afspraak</a>   </div>   <div class='clear'></div>   <div style='background-color: #f6f6f6; height:1rem; left: -1rem; right:-1rem; position: absolute;'></div>   </div>")}(s,a,o,e,t);a.Nationwide?n.appendTo(c):n.appendTo(l)}),$(".resultLoader").hide(),$(".resultContainer").show()}})}$(function(){$("#aNationwide").click(function(){$("#pagerDiv").hide(),$("#aNationwide").hide(),$("#aLocal").show(),$("#localresultContainer").hide(),$("#nationwideresultContainer").show()}),$("#aLocal").click(function(){$("#pagerDiv").show(),$("#aNationwide").show(),$("#aLocal").hide(),$("#localresultContainer").show(),$("#nationwideresultContainer").hide()}),$("#sortSelect").change(function(){$("#sortValue").html(this.value),t()}),$("#btn_postcodeplaats").click(function(){t()}),$("#search_postcodeplaats").keyup(function(e){13==e.keyCode&&t()}),$(".checkboxFilter").change(function(){e()}),$(".dropdownFilter").change(function(){e()}),$(".textboxFilter").keyup(function(t){13==t.keyCode&&e()}),$("#pagerDiv").on("click",".pagerClick",function(){$("#pagerDiv").html(""),function(e){$("#pValue").html(e),t()}($(this).text())}),$("#top10reset").click(function(){$("#filter_tt").val(""),e()}),e()})});
+</script>

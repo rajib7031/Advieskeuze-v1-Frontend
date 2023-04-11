@@ -1,0 +1,11 @@
+﻿@using AdvieskeuzeCode.DataModel
+@model Locatie
+
+<div class="grid mt1">
+  <div class="grid-cell100">
+    <h1>Bedankt!</h1>
+    <p>Wellicht ben je inmiddels al klant geworden bij @Model.Naam.<br />Als je wil, kan je een review schrijven hoe je hun dienstverlening hebt ervaren.</p>
+    <p>@Html.RouteLink("Schrijf een review", AdvieskeuzeRoutes.Beoordeling(Model), new { @class = "base-button button-solid-green" })</p>
+    <p>@Html.RouteLink("Of bekijk het bedrijf op Advieskeuze.nl", AdvieskeuzeRoutes.ShowLocatie(Model))</p>
+  </div>
+</div>

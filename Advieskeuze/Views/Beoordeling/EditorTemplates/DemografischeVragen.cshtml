@@ -1,0 +1,28 @@
+﻿@model Advieskeuze.Data.Domain.ViewModel.Beoordeling.BeoordelingBevestigen.DemografischeVragen
+
+@Html.VraagLabelFor(m => m.BeoordelaarAanbieder)
+@Html.DropDownListFor(m => m.BeoordelaarAanbieder, Model.BeoordelaarAanbiederList)
+@Html.ValidationMessageFor(m => m.BeoordelaarAanbieder)
+
+<h2 class="mt2">Onderzoek: "Transparantie van verdiensten in schadeverzekeringen" (optioneel)</h2>
+<p>Je hebt zojuist een review gegeven. Voor het bedrijf is het waardevol om wat meer te kunnen lezen over zijn of haar geleverde dienst. We stellen je daarom graag de volgende vragen (optioneel). De antwoorden worden anoniem met het bedrijf gedeeld.</p>
+
+@Html.VraagLabelFor(m => m.EindeReview_Aug21_Adviseurkeuze)
+@Html.TextAreaFor(m => m.EindeReview_Aug21_Adviseurkeuze)
+@Html.ValidationMessageFor(m => m.EindeReview_Aug21_Adviseurkeuze)
+
+@Html.VraagLabelFor(m => m.EindeReview_Aug21_Adviseurtips)
+@Html.TextAreaFor(m => m.EindeReview_Aug21_Adviseurtips)
+@Html.ValidationMessageFor(m => m.EindeReview_Aug21_Adviseurtips)
+
+<div class="vraag"><label for="DemografieData_EindeReview_Jul22_Afsluitwijze">De volgende vragen zijn relevant als je een schadeverzekering (bijvoorbeeld woonverzekering) hebt afgesloten.<br />Op welke wijze heb je de (meeste) schadeverzekeringen afgesloten?</label></div>
+@Html.RadiobuttonListFor(m => m.EindeReview_Jul22_Afsluitwijze, Model.EindeReview_Jul22_AfsluitList, true, true)
+@Html.ValidationMessageFor(m => m.EindeReview_Jul22_Afsluitwijze)
+
+@Html.VraagLabelFor(m => m.EindeReview_Jul22_ProvisietransparantieBelangrijk)
+@Html.RadiobuttonListFor(m => m.EindeReview_Jul22_ProvisietransparantieBelangrijk, SelectListFactory.CreateJaNeeLijst(false), true, true)
+@Html.ValidationMessageFor(m => m.EindeReview_Jul22_ProvisietransparantieBelangrijk)
+
+@Html.VraagLabelFor(m => m.EindeReview_Jul22_Provisiewijze)
+@Html.RadiobuttonListFor(m => m.EindeReview_Jul22_Provisiewijze, Model.EindeReview_Jul22_ProvisieList, true, true)
+@Html.ValidationMessageFor(m => m.EindeReview_Jul22_Provisiewijze)

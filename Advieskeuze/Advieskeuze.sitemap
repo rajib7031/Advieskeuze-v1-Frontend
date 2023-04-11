@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<siteMap>
+  <mvcSiteMapNode controller="Home" action="Index" area="" title="Vergelijk financieel adviseurs op Advieskeuze.nl" pageDescription="Zoeken naar de beste hypotheekadviseur, pensioenadviseur, verzekeringsadviseur, makelaar of notaris op basis van reviews van consumenten.">
+    <mvcSiteMapNode controller="Zoekmodule" action="Index" area="" title="Zoeken naar een adviseur die bij je past op Advieskeuze.nl" pageDescription="Zoeken naar de passende adviseur op Advieskeuze.nl."></mvcSiteMapNode>
+    <mvcSiteMapNode controller="Home" area="ProductgroepAlgemeen" title="{TitleMap}" pageDescription="{DescriptionMap}"></mvcSiteMapNode>
+    <mvcSiteMapNode controller="Beoordeling" title="Beoordeel je financieel adviseur via Advieskeuze.nl" pageDescription="Geef je beoordeling over de adviseur waar je financieel advies van hebt gekregen. Andere consumenten zijn geinteresseerd in het lezen van reviews."></mvcSiteMapNode>
+    <mvcSiteMapNode controller="Beoordeling" area="BeoordelingAlgemeen" title="{sitemaptitle}" pageDescription="{sitemappagedescription}" visibility="!*"></mvcSiteMapNode>
+    <mvcSiteMapNode controller="Home" area="ThemaAlgemeen" title="{TitleMap}" pageDescription="{DescriptionMap}">
+      <mvcSiteMapNode controller="Beoordeling" area="ThemaAlgemeen" title="{TitleMap}" pageDescription="{DescriptionMap}" />
+    </mvcSiteMapNode>
+    <mvcSiteMapNode controller="Home" area="StedenAlgemeen" title="Adviseurs in {plaats}" pageDescription="Bekijk de dienstverleners in {plaats}, vind de adviseur die bij je past." />
+    <mvcSiteMapNode controller="Home" action="Contact" title="Neem contact op met Advieskeuze.nl" pageDescription="Heb je vragen of opmerkingen over onze adviseurvergelijking of website? Neem contact op met Advieskeuze.nl." />
+    <mvcSiteMapNode controller="Home" action="Cookiebeleid" title="Het cookiebeleid van Advieskeuze.nl" pageDescription="Informatie over het cookiebeleid van advieskeuze.nl. Waar gebruiken we cookies wel/niet voor." />
+    <mvcSiteMapNode controller="Home" action="Disclaimer" title="Disclaimer van Advieskeuze.nl" pageDescription="De disclaimer van advieskeuze.nl. Hoe gaan we om met correctheid van data, reviews en tariefinformatie en op welke gegevens is onze website gebaseerd." />
+    <mvcSiteMapNode controller="Home" action="Faq" title="Veelgestelde vragen van Advieskeuze.nl" pageDescription="Het overzicht van alle veelgestelde vragen van advieskeuze.nl." />
+    <mvcSiteMapNode controller="Home" action="FaqVraag" title="Veelgestelde vraag van Advieskeuze.nl" pageDescription="{vraag}" />
+    <mvcSiteMapNode controller="Home" action="Kernwaarden" title="Kernwaarden van Advieskeuze.nl" pageDescription="De kernwaarden van advieskeuze.nl. Wat maakt advieskeuze.nl uniek en wat leeft binnen het bedrijf." />
+    <mvcSiteMapNode controller="Home" action="OverOns" title="Over Advieskeuze.nl" pageDescription="Lees over Advieskeuze.nl, wie we zijn en wat we doen." />
+    <mvcSiteMapNode controller="Home" action="Partners" title="Partners van Advieskeuze.nl" pageDescription="Bekijk met wie advieskeuze.nl samenwerkt op het overzicht van partners." />
+    <mvcSiteMapNode controller="Home" action="Privacy" title="Privacybeleid van Advieskeuze.nl" pageDescription="Het privacybeleid van advieskeuze.nl. Lees hoe we omgaan met reviewgegevens, e-mailadressen en contactverzoeken." />
+    <mvcSiteMapNode controller="Home" action="Sitemap" title="Sitemap van Advieskeuze.nl" pageDescription="De sitemap van advieskeuze.nl met alle belangrijkste links binnen de website." />
+    <mvcSiteMapNode controller="Home" action="SpelregelsBeoordeling" title="Spelregels voor reviews op Advieskeuze.nl" pageDescription="De spelregels en bijbehorende richtlijnen voor reviews op advieskeuze.nl." />
+    <mvcSiteMapNode controller="Home" action="VoorwaardenBeoordeling" title="Voorwaarden voor reviews op Advieskeuze.nl" pageDescription="De voorwaarden voor reviews en alles wat daarbij komt kijken op advieskeuze.nl." />
+    <mvcSiteMapNode controller="Home" action="Vacatures" title="Vacatures bij Advieskeuze.nl in Amersfoort" pageDescription="Advieskeuze.nl staat altijd open voor getalenteerde mensen (te Amersfoort, Utrecht)." />
+    <mvcSiteMapNode controller="Home" action="NietGevonden" title="Niet gevonden" pageDescription="Zoek verder naar een dienstverlener via de homepage of zoekpagina!" />
+    
+    <mvcSiteMapNode controller="Blogs" action="Index" title="Blogs op Advieskeuze.nl" pageDescription="Lees blogs geschreven door adviseurs over interessante financiële onderwerpen. Doe kennis op over geldzaken!">
+      <mvcSiteMapNode controller="Blogs" action="Lezen" title="{titel}" pageDescription="{titel} door {auteur}" />
+      <mvcSiteMapNode controller="Blogs" action="Categorie" title="{titel}" pageDescription="{omschrijving}" />
+    </mvcSiteMapNode>
+
+    <mvcSiteMapNode controller="Over" action="Aanbieders" title="Aanbieders van financiële producten" pageDescription="Welke partijen bieden producten en diensten aan. Een overzicht van alle aanbieders.">
+      <mvcSiteMapNode controller="Over" action="Aanbieder" title="Informatie over {aanbieder}" pageDescription="Een overzicht van alle kantoren en adviseurs die producten van {aanbieder} aanbieden." />
+    </mvcSiteMapNode>
+    <mvcSiteMapNode controller="Over" action="Ketens" title="Adviesketens van financiële producten" pageDescription="Welke partijen adviseren over financiële producten. Een overzicht van alle ketens.">
+      <mvcSiteMapNode controller="Over" action="Keten" title="Informatie over {keten}" pageDescription="Een overzicht van alle kantoren en zoekresultaten waar kantoren van {keten} over adviseren." />
+    </mvcSiteMapNode>
+    <mvcSiteMapNode controller="Over" action="Registers" title="Branche- en keurmerkregisters" pageDescription="Een overzicht van de belangrijkste brancheregisters, keurmerken, beroepsregisters en specialistenregisters.">
+      <mvcSiteMapNode controller="Over" action="Register" title="Informatie over {keurmerk}" pageDescription="Informatie over het register {keurmerk} zoals bijvoorbeeld contactgegevens, website en algemene informatie." />
+    </mvcSiteMapNode>
+    <mvcSiteMapNode controller="Over" action="Nederland" title="{titel}" pageDescription="{omschrijving}"></mvcSiteMapNode>
+
+    <mvcSiteMapNode controller="Zoekresultaat" action="Index" area="Advies" title="Zoek een financieel adviseur{toevoeging}" pageDescription="Zoek een financieel adviseur{toevoeging} die voldoet aan jouw wensen via advieskeuze.nl.">
+      <mvcSiteMapNode controller="Locatie" action="Details" area="Advies" title="{locatie} in {plaats} - Informatie over het kantoor" pageDescription="Bekijk informatie, reviews, tarieven, contactgegevens en openingstijden van {locatie} in {plaats}.">
+        <mvcSiteMapNode controller="Adviseur" action="Details" area="Advies" title="{adviseur} van {locatie}" pageDescription="Informatie en contactgegevens van {adviseur} (werkt bij {locatie})." />
+      </mvcSiteMapNode>
+      <mvcSiteMapNode controller="Locatie" action="Adviesgesprek" area="Advies" title="Maak een afspraak bij {locatie}" pageDescription="Vraag online een gesprek aan bij de adviseurs van {locatie} in {plaats}." />
+      <mvcSiteMapNode controller="Locatie" action="Belmeterug" area="Advies" title="Neem contact op met {locatie}" pageDescription="Laat een terugbelverzoek achter bij {locatie} in {plaats}." />
+      <mvcSiteMapNode controller="Locatie" action="Beoordelingen" area="Advies" title="Reviews van {locatie}" pageDescription="Lees reviews van {locatie} in {plaats} op advieskeuze.nl." />
+      <mvcSiteMapNode controller="Locatie" action="Beoordeling" area="Advies" title="Review van {locatie} in {plaats}, {datum}" pageDescription="Review van {locatie} in {plaats}, een klantervaring over het advies, product of dienst." />
+      <mvcSiteMapNode controller="Locatie" action="Betrouwbaarheidsstempel" area="Advies" title="{locatie} is gecontroleerd door Advieskeuze.nl" pageDescription="De gegevens van {locatie} in {plaats} is door Advieskeuze.nl gecontroleerd." />
+      <mvcSiteMapNode controller="Locatie" action="Tarieven" area="Advies" title="Tarieven en prijzen van {locatie}" pageDescription="Bekijk de tarieven van {locatie} in {plaats}." />
+    </mvcSiteMapNode>
+
+    <mvcSiteMapNode controller="Home" action="Index" area="Kennisbank" title="Advieskeuze.nl - Kennisbank met informatie over financiën" pageDescription="De kennisbank van Advieskeuze.nl bevat informatie en artikelen over financiele onderwerpen zoals hypotheken, verzekeringen en pensioenen.">
+      <mvcSiteMapNode controller="Home" action="Categorie" area="Kennisbank" title="Informatie over {title}" pageDescription="De kennisbank van Advieskeuze.nl bevat informatie en artikelen over {content}." />
+      <mvcSiteMapNode controller="Home" action="Artikel" area="Kennisbank" title="{title}" pageDescription="{content}." />
+      <mvcSiteMapNode controller="Zoekresultaat" action="Index" area="Kennisbank" title="Kennisbank zoekresultaat" pageDescription="Zoeken door alle artikelen van Advieskeuze.nl over financiele thema's zoals hypotheken, verzekeringen en pensioenen." />
+    </mvcSiteMapNode>
+
+    <mvcSiteMapNode controller="Home" action="Index" area="Expert" title="Vragen en antwoorden over financiële onderwerpen" pageDescription="Het expertplatform van Advieskeuze.nl. Stel een vraag aan een expert en lees eerder gegeven antwoorden op diverse financiele vragen.">
+      <mvcSiteMapNode controller="Home" action="VraagDetails" area="Expert" title="{vraag}" pageDescription="{omschrijving}" />
+      <mvcSiteMapNode controller="Home" action="Expert" area="Expert" title="De expert {expert}" pageDescription="Alle antwoorden die de expert {expert} heeft gegeven op het expertplatform van Advieskeuze.nl." />
+      <mvcSiteMapNode controller="StelEenVraag" action="Index" area="Expert" title="Stel een vraag" pageDescription="Stel een vraag op het expertplatform van Advieskeuze.nl." />
+      <mvcSiteMapNode controller="StelEenVraag" action="Bedankt" area="Expert" title="Bedankt" pageDescription="{content}." />
+      <mvcSiteMapNode controller="StelEenVraag" action="Bevestigen" area="Expert" title="Je vraag bevestigen" pageDescription="Zoeken door alle artikelen van Advieskeuze.nl over financiele thema's zoals hypotheken, verzekeringen en pensioenen." />
+    </mvcSiteMapNode>
+  </mvcSiteMapNode>
+</siteMap>

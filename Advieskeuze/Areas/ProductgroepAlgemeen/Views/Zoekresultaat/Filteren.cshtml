@@ -1,0 +1,119 @@
+﻿@model AdvieskeuzeCode.Searchengine.Models.SearchModel
+@using AdvieskeuzeCode.Searchengine.Filters
+
+@{
+  var cdn = SharedCode.GewrapteSettings.CDNUrl;
+  var api = SharedCode.GewrapteSettings.HostApiUrl;
+}
+
+<div class="grid pt1">
+  <div class="grid-cell100">
+    <div class="mb2">@Html.RouteLink("< Terug naar zoekresultaat", AdvieskeuzeRoutes.Zoekresultaat(Model.Scope))</div>
+    <h2 class="mb1">Postcode of plaats</h2>
+    <input id="search_postcodeplaats" type="text" style="width:70% !important;" value="@(Model.GeoLocation)" />
+    <hr />
+    @foreach (var filter in Model.Filters) {
+      if (!string.IsNullOrEmpty(filter.Description)) {
+        if (Model.Filters.ToList().IndexOf(filter) > 0) {
+          <div class="mt1"></div>
+          <hr />
+        }
+        <h2 class="fl">@filter.Description</h2>
+      }
+      if (!string.IsNullOrEmpty(filter.Information)) {
+        <div class="fr tooltip">
+          <span class="mt07"><img src="@(cdn)/content/flat/images/icon_info_small.png" title="Info" alt="Info"></span>
+          <span>@filter.Information</span>
+        </div>
+      }
+      <div class="clear"></div>
+      if (filter.Type == FilterType.SingleCheckbox) {
+        <input id="filter_@(filter.Key)" type="checkbox" class="checkboxFilter" @(!string.IsNullOrEmpty(filter.Value) && filter.Value.ToLower() == "true" ? "checked" : "") /> @filter.DescriptionDetails
+      }
+      if (filter.Type == FilterType.SingleTextbox) {
+        <input id="filter_@(filter.Key)" type="text" class="textboxFilter" value="@(string.IsNullOrEmpty(filter.Value) ? "" : filter.Value)" style="width:70% !important;" />
+      }
+      if (filter.Type == FilterType.SingleDropdown) {
+        <select id="filter_@(filter.Key)" class="dropdownFilter" style="width:70% !important;">
+          @foreach (var option in filter.Options) {
+            <option value="@option.Key" @(option.Key == filter.Value ? "selected" : "")>@option.Value</option>
+          }
+        </select>
+      }
+    }
+
+    <div class="clear"></div>
+
+    @Html.RouteLink("Zoeken", AdvieskeuzeRoutes.Zoekresultaat(Model.Scope), new { id = "zoeklink", @class = "base-button button-solid-green mt2" })
+  </div>
+
+
+  <div id="filterValue" class="hidden"></div>
+  <div id="cValue" class="hidden">@Model.C</div>
+  <div id="gValue" class="hidden"></div>
+</div>
+
+
+<script>
+  queue.wait(function () {
+    $(function () {
+      // Add the search event
+      $("#search_postcodeplaats").focusout(function () {
+        $("#gValue").html($(this).val());
+        setLink();
+      });
+
+      // Add the filtering events
+      $(".checkboxFilter").change(function () {
+        getFiltervalue();
+      });
+      $(".dropdownFilter").change(function () {
+        getFiltervalue();
+      });
+      $(".textboxFilter").focusout(function () {
+        getFiltervalue();
+      });
+    });
+
+    function setLink() {
+      const filterValue = $("#filterValue").text();
+      const gValue = $("#gValue").text();
+      const cValue = $("#cValue").text();
+      $("#zoeklink").attr("href", "/@(Model.Scope.Slug)/zoekresultaat?f=" + filterValue + "&geolocation=" + gValue + "&c=" + cValue);
+    }
+
+    function getFiltervalue() {
+      var filterValue = "";
+      $('.checkboxFilter').each(function () {
+        if (this.checked) {
+          filterValue += this.id.replace("filter_", "") + "_true";
+        }
+        else {
+          filterValue += this.id.replace("filter_", "") + "_false"; /* explicit false to overrule some default=true filters */
+        }
+        filterValue += "-";
+      });
+      $('.dropdownFilter').each(function () {
+        if ($(this).val().length > 0) {
+          filterValue += this.id.replace("filter_", "") + "_" + $(this).val();
+          filterValue += "-";
+        }
+      });
+      $('.textboxFilter').each(function () {
+        if ($(this).val().length > 0) {
+          filterValue += this.id.replace("filter_", "") + "_" + $(this).val();
+          filterValue += "-";
+        }
+      });
+      $.ajax({
+        type: "GET",
+        url: ("@(AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.EncryptFilter()))/" + filterValue.slice(0, -1)),
+        cache: false,
+        success: function (data) {
+          $("#filterValue").html(data);
+          setLink();
+        }
+      });
+    }
+  });
+</script>

@@ -1,0 +1,93 @@
+﻿@using AdvieskeuzeCode.DataModel
+@using Advieskeuze.Models
+@model OverRegisterModel
+
+@{
+  var cdn = SharedCode.GewrapteSettings.CDNUrl;
+}
+
+<div class="grid pt1">
+  <div class="grid-cell100">
+    @if (Model.Register.EntityType == (int)EntityType.Locatie) {
+      <h1>@Html.RouteLink("Branche- en keurmerkregisters", AdvieskeuzeRoutes.OverRegisters()) : @Model.Register.Naam</h1>
+    }
+    else {
+      <h1>@Html.RouteLink("Beroeps- en specialistenregisters", AdvieskeuzeRoutes.OverRegisters()) : @Model.Register.Naam</h1>
+    }
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell67">
+    <div>@Html.ShowMultilineText(Model.Register.ConsumentOmschrijving)</div>
+  </div>
+  <div class="grid-cell33">
+    @Html.Image(Model.Register.FotoBestand, Model.Register.Naam, null, 120)
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2 class="fl">Informatie van Advieskeuze.nl over @Model.Register.KorteNaam</h2>
+    <div class="fl ml1 mt05 tooltip">
+      <span><img src="@(cdn)/content/flat/images/icon_info_small.png" title="Info" alt="Info"></span>
+      <span>Dit betreft de informatie die bij Advieskeuze.nl bekend is over de dienstverleners die zijn aangesloten bij de organisatie. Advieskeuze.nl spant zich in om ervoor te zorgen dat de informatie juist is, maar kan dit niet garanderen.</span>
+    </div>
+    <div class="clear"></div>
+    <div>
+      @if (Model.Register.EntityType == (int)EntityType.Locatie) {
+        <h3>Dienstverleners</h3>
+      }
+      else {
+        <h3>Specialisten</h3>
+      }
+      <div>@Model.AantalEntiteiten</div>
+    </div>
+    <div class="clear"></div>
+    @if (!string.IsNullOrEmpty(Model.Register.ModeratingUrl)) {
+      @Html.WebsiteLink("Bezoek de website van " + Model.Register.KorteNaam, string.Format(Model.Register.ModeratingUrl, ""))
+    }
+  </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Register.SamenwerkingOmschrijving)) {
+  <div class="grid">
+    <div class="grid-cell100">
+      <h2>Samenwerking met Advieskeuze.nl</h2>
+      <div>@Html.ShowMultilineText(Model.Register.SamenwerkingOmschrijving)</div>
+      <img src="@cdn/content/base/images/badges/partnervan.png" alt="Partner van Advieskeuze.nl" title="Partner van Advieskeuze.nl" class="fr" />
+    </div>
+  </div>
+}
+
+@if (Model.Register.Adres != null) {
+<div class="grid">
+  <div class="grid-cell33">
+    <h2 class="mb1">Adres</h2>
+    <div>@Model.Register.Adres.StraatEnNummer</div>
+    <div>@Model.Register.Adres.PostcodePlaats</div>
+  </div>
+  <div class="grid-cell67">
+    @Html.StaticGoogleMap(Model.Register.Naam, Model.Register.Adres.ForGeoCoding, 800, 300)<br />
+  </div>
+  <div class="clear"></div>
+</div>
+}
+
+@if (Model.Zoekresultaten.Any()) {
+  <div class="grid">
+    <div class="grid-cell100">
+      <h2 class="fl">Dienstverlening van @(Model.Register.EntityType == (int)EntityType.Locatie ? "bedrijven" : "specialisten") aangesloten bij @Model.Register.KorteNaam</h2>
+      <div class="fl ml1 mt05 tooltip">
+        <span><img src="@(cdn)/content/flat/images/icon_info_small.png" title="Info" alt="Info"></span>
+        <span>In de getoonde onderwerpen kun je de @(Model.Register.EntityType == (int)EntityType.Locatie ? "dienstverleners" : "specialisten") vinden, die zijn aangesloten bij de organisatie @Model.Register.KorteNaam.</span>
+      </div>
+      <div class="clear"></div>
+      <ul>
+        @foreach (var scope in Model.Zoekresultaten) {
+          <li>@scope.Naam &nbsp; (@Html.RouteLink("zoek een " + (Model.Register.EntityType == (int)EntityType.Locatie ? "dienstverlener" : "specialist"), AdvieskeuzeRoutes.Zoekresultaat(scope)))</li>
+        }
+      </ul>
+    </div>
+  </div>
+}

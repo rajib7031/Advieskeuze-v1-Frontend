@@ -1,0 +1,28 @@
+﻿@using Advieskeuze.Data.Domain.ViewModel.Banner
+@using SharedCode
+@model BannerModelLocatie
+
+@{
+  Layout = "~/Views/Shared/_Banner.cshtml";
+  var cdn = GewrapteSettings.CDNUrl;
+  var kantoorPagina = AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.ShowLocatie(Model.KantoorLink));
+  var advieskeuzeimg = cdn + "/content/base/images/advieskeuze_lr.png";
+  var breedte = Model.BannerSettings.PropertyContainer.CustomBreedte > 0 ? Model.BannerSettings.PropertyContainer.CustomBreedte : Model.BannerSettings.PropertyContainer.HuidigeAfmeting.Width;
+  var ambassadeurimg = cdn + "/content/base/images/badges/marketingpakket.png";
+
+  if (Model.BannerSettings.VoorbeeldModus) {
+    kantoorPagina = AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.Home());
+  }
+}
+<div class="cursorLink center" style="width: @(breedte-22)px;" id="goToLink">
+  @if (Model.BannerSettings.VoorbeeldModus) {
+    <div id="banner-no-access">Let op! Ongeldig</div>
+  }
+<img src="@ambassadeurimg" alt="Advieskeuze.nl" title="Advieskeuze.nl" />
+  <div class="clear"></div>
+  <img src="@advieskeuzeimg" alt="Advieskeuze.nl" title="Advieskeuze.nl" width="@breedte" />
+</div>
+
+<script>
+  document.getElementById("goToLink").onclick = function() { window.open('@kantoorPagina', '_blank'); };
+</script>

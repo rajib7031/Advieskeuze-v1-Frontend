@@ -1,0 +1,21 @@
+﻿@using Advieskeuze.Data.VraagAntwoord
+@using AdvieskeuzeCode.BI.Advieskeuze.VraagAntwoordModel
+@model VraagAntwoordEnginePagina.Vraag
+
+@{
+  var renderHelper = new VraagRenderHelper<VraagAntwoordEnginePagina.Vraag>(Model, ViewData);
+}
+
+@Html.HiddenFor(m => m.VraagID)
+@if (Model.IsHidden) {
+  @Html.Partial("Controls/VraagAntwoord/_RenderHidden", Model)
+} else if (Model.RenderType != AdvieskeuzeCode.DataModel.RenderType.Header) {
+  if (Model.IsAfhankelijk && Model.AfhankelijkVraag.Type == VraagAntwoordEnginePagina.VraagVerwijzingType.ShowHide) {
+    <div class="dependable-question" data-dependable-on="@renderHelper.GetVerwijzingName()" data-trigger="@Model.Trigger">
+      @Html.Partial("Controls/VraagAntwoord/_Render_" + Model.RenderType, Model)
+    </div>
+  } else {
+    @Html.Partial("Controls/VraagAntwoord/_Render_" + Model.RenderType, Model)
+  }
+  <div class="clear"></div>
+}

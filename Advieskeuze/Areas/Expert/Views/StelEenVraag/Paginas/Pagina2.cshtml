@@ -1,0 +1,20 @@
+﻿@using SharedCode.Mvc
+@model Advieskeuze.Areas.Expert.Models.VraagModel
+
+@Html.VraagLabelFor(m => m.Pagina2.Onderwerp)
+@(Model.Pagina2.OnderwerpList.Count() > 1 ? Html.DropDownListFor(m => m.Pagina2.Onderwerp, Model.Pagina2.OnderwerpList, "- Selecteer een onderwerp -") : Html.DropDownListFor(m => m.Pagina2.Onderwerp, Model.Pagina2.OnderwerpList))
+@Html.ValidationMessageFor(m => m.Pagina2.Onderwerp)
+
+<hr />
+
+@Html.VraagLabelFor(m => m.Pagina2.Vraag)
+@Html.TextAreaFor(m => m.Pagina2.Vraag)
+@Html.ValidationMessageFor(m => m.Pagina2.Vraag)
+
+@if (!AdvieskeuzeCode.Routes.CampagneActiviteitContext.Current.HeeftCampagne) {
+  <p><b>Let op: </b> De vraag en de gegeven antwoorden worden anoniem gemaakt en getoond op Advieskeuze.nl.</p>
+}
+
+@Html.HiddenFor(m => m.Pagina1.Naam)
+@Html.HiddenFor(m => m.Pagina1.Emailadres)
+@Html.HiddenFor(m => m.PaginaNr)

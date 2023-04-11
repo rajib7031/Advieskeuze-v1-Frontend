@@ -1,0 +1,28 @@
+﻿@using AdvieskeuzeCode.BI.Advieskeuze.FaqModel
+@model FaqIndex
+
+<div class="grid pt1">
+  <div class="grid-cell100">
+    <h1>Veelgestelde vragen</h1>
+    <p>Op deze pagina vind je antwoord op veel gestelde vragen over diverse onderwerpen van advieskeuze.nl.<br />Staat je vraag er niet bij? Stel hem via het @Html.RouteLink("contactformulier", AdvieskeuzeRoutes.Contact()), je krijgt dan zo snel mogelijk een reactie van ons!</p>
+  </div>
+</div>
+
+@foreach (var c in Model.Categorieen) {
+  <div class="grid">
+    <div class="grid-cell100">
+      <h2>@c.Naam</h2>
+      <ul>
+        @foreach (var v in c.Vragen) {
+          <li>- @Html.RouteLink(v.Titel, AdvieskeuzeRoutes.FaqVraag(v.ID))</li>
+        }
+      </ul>
+    </div>
+  </div>
+}
+
+<div class="grid">
+  <div class="grid-cell100">
+    <p>Staat je vraag er niet bij? Stel hem via het @Html.RouteLink("contactformulier", AdvieskeuzeRoutes.Contact()), je krijgt dan zo snel mogelijk een reactie van ons!</p>
+  </div>
+</div>

@@ -1,0 +1,644 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{75D6BC33-BB29-428B-A641-8BD000CC9E9A}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Advieskeuze</RootNamespace>
+    <AssemblyName>Advieskeuze</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <TargetFrameworkProfile />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
+    <UseGlobalApplicationHostFile />
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <Use64BitIISExpress />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AdvieskeuzeCode, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\AdvieskeuzeProj\advieskeuze-v1\AdvieskeuzeCode\bin\Debug\AdvieskeuzeCode.dll</HintPath>
+    </Reference>
+    <Reference Include="AdvieskeuzeModels">
+      <HintPath>..\..\..\AdvieskeuzeProj\advieskeuze-v1\AdvieskeuzeModels\bin\Debug\AdvieskeuzeModels.dll</HintPath>
+    </Reference>
+    <Reference Include="AntiXssLibrary, Version=4.3.0.0, Culture=neutral, PublicKeyToken=d127efab8a9c114f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AntiXSS.4.3.0\lib\net40\AntiXssLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Elmah">
+      <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlSanitizationLibrary, Version=4.3.0.0, Culture=neutral, PublicKeyToken=d127efab8a9c114f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AntiXSS.4.3.0\lib\net40\HtmlSanitizationLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Mandrill, Version=3.1.0.0, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Edm.5.8.5\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.OData.5.8.5\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.8.5\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=9.3.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAzure.Storage.9.3.3\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
+    <Reference Include="MvcSiteMap.Core">
+      <HintPath>Content\External\MvcSiteMap.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SharedCode, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\AdvieskeuzeProj\advieskeuze-v1\SharedCode\bin\Debug\SharedCode.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleMvcSitemap, Version=2.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleMvcSitemap.2.3.1\lib\net45\SimpleMvcSitemap.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Linq">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data.Services.Client">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Spatial, Version=5.8.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Spatial.5.8.5\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Data">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.DynamicData">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Entity">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.ApplicationServices">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Abstractions">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Configuration">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Services">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.EnterpriseServices">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_GlobalResources\Messages.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Advies\AdviesAreaRegistration.cs" />
+    <Compile Include="Areas\Advies\Controllers\AdviseurController.cs" />
+    <Compile Include="Areas\Advies\Controllers\BeoordelingController.cs" />
+    <Compile Include="Areas\Advies\Controllers\BannerController.cs" />
+    <Compile Include="Areas\Advies\Controllers\LocatieController.cs" />
+    <Compile Include="Areas\Advies\Controllers\ZoekresultaatController.cs" />
+    <Compile Include="Areas\StedenAlgemeen\Models\StadModel.cs" />
+    <Compile Include="Controllers\AdviesgesprekController.cs" />
+    <Compile Include="Controllers\BlogsController.cs" />
+    <Compile Include="Controllers\ZakelijkController.cs" />
+    <Compile Include="Controllers\ParticulierController.cs" />
+    <Compile Include="Controllers\ReviewController.cs" />
+    <Compile Include="Data\Domain\BannerDomain.cs" />
+    <Compile Include="Data\Domain\BeoordelingDomain.cs" />
+    <Compile Include="Data\Domain\ViewModel\Banner\BannerModelCompany.cs" />
+    <Compile Include="Data\Domain\ViewModel\Banner\BannerModelLocatie.cs" />
+    <Compile Include="Data\Domain\ViewModel\Banner\BannerModelBase.cs" />
+    <Compile Include="Data\Domain\ViewModel\Beoordeling\BeoordelingBevestigen.cs" />
+    <Compile Include="Areas\BeoordelingAlgemeen\Controllers\BeoordelingController.cs" />
+    <Compile Include="Areas\BeoordelingAlgemeen\BeoordelingAlgemeenAreaRegistration.cs" />
+    <Compile Include="Areas\ProductgroepAlgemeen\Controllers\HomeController.cs" />
+    <Compile Include="Areas\ProductgroepAlgemeen\Controllers\ZoekresultaatController.cs" />
+    <Compile Include="Areas\ProductgroepAlgemeen\ProductgroepAlgemeenAreaRegistration.cs" />
+    <Compile Include="Areas\Expert\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Expert\Controllers\OnderwerpController.cs" />
+    <Compile Include="Areas\Expert\Controllers\StelEenVraagController.cs" />
+    <Compile Include="Areas\Expert\Controllers\ZoekresultaatController.cs" />
+    <Compile Include="Areas\Expert\ExpertAreaRegistration.cs" />
+    <Compile Include="Areas\Expert\Models\HomeModel.cs" />
+    <Compile Include="Areas\Expert\Models\VraagModel.cs" />
+    <Compile Include="Areas\Expert\Models\ZoekresultaatModel.cs" />
+    <Compile Include="Areas\Kennisbank\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Kennisbank\Controllers\ZoekresultaatController.cs" />
+    <Compile Include="Areas\Kennisbank\KennisbankAreaRegistration.cs" />
+    <Compile Include="Areas\Kennisbank\Models\ArtikelModel.cs" />
+    <Compile Include="Areas\Kennisbank\Models\CategorieModel.cs" />
+    <Compile Include="Areas\Kennisbank\Models\KennisbankModel.cs" />
+    <Compile Include="Areas\Kennisbank\Models\ZoekresultaatModel.cs" />
+    <Compile Include="Areas\StedenAlgemeen\Controllers\HomeController.cs" />
+    <Compile Include="Areas\StedenAlgemeen\StedenAlgemeenAreaRegistration.cs" />
+    <Compile Include="Controllers\SitemapController.cs" />
+    <Compile Include="Controllers\ZoekenController.cs" />
+    <Compile Include="Data\BaseController.cs" />
+    <Compile Include="Data\BaseControllerFactory.cs" />
+    <Compile Include="Data\CampagneActiviteitAttributes.cs" />
+    <Compile Include="Data\CompositionRoot.cs" />
+    <Compile Include="Data\AdvieskeuzeEnvironmentAttribute.cs" />
+    <Compile Include="Data\Domain\AdvieskeuzeDomain.cs" />
+    <Compile Include="Data\Domain\BeoordelingengineDomain.cs" />
+    <Compile Include="Data\Domain\EnvironmentDomain.cs" />
+    <Compile Include="Data\Domain\HomeDomain.cs" />
+    <Compile Include="Data\Domain\LocatiesDomain.cs" />
+    <Compile Include="Data\Domain\OverDomain.cs" />
+    <Compile Include="Data\Domain\ViewModel\Beoordeling\BeoordelingVragenPagina.cs" />
+    <Compile Include="Data\Domain\ViewModel\Home\HomeFront.cs" />
+    <Compile Include="Data\Domain\ViewModel\Home\Sitemap.cs" />
+    <Compile Include="Data\Domain\ViewModel\Locaties\KantoorDetailModel.cs" />
+    <Compile Include="Data\Domain\ViewModel\Over\OverRegio.cs" />
+    <Compile Include="Data\VraagAntwoord\VraagRenderHelper.cs" />
+    <Compile Include="Models\Base\TarievenModel.cs" />
+    <Compile Include="Models\Base\BelmeterugModel.cs" />
+    <Compile Include="Models\Base\AdviesgesprekModel.cs" />
+    <Compile Include="Models\Base\LocatieAdviseurModel.cs" />
+    <Compile Include="Models\Base\LocatieModel.cs" />
+    <Compile Include="Controllers\BeoordelingController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\GoController.cs" />
+    <Compile Include="Controllers\OverController.cs" />
+    <Compile Include="Models\BlogModels.cs" />
+    <Compile Include="Models\FaqIndexModel.cs" />
+    <Compile Include="Models\BeoordelingBedanktModel.cs" />
+    <Compile Include="Models\OverKetenModel.cs" />
+    <Compile Include="Models\ToelichtenModel.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ImagesController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\HomeModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="404.html" />
+    <Content Include="404.aspx" />
+    <Content Include="500.html" />
+    <Content Include="500.aspx" />
+    <Content Include="android-chrome-192x192.png" />
+    <Content Include="apple-touch-icon-114x114.png" />
+    <Content Include="apple-touch-icon-120x120.png" />
+    <Content Include="apple-touch-icon-144x144.png" />
+    <Content Include="apple-touch-icon-152x152.png" />
+    <Content Include="apple-touch-icon-precomposed.png" />
+    <Content Include="apple-touch-icon.png" />
+    <Content Include="apple-touch-icon-180x180.png" />
+    <Content Include="apple-touch-icon-57x57.png" />
+    <Content Include="apple-touch-icon-60x60.png" />
+    <Content Include="apple-touch-icon-72x72.png" />
+    <Content Include="apple-touch-icon-76x76.png" />
+    <Content Include="browserconfig.xml" />
+    <Content Include="Content\PdfResources\check_off.png" />
+    <Content Include="Content\PdfResources\check_on.png" />
+    <Content Include="Content\PdfResources\empty.png" />
+    <Content Include="Content\PdfResources\icon_green.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\PdfResources\icon_orange.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\PdfResources\icon_red.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\pgp_public_key.txt" />
+    <Content Include="favicon-16x16.png" />
+    <Content Include="favicon-194x194.png" />
+    <Content Include="favicon-32x32.png" />
+    <Content Include="favicon-96x96.png" />
+    <Content Include="favicon.ico" />
+    <Content Include="Fonts\roboto.css" />
+    <Content Include="Global.asax" />
+    <Content Include="Areas\Kennisbank\Views\_ViewStart.cshtml" />
+    <Content Include="robots.txt" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Base.cshtml" />
+    <Content Include="Views\Beoordeling\Demo.cshtml" />
+    <Content Include="Views\Beoordeling\BestaatFout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Advies\Views\Locatie\Details.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Advies\Views\Adviseur\Details.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Privacy.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Contact.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="User.config">
+      <SubType>
+      </SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Advieskeuze.sitemap">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Advies\Views\Locatie\Adviesgesprek.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Advies\Views\Locatie\AdviesgesprekBedankt.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AppSettings.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Advies\Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Beoordeling\Bevestigen.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Beoordeling\Bedankt.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Advies\Views\_ViewStart.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\ContactBedankt.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\OverOns.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\FaqOverzicht.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\FaqVraag.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Over\Aanbieders.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Over\Aanbieder.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Advies\Views\Locatie\Beoordelingen.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\VoorwaardenBeoordeling.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Beoordeling\Toelichten.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Beoordeling\ToelichtenBevestigen.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\SpelregelsBeoordeling.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Disclaimer.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Kernwaarden.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Sitemap.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Advies\Views\Locatie\Beoordeling.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Over\Register.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Over\Registers.cshtml" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\Home\Vacatures.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Beoordeling\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\_Banner.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Cookiebeleid.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Home\Blank.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\Advies\Views\Locatie\Betrouwbaarheidsstempel.cshtml" />
+    <Content Include="Areas\Expert\Views\Web.config" />
+    <Content Include="Areas\Expert\Views\StelEenVraag\Index.cshtml" />
+    <Content Include="Areas\Expert\Views\StelEenVraag\Paginas\Pagina1.cshtml" />
+    <Content Include="Areas\Expert\Views\StelEenVraag\Paginas\Pagina2.cshtml" />
+    <Content Include="Areas\Expert\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Expert\Views\StelEenVraag\Bedankt.cshtml" />
+    <Content Include="Areas\Kennisbank\Views\Web.config" />
+    <Content Include="Areas\Kennisbank\Views\Home\Artikel.cshtml" />
+    <Content Include="Areas\Kennisbank\Views\Home\Categorie.cshtml" />
+    <Content Include="Areas\Kennisbank\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Kennisbank\Views\Zoekresultaat\Index.cshtml" />
+    <Content Include="Areas\Expert\Views\StelEenVraag\Bevestigen.cshtml" />
+    <Content Include="Areas\Expert\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Expert\Views\Home\VraagDetails.cshtml" />
+    <Content Include="Areas\Expert\Views\Onderwerp\Index.cshtml" />
+    <Content Include="Areas\Expert\Views\Zoekresultaat\Index.cshtml" />
+    <Content Include="Areas\Expert\Views\StelEenVraag\AntwoordenBekijken.cshtml" />
+    <Content Include="Areas\Expert\Views\StelEenVraag\AntwoordDetails.cshtml" />
+    <Content Include="Areas\Expert\Views\StelEenVraag\Onbeantwoord.cshtml" />
+    <Content Include="Areas\Expert\Views\Home\Expert.cshtml" />
+    <Content Include="Areas\ProductgroepAlgemeen\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\ProductgroepAlgemeen\Views\Home\Index.cshtml" />
+    <Content Include="Areas\ProductgroepAlgemeen\Views\Web.config" />
+    <Content Include="Areas\ProductgroepAlgemeen\Views\Zoekresultaat\Index.cshtml" />
+    <Content Include="Areas\BeoordelingAlgemeen\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\BeoordelingAlgemeen\Views\Web.config" />
+    <Content Include="Views\Shared\Controls\VraagAntwoord\_RenderHidden.cshtml" />
+    <Content Include="Views\Shared\Controls\VraagAntwoord\_Vragen.cshtml" />
+    <Content Include="Areas\StedenAlgemeen\Views\Web.config" />
+    <Content Include="Areas\StedenAlgemeen\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\BeoordeelMijAdviseur.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\BeoordeelOnsKantoor.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\BeoordeelMijPlaatje.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\BeoordeelMijTekst.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\Reviews.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\ScoreUitgebreid.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\ScoreUitgebreidEnReviewsSmal.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\ReviewsLaatsteTwee.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\LinkReview.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\Score.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\LinkKantoor.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\LinkKantoorTekst.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\ScoreUitgebreidEnReviews.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\ScoreEnReviewsPagina.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\KetenScore.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\KetenLinkReview.cshtml" />
+    <Content Include="Areas\Advies\Views\Banner\Ambassadeur.cshtml" />
+    <Content Include="Areas\Advies\Views\Locatie\Belmeterug.cshtml" />
+    <Content Include="Areas\Advies\Views\Locatie\BelmeterugBedankt.cshtml" />
+    <Content Include="Areas\StedenAlgemeen\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Advies\Views\Locatie\_Tarief.cshtml" />
+    <Content Include="Areas\Advies\Views\Locatie\Tarieven.cshtml" />
+    <Content Include="Areas\ProductgroepAlgemeen\Views\Zoekresultaat\Filteren.cshtml" />
+    <Content Include="Areas\ProductgroepAlgemeen\Views\Zoekresultaat\IndexJS.cshtml" />
+    <Content Include="Fonts\KFOkCnqEu92Fr1Mu51xGIzIFKw.woff2" />
+    <Content Include="Fonts\KFOkCnqEu92Fr1Mu51xIIzI.woff2" />
+    <Content Include="Fonts\KFOlCnqEu92Fr1MmWUlfBBc4.woff2" />
+    <Content Include="Fonts\KFOlCnqEu92Fr1MmWUlfChc4EsA.woff2" />
+    <Content Include="Fonts\KFOmCnqEu92Fr1Mu4mxK.woff2" />
+    <Content Include="Fonts\KFOmCnqEu92Fr1Mu7GxKOzY.woff2" />
+    <None Include="Properties\PublishProfiles\Profile1.pubxml" />
+    <None Include="Properties\PublishProfiles\Profile1.pubxml" />
+    <Content Include="Views\Shared\Controls\_Poweredby_large.cshtml" />
+    <Content Include="Views\Over\Nederland.cshtml" />
+    <Content Include="Views\Over\Seo\_Info.cshtml" />
+    <Content Include="Views\Over\Seo\_Beoordelingen.cshtml" />
+    <Content Include="Views\Over\Seo\_Regio.cshtml" />
+    <Content Include="Views\Shared\Campagnes\_Header.cshtml" />
+    <Content Include="Views\Shared\Campagnes\_Footer.cshtml" />
+    <Content Include="Views\Beoordeling\Fout.cshtml" />
+    <Content Include="Views\Zoeken\Uitleg.cshtml" />
+    <Content Include="Views\Shared\Controls\VraagAntwoord\_Render_Checkbox.cshtml" />
+    <Content Include="Views\Shared\Controls\VraagAntwoord\_Render_InputDate.cshtml" />
+    <Content Include="Views\Shared\Controls\VraagAntwoord\_Render_InputEmail.cshtml" />
+    <Content Include="Views\Shared\Controls\VraagAntwoord\_Render_InputText.cshtml" />
+    <Content Include="Views\Shared\Controls\VraagAntwoord\_Render_Radio.cshtml" />
+    <Content Include="Views\Shared\Controls\VraagAntwoord\_Render_Select.cshtml" />
+    <Content Include="Views\Shared\Controls\VraagAntwoord\_Render_TextArea.cshtml" />
+    <Content Include="Views\Shared\Controls\VraagAntwoord\_Vraag.cshtml" />
+    <Content Include="Areas\BeoordelingAlgemeen\Views\Beoordeling\Pagina.cshtml" />
+    <Content Include="Views\Shared\Controls\VraagAntwoord\_Render_InputNumber.cshtml" />
+    <Content Include="Views\Beoordeling\_bedankje.cshtml" />
+    <Content Include="Views\Beoordeling\EditorTemplates\DemografischeVragen.cshtml" />
+    <Content Include="Views\Beoordeling\_bedankjes.cshtml" />
+    <Content Include="Views\Beoordeling\Demografie.cshtml" />
+    <Content Include="Views\Shared\Controls\VraagAntwoord\_Render_InputDateMonth.cshtml" />
+    <Content Include="Views\Blogs\Index.cshtml" />
+    <Content Include="Views\Blogs\Lezen.cshtml" />
+    <Content Include="Views\Home\Zoeken.cshtml" />
+    <Content Include="Views\Shared\Controls\_ContactOptieAfspraakFormulier.cshtml" />
+    <Content Include="Views\Shared\Controls\_ContactOptieWhatsApp.cshtml" />
+    <Content Include="Views\Shared\Controls\_ContactOptieBelMeTerug.cshtml" />
+    <Content Include="Views\Home\Faq.cshtml" />
+    <Content Include="Views\Blogs\Overzicht.cshtml" />
+    <Content Include="Views\Home\Reviewbeleid.cshtml" />
+    <Content Include="Views\Home\Beoordeling.cshtml" />
+    <Content Include="Views\Home\BeoordelingBedankt.cshtml" />
+    <Content Include="Views\Blogs\Categorie.cshtml" />
+    <Content Include="Views\Over\Ketens.cshtml" />
+    <Content Include="Views\Over\Keten.cshtml" />
+    <Content Include="Views\Home\PartnerWebsites.cshtml" />
+    <Content Include="Views\Particulier\Index.cshtml" />
+    <Content Include="Views\Zakelijk\Index.cshtml" />
+    <Content Include="Views\Home\NietGevonden.cshtml" />
+    <Content Include="Views\Shared\Controls\_Review.cshtml" />
+    <Content Include="Views\Shared\Controls\_ReviewFlat.cshtml" />
+    <Content Include="Views\Adviesgesprek\WelContact.cshtml" />
+    <Content Include="Views\Adviesgesprek\GeenContact.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="App_GlobalResources\Messages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.designer.cs</LastGenOutput>
+      <CustomToolNamespace>Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>14462</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+</Project>

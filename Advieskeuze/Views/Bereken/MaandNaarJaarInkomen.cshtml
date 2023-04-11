@@ -1,0 +1,83 @@
+﻿@using Advieskeuze.Models
+@model MaandNaarJaarInkomenModel
+
+<div class="alternating">
+  <div class="altblock">
+    <div class="container">
+      <h1>Bereken jaarinkomen</h1>
+      <p>Bereken het jaarinkomen uit het maandsalaris, vakantiegeld en de eventuele extra's.</p>
+    </div>
+  </div>
+
+  <div class="altblock">
+    <div class="container">
+      <div class="container50p fl">
+        @using (Html.BeginForm()) {
+          @Html.Honeypot("FirstName")
+
+          @Html.VraagLabelFor(m => m.BrutoInkomen)
+          @Html.TextBoxFor(m => m.BrutoInkomen, new { type = "number", Value = "2500" })
+          @Html.ValidationMessageFor(m => m.BrutoInkomen)
+
+          @Html.VraagLabel("inkomenPeriode", "Inkomen per", true)
+          @Html.DropDownList("inkomenPeriode", Model.inkomenPeriodeItems)
+
+          @Html.VraagLabelFor(m => m.PercentageVakantieToeslag)
+          @Html.TextBoxFor(m => m.PercentageVakantieToeslag, new { type = "number", max = "100", min = "0", step = "0.1", Value = "8" })
+
+          @Html.VraagLabelFor(m => m.Eindejaarsuitkering)
+          @Html.TextBoxFor(m => m.Eindejaarsuitkering, new { type = "number"})
+          
+          @Html.VraagLabelFor(m => m.OverigeInkomsten)
+          <p>Bijvoorbeeld onregelmatigheidstoeslag, provisie, overwerk, partneralimentatie etc.</p>
+          @Html.TextBoxFor(m => m.OverigeInkomsten, new { type = "number"})
+        }
+      </div>
+      <div class="container50p fl hidden" id="jaarinkomen-result">
+        <h2>Berekende jaarinkomen</h2>
+        <p>Je berekende bruto jaarinkomen is € <span id="jaarinkomen" class="b">100.000</span>.</p>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+
+  <div class="altblock mt2">
+    <div class="container">
+      <div class="fl">
+        @Html.RouteLink("Bekijk alle rekentools", AdvieskeuzeRoutes.BerekenIndex())
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  queue.wait(function() {
+    $(function() {
+      $('form').submit(function(e) {
+        var inputBrutoInkomen = parseInt($('#BrutoInkomen').val()); if (!(inputBrutoInkomen > 0)) inputBrutoInkomen = 0;
+        var inputVakantieToeslag = $('#PercentageVakantieToeslag').val(); if (!(inputVakantieToeslag > 0)) inputVakantieToeslag = 0;
+        var inputInkomenPeriode = $('#inkomenPeriode').val(); if (!(inputInkomenPeriode > 0)) inputInkomenPeriode = 0;
+        var inputEindejaarsUitkering = $('#Eindejaarsuitkering').val(); if (!(inputEindejaarsUitkering > 0)) inputEindejaarsUitkering = 0;
+        var inputOverigeInkomsten = $('#OverigeInkomsten').val(); if (!(inputOverigeInkomsten > 0)) inputOverigeInkomsten = 0;
+
+        $.getJSON('@Url.Action("MaandNaarJaarInkomenResultaat")', {
+          brutoInkomen: inputBrutoInkomen,
+          vakantieToeslag: inputVakantieToeslag,
+          inkomenPeriode: inputInkomenPeriode,
+          eindejaarsUitkering: inputEindejaarsUitkering,
+          overigeInkomsten: inputOverigeInkomsten
+        }, function(data) {
+          $('#jaarinkomen-result').show();
+          $('#jaarinkomen').html(data[0].toLocaleString("nl-NL"));
+        });
+        e.preventDefault();
+      });
+
+      $('form').on('change', function() { $('form').submit(); });
+
+      $('form').submit();
+    });
+  });
+</script>

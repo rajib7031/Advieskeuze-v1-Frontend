@@ -1,0 +1,45 @@
+﻿@using System.Text.RegularExpressions
+@using SharedCode
+@{
+  string cdn = GewrapteSettings.CDNUrl;
+}
+@model Advieskeuze.Models.BlogcategorieModel
+
+<div class="homevisual @(Model.Blogcategorie.Slug)blogcatvisual">
+  <div class="grid pt1">
+    <div class="grid-cell33 mb2 mt2">
+      <h1 class="mb1">Vind een blog</h1>
+      @using (Html.BeginForm()) {
+        @Html.TextBox("Zoektermen", null, new { @placeholder = "Typ een onderwerp", @class = "input100" })
+        <input type="submit" value="zoek" class="mt1" />
+      }
+    </div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <div class="fr">@Html.RouteLink("Bekijk alle blogs", AdvieskeuzeRoutes.BlogsOverzicht(Model.Blogcategorie.Slug, null))</div>
+    <h1 class="fl">@Model.Blogcategorie.Naam</h1>
+    <br />
+  </div>
+</div>
+
+<div class="grid">
+  @foreach (var blog in Model.Blogs) {
+    <div class="grid-cell33">
+      <img src="@cdn/content/flat/images/Blogimages/@(blog.Afbeelding)_thumb.jpg" />
+      <h2>@blog.Titel</h2>
+      <p>@Regex.Replace(blog.Tekst.Substring(0, 130), @"\[(.*?)\]", String.Empty, RegexOptions.IgnoreCase)...</p>
+      <p>Geschreven door @blog.Auteur</p>
+      @Html.RouteLink("Lees verder", AdvieskeuzeRoutes.BlogLezen(blog.Slug), new { @class = "base-button button-solid-blue fr" })
+      <div class="clear"></div>
+    </div>
+  }
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <div class="fr">@Html.RouteLink("Bekijk alle blogs", AdvieskeuzeRoutes.BlogsOverzicht(Model.Blogcategorie.Slug, null))</div>
+  </div>
+</div>

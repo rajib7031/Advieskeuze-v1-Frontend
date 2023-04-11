@@ -1,0 +1,46 @@
+﻿@using AdvieskeuzeCode.Routes
+@using SharedCode.Mvc
+@model Advieskeuze.Areas.Expert.Models.HomeModel
+
+<div class="expertvisual zoekvisual h18rem">
+  <div>&nbsp;</div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2 class="fl blauw">Vraag</h2>
+    <div class="fr">Gesteld op: @Model.Vraag.DatumDisplayShort</div>
+    <div class="clear"></div>
+    <p>@Html.ShowMultilineText(Model.Vraag.Omschrijving)</p>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <div class="fr">Gegeven op: @Model.Antwoord.DefinitiefDatumDisplayShort</div>
+    <h2>Antwoord</h2>
+    <div class="clear"></div>
+    <p>
+      @Html.ShowMultilineText(Model.Antwoord.Omschrijving)
+    </p>
+    @Html.RouteLink("Bekijk overige antwoorden", AdvieskeuzeRoutes.ExpertAntwoordenBekijken(Model.Vraag.SecurityID), new { @class = "base-button button-solid-blue" })
+    <div class="clear"></div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2>Contactgegevens van de expert</h2>
+
+    <div class="w30p">Naam</div>
+    <div class="w70p">@Model.Expert.Naam</div>
+    <div class="clear"></div>
+
+    @if (Model.LocatieAdviseurs != null && Model.LocatieAdviseurs.Any()) {
+      foreach (var locatieAdviseur in Model.LocatieAdviseurs) {
+        <div>@locatieAdviseur.EmailadresDisplay</div>
+        <div>@locatieAdviseur.TelefoonDisplay</div>
+      }
+    }
+  </div>
+</div>

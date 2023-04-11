@@ -1,0 +1,102 @@
+﻿@using AdvieskeuzeCode.BI.Advieskeuze.VraagAntwoordModel
+@model VraagAntwoordEnginePagina
+
+@{ 
+  var gaRenderen = false; 
+}
+@for (int teller = 0; teller < Model.VragenVolgorde.Count; teller++) {
+  var vraagWrapper = Model.VragenVolgorde[teller];
+  var vraagLos = vraagWrapper as VraagAntwoordEnginePagina.Vraag;
+  var vraagContainer = vraagWrapper as VraagAntwoordEnginePagina.VraagContainer;
+  var afhankelijk = (vraagLos != null) && vraagLos.IsAfhankelijk && vraagLos.AfhankelijkVraag.Type == VraagAntwoordEnginePagina.VraagVerwijzingType.ShowHide;
+  gaRenderen = gaRenderen && ((vraagLos != null && !vraagLos.IsHidden) || vraagContainer != null);
+
+  if (gaRenderen) {
+    <hr class="mt1" style="@(afhankelijk ? "display:none" : null)" />
+    gaRenderen = false;
+  }
+  if (vraagLos != null) {
+    gaRenderen = !vraagLos.IsHidden;
+    var vraagNr = Model.VragenLos.IndexOf(vraagLos);
+    @Html.PartialFor(m => m.VragenLos[vraagNr], "Controls/VraagAntwoord/_Vraag")
+  }
+  else if (vraagContainer != null) {
+    <div class="vraag">
+      <label>@vraagContainer.Label.Label</label>
+    </div>
+    <div>
+      @foreach (var vraagNr in vraagContainer.VragenIndexVolgorde) {
+        @Html.PartialFor(m => m.VragenLos[vraagNr], "Controls/VraagAntwoord/_Vraag")
+      }
+    </div>
+  }
+}
+
+<script>
+  queue.wait(function() {
+    $(function() {
+      $('.dependable-question').each(function() {
+        var triggered = $(this).attr('data-trigger') === $('[name="' + $(this).attr('data-dependable-on') + '"]:checked').prop('title');
+        var previousLine = $(this).prevAll('.l_grijs.mt1.mb1').first();
+        var input = $(this).find('input,textarea,select');
+        if (triggered) {
+          previousLine.show();
+          $(this).show();
+          input.rules('add', {
+            required: true,
+            messages: {
+              required: 'Dit veld is verplicht.'
+            }
+          });
+        }
+      });
+
+      $(':radio').change(function(event) {
+        var changedElement = $(this).attr('name');
+        var dependentObjects = $('[data-dependable-on="' + changedElement + '"]');
+        var selectedValue = $(this).prop('title');
+        if (dependentObjects.length > 0) {
+          dependentObjects.each(function() {
+            var previousLine = $(this).prevAll('.l_grijs.mt1.mb1').first();
+            var input = $(this).find('input,textarea,select');
+            if ($(this).attr('data-trigger') === selectedValue) {
+              $(this).slideDown();
+              previousLine.slideDown();
+              input.rules('add', {
+                required: true,
+                messages: {
+                  required: 'Dit veld is verplicht.'
+                }
+              });
+            } else {
+              previousLine.slideUp();
+              $(this).slideUp();
+              input.removeAttr('required');
+            }
+          });
+        }
+      });
+
+      $('form').submit(function(event) {
+        $('.waarderingAntwoord').each(function(i, e) {
+          if ($(e).find(':radio:checked').length === 0 && $(e).find(':checkbox:checked').length === 0) {
+            $('[id="Error_' + $(e).find(':radio').first().attr('name') + '"]').show();
+            event.preventDefault();
+          }
+        });
+      });
+
+      $('.waarderingAntwoord :checkbox').change(function() {
+        var subject = $(this).closest('.waarderingAntwoord').find(':radio');
+        subject.attr('checked', false);
+        $('[id="Error_' + subject.attr('name') + '"]').hide();
+      });
+
+      $('.waarderingAntwoord :radio').change(function() {
+        var subject = $(this).closest('.waarderingAntwoord');
+        subject.find(':checkbox').attr('checked', false);
+        $('[id="Error_' + $(this).attr('name') + '"]').hide();
+      });
+    });
+  });
+</script>

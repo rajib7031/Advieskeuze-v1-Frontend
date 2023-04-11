@@ -1,0 +1,72 @@
+﻿@using Advieskeuze.Data.Domain.ViewModel.Banner
+@using SharedCode
+@model BannerModelLocatie
+
+@{
+  Layout = "~/Views/Shared/_Banner.cshtml";
+  ViewData.Add("showJS", true);
+  var cdn = GewrapteSettings.CDNUrl;
+  var kantoorPagina = AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.ShowLocatie(Model.KantoorLink));
+  var advieskeuzeimg = cdn + "/content/base/images/advieskeuze_lr.png";
+  var breedte = Model.BannerSettings.PropertyContainer.CustomBreedte > 0 ? Model.BannerSettings.PropertyContainer.CustomBreedte : Model.BannerSettings.PropertyContainer.HuidigeAfmeting.Width;
+  var margin = breedte / 7;
+  var origineleBreedte = breedte - 20;
+  var maxToelichting = 25;
+
+  if (Model.BannerSettings.VoorbeeldModus) {
+    kantoorPagina = AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.Home());
+  }
+}
+
+<style>
+  .beoordeling .header {
+    display: none;
+  }
+
+  .beoordeling .star {
+    float: left;
+  }
+</style>
+
+<div style="width: @(breedte - margin)px; line-height: 1.3em; margin-left:@(margin/2)px">
+  <div class="center">
+    <a href="@kantoorPagina" target="_blank"><img src="@advieskeuzeimg" alt="Advieskeuze.nl" title="Advieskeuze.nl" width="@origineleBreedte" /></a>
+    @if (Model.BannerSettings.VoorbeeldModus) {
+  <div id="banner-no-access">Let op! Ongeldig</div>
+    }
+  </div>
+  <div class="clear"></div>
+  @if (!Model.Score.HeeftScore) {
+    <div>
+      Geen score beschikbaar
+    </div>
+  }
+  else {
+    <div class="cursorLink" id="goToLink">
+      <div class="scoreLarge mt05"><span>@Model.Score.WaardeDisplay</span></div>
+      <div>@Html.ScoreDetailsBar(Model.Score.Waarde)</div>
+    </div>
+    <div class="center mt05">
+      <span>@Model.Score.AantalTotaal reviews.</span>
+    </div>
+  }
+  <div class="clear"></div>
+
+  @if (!Model.Score.RecenteBeoordelingen.Lijst.Any()) {
+    <div>
+      Er zijn geen reviews gevonden
+    </div>
+  }
+  else {
+    foreach (var review in Model.Reviews) {
+      <div class="mb1 p1">
+        @Html.Partial("Controls/_ReviewFlat", new Tuple<AdvieskeuzeCode.DataModel.Beoordeling, bool, bool, bool>(review, false, false, true))
+      </div>
+    }
+  }
+
+</div>
+
+<script>
+  document.getElementById("goToLink").onclick = function() { window.open('@kantoorPagina', '_blank'); };
+</script>

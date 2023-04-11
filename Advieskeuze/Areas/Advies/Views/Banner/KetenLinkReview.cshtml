@@ -1,0 +1,14 @@
+﻿@using Advieskeuze.Data.Domain.ViewModel.Banner
+@using SharedCode
+@model BannerModelCompany
+
+@{
+  Layout = "~/Views/Shared/_Banner.cshtml";
+  var cdn = GewrapteSettings.CDNUrl;
+  var pagina = AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.OverKeten(Model.Company.Slug));
+  var width = Model.BannerSettings.PropertyContainer.HuidigeAfmeting.Width;
+  var height = Model.BannerSettings.PropertyContainer.HuidigeAfmeting.Height;
+  ViewData.Add("hideCSS", true);
+}
+
+<a href="@pagina" target="_blank"><img src="@cdn/content/advieskeuze/images/banners/banner-beoordeling-@(width)-x-@(height).png" width="@width" height="@height" alt="Geef ons een review" title="Geef ons een review"/></a>

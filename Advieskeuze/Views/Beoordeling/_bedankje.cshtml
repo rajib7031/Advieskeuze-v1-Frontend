@@ -1,0 +1,40 @@
+﻿@using Advieskeuze.Data.Domain.ViewModel.Beoordeling
+@model BeoordelingBevestigen.Bedankje
+
+@{
+  var link = (AdvieskeuzeCode.BI.Shared.BeoordelingSecureEntity)ViewData["Link"];
+}
+
+<div class="BedanktVragen">
+  @using (Html.BeginForm(AdvieskeuzeRoutes.BeoordelingBedankjeVersturen(link))) {
+    @Html.ValidationSummary(false)
+    @Html.HiddenFor(m => m.OrganisatieNaam)
+    if (Model.Keuzes.Count() > 1) { 
+    <table>
+      <tr>
+        @foreach (var item in Model.Keuzes.OrderBy(r => r.SortIndex)) {
+          <td style="padding-right: 1em">
+            <label for="BedankVraag_BedankKeuze_@item.ID">@Html.Image(item.Logo, item.Naam, item.Naam, null)</label>
+            <div style="text-align: center;">
+              <input type="radio" name="BedankVraag.BedankKeuze" id="BedankVraag_BedankKeuze_@item.ID" value="@item.ID" data-val="true" data-val-required="Kies een cadeau" />
+              <label for="BedankVraag_BedankKeuze_@item.ID">@item.Naam</label>
+            </div>
+          </td>
+        }
+      </tr>
+    </table>
+    }
+    else {
+      // Als er maar 1 keuze is gebruiken we een afwijkende renderer zodat je t naar keuze kan stylen
+      var regel = Model.Keuzes.FirstOrDefault();
+      <div>
+        @Html.Hidden("BedankVraag.BedankKeuze", regel.ID)
+        @Html.TryPartial(String.Format("Promotie/_{0}", regel.Slug), regel)
+      </div>
+    }
+    <div class="clear"></div>
+    <div class="mt1 fr"><input type="submit" value="Ontvang het cadeautje" /></div>
+    <div class="clear"></div>
+  }
+</div>
+

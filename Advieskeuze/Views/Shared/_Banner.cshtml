@@ -1,0 +1,41 @@
+﻿@using SharedCode
+@{
+  var cdn = GewrapteSettings.CDNUrl;
+  var cdnv = GewrapteSettings.AssemblyVersion;
+  
+  object value;
+  bool hideCSS = false;
+  if (ViewData.TryGetValue("hideCSS", out value)) {
+    hideCSS = (bool)value;
+  }
+  bool showJS = false;
+  if (ViewData.TryGetValue("showJS", out value)) {
+    showJS = (bool)value;
+  }
+}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Advieskeuze.nl</title>
+  <meta name="description" content="Advieskeuze.nl - Zoek een dienstverlener die bij je past." />
+  <meta name="keywords" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+  @if (showJS) {
+    <script src="@cdn/content/js/LABjs/@cdnv"></script>
+    <script>
+    var queue = $LAB
+      .script("@cdn/content/base/scripts/jquery-3.5.1.min.js").wait()
+      .script("@cdn/content/base/scripts/jquery-ui.min.js")
+      .script("@cdn/content/js/BestReview/@cdnv")
+    </script>
+  }
+  @if (!hideCSS) {
+    <link href="@cdn/content/css/basestyle/@cdnv" rel="stylesheet" type="text/css" />
+  }
+  <link rel="canonical" href="@AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeViewContext.CanonicalUrlRouteValuesGet())" />
+</head>
+<body style="background-color: white;">
+  @RenderBody()
+</body>
+</html>

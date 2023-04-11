@@ -1,0 +1,63 @@
+﻿@using AdvieskeuzeCode.Routes
+@using SharedCode.Mvc
+@using SharedCode
+@using Advieskeuze.Areas.Expert.Models
+@model HomeModel
+
+<div class="homevisual expertvisual">
+  <div class="grid pt1">
+    <div class="grid-cell33 mb2 mt2">
+      <h1 class="mb1">Zoek in eerder gestelde vragen</h1>
+      @using (Html.BeginForm()) {
+        @Html.TextBox("zoekTerm", "", new { @placeholder = "Vul hier je zoekterm in", @class = "input100" })
+        <input type="submit" value="Zoek" class="mt1" />
+      }
+      <div class="mt1">@(Model.AantalVragen != 0 ? @String.Format("{0:n0}", Model.AantalVragen) : "Geen")  vragen in het expertplatform</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell50">
+    <h2>Recente vragen</h2>
+    @if (!Model.Vragen.Any()) {
+      <p>Er zijn geen vragen gevonden.</p>
+    }
+    else {
+      <ul>
+        @foreach (var a in Model.Vragen) {
+          <li>@Html.RouteLink(a.Titel.TrimLength(55, "..."), AdvieskeuzeRoutes.ExpertVraagDetails(a.Slug))</li>
+        }
+      </ul>
+    }
+  </div>
+  <div class="grid-cell50">
+    <h2>Expertplatform</h2>
+    <p>Het expertplatform is dé plek om vragen te stellen over allerlei financiële onderwerpen die je niet zomaar op het internet kan opzoeken. Wellicht heb je een gerichte vraag over jouw situatie of wil je weten hoe bepaalde financiële regelgeving precies werkt.</p>
+    @Html.RouteLink("Stel een vraag", AdvieskeuzeRoutes.ExpertStelEenVraag(), new { @class = "base-button button-solid-blue" })
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2>Recente experts</h2>
+    @if (!Model.Experts.Any()) {
+      <p>Er zijn geen experts gevonden.</p>
+    }
+    else {
+      <ul>
+        @foreach (var a in Model.Experts) {
+          <li>@a.Naam</li>
+        }
+      </ul>
+    }
+  </div>
+  <div class="grid-cell100">
+    <h2>Onderwerpen</h2>
+    <ul>
+      @foreach (var a in Model.Onderwerpen) {
+        <li>@Html.RouteLink(a.Naam, AdvieskeuzeRoutes.ExpertOnderwerpDetails(a.Naam))</li>
+      }
+    </ul>
+  </div>
+</div>

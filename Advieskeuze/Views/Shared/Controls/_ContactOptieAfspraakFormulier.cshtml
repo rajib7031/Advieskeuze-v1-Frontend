@@ -1,0 +1,8 @@
+﻿@model Tuple<Advieskeuze.Data.Domain.ViewModel.Locaties.KantoorDetailModel, AdvieskeuzeCode.BI.Common.LocatieModel.KantoorContactOpties>
+
+@if (Model.Item2.ContactOptieActief && !string.IsNullOrEmpty(Model.Item2.ContactOptieTekst)) {
+  @Html.RouteLink(Model.Item2.ContactOptieTekst, AdvieskeuzeRoutes.Adviesgesprek(Model.Item1.KantoorLink, Model.Item1.Productgroep), new { @class = "base-button button-solid-green w100p mb1" })
+}
+else if (string.IsNullOrEmpty(Model.Item2.ContactOptieTekst)) {
+  @Html.RouteLink("Afspraak maken", AdvieskeuzeRoutes.Adviesgesprek(Model.Item1.KantoorLink, Model.Item1.Productgroep), new { @class = "base-button button-solid-green w100p mb1" })
+}

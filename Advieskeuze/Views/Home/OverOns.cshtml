@@ -1,0 +1,36 @@
+﻿@using AdvieskeuzeCode.DataModel
+@model List<FaqVraag>
+@{ var count = 1; }
+
+<div class="homevisual zoekvisualhome">
+  <div class="grid pt1">
+  </div>
+</div>
+
+<div class="grid pt1">
+  @foreach (var v in Model) {
+    <div class="grid-cell@(count == 1 ? "50" : "100")">
+      @if (count == 1) {
+        <h1>@v.Titel</h1>
+      }
+      else {
+        <h2>@v.Titel</h2>
+      }
+      <p>@Html.ShowMultilineText(v.Tekst)</p>
+    </div>
+    if (count == 1) { // 1e item net iets anders positioneren ivm de zoekbox
+      <div class="grid-cell50">
+        <h1>Zoek een adviseur</h1>
+        <p>Vergelijk en vind een financieel adviseur bij jou in de buurt die je kan helpen met een @Html.RouteLink("hypotheek", AdvieskeuzeRoutes.ProductgroepHome("hypotheek")), @Html.RouteLink("verzekeringen", AdvieskeuzeRoutes.ProductgroepHome("verzekering")), @Html.RouteLink("pensioenen", AdvieskeuzeRoutes.ProductgroepHome("pensioen")) of meerdere andere onderwerpen.</p>
+        <div>@Html.RouteLink("Zoek een adviseur", AdvieskeuzeRoutes.Home(), new { @class = "base-button button-solid-blue" })</div>
+      </div>
+    }
+    count++;
+  }
+  <div class="grid-cell100">
+    <h2>Veelgestelde vragen</h2>
+    <p>Heb je nog vragen over Advieskeuze.nl? Bekijk dan onze veelgestelde vragen via de onderstaande button.</p>
+    @Html.RouteLink("Veelgestelde vragen", AdvieskeuzeRoutes.Faq(), new { @class = "base-button button-solid-blue" })
+    <div class="clear"></div>
+  </div>
+</div>

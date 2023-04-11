@@ -1,0 +1,38 @@
+﻿@using AdvieskeuzeCode.DataModel
+@model Blog
+
+<div class="center white-bg p1">
+  <h2>door @Model.Auteur</h2>
+  <div class="mt1">
+    @Html.RouteLink("van " + Model.Locatie.Naam, AdvieskeuzeRoutes.BlogRedirectNaarKantoor(Model.Slug), new { @class = "base-button button-solid-green" })
+  </div>
+</div>
+
+<div class="zoekvisual @(String.Format("{0}blogvisual",Model.Afbeelding)) h18rem">
+  <div>&nbsp;</div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h1>@Model.Titel</h1>
+    <p class="i">@Model.Auteur - @Model.Datum.ToShortDateString()</p>
+    @Html.ParseBBToHtml(Model.Tekst, AdvieskeuzeCode.Util.BBFormatter.Universeel)
+    <br /><br />
+    <div class="w60p">
+      <span class="bold">Door @Model.Auteur van @Model.Locatie.Naam</span>
+      <p>geschreven op @Model.Datum.ToShortDateString()</p>
+      <div class="w50p">
+        @Html.RouteLink("Bekijk kantoorpagina", AdvieskeuzeRoutes.BlogRedirectNaarKantoor(Model.Slug), new { @class = "base-button button-solid-blue" })
+      </div>
+    </div>
+    <div class="w30p fr">
+      <br />
+      <p class="bold">Deel dit blog op social media</p>
+      <div class="fl mr1">@Html.ShareOnFacebook(Context.Request.Url.ToString())</div>
+      <div class="fl mr1">@Html.ShareOnTwitterFromOtherPage(Context.Request.Url.ToString())</div>
+      <div class="fl mr1">@Html.ShareOnLinkedIn(Context.Request.Url.ToString())</div>
+      <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+  </div>
+</div>

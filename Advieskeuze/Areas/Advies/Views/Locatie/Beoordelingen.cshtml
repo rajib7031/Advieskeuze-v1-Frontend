@@ -1,0 +1,198 @@
+﻿@using SharedCode
+@model Advieskeuze.Models.Base.LocatieModel
+@{
+  string cdn = GewrapteSettings.CDNUrl;
+}
+
+<div class="white-bg border-bottom">
+  <div class="grid">
+    <div class="grid-cell100 nopadding">
+      <div class="fl">
+        <span class="breadcrumbs">
+          @Html.RouteLink("Home", AdvieskeuzeRoutes.Home()) <span class="light-text"> &nbsp;>&nbsp; </span>
+        </span>
+        @if (AdvieskeuzeViewContext.CurrentProductgroep != null) {
+          <span class="breadcrumbs">
+            @Html.RouteLink(AdvieskeuzeViewContext.CurrentProductgroep.Naam, AdvieskeuzeRoutes.ProductgroepHome(AdvieskeuzeViewContext.CurrentProductgroep)) <span class="light-text"> &nbsp;>&nbsp; </span>
+          </span>
+          @Html.RouteLink("Zoekresultaat", AdvieskeuzeRoutes.Zoekresultaat(AdvieskeuzeViewContext.CurrentProductgroep)) <span class="light-text"> &nbsp;>&nbsp; </span>
+        }
+        @Html.RouteLink(Model.Locatie.Naam, AdvieskeuzeRoutes.ShowLocatie(Model.Locatie))
+      </div>
+      <div class="fr">
+        <span class="light-text"> &lt;&nbsp; </span>
+        @Html.RouteLink("Terug naar de kantoorpagina", AdvieskeuzeRoutes.ShowLocatie(Model.Locatie))
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
+
+<div itemscope itemtype="http://schema.org/LocalBusiness">
+  <div class="grid pt1">
+    <div class="grid-cell100">
+      @if (Model.Coordinaat != null) {
+        <div class="hidden" itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
+          <meta itemprop="latitude" content="@Model.Coordinaat.Latitude" />
+          <meta itemprop="longitude" content="@Model.Coordinaat.Longitude" />
+        </div>
+      }
+      <meta itemprop="name" content="@Model.Locatie.Naam" />
+      <meta itemprop="description" content="@Model.Locatie.Omschrijving" />
+      @if (Model.Locatie.FotoID.HasValue) {
+        <meta itemprop="image" content="@Model.Locatie.FotoURL" />
+      }
+      <h2 id="scrollto-reviews" class="mb1">Reviews</h2>
+      <div class="w25p">
+        @if (Model.BeoordelingCount > 0) {
+          if (Model.Locatie.HeeftScore) {
+            <div class="fl" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+              <div class="scoreLarge" itemprop="ratingValue" content="@Model.Locatie.ScoreDisplay"><span>@Model.Locatie.ScoreDisplay</span></div>
+              <meta itemprop="worstRating" content="1" />
+              <meta itemprop="bestRating" content="10" />
+              <meta itemprop="reviewCount" content="@Model.BeoordelingCount" />
+            </div>
+          }
+          else {
+            var score = new AdvieskeuzeCode.BI.Common.LocatieModel.KantoorScoreEnBeoordeling();
+            <span class="hidden" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+              <meta itemprop="ratingValue" content="@score.WaardeGeenScoreDisplay(Model.BeoordelingenPagination)" />
+              <meta itemprop="worstRating" content="1" />
+              <meta itemprop="bestRating" content="10" />
+              <meta itemprop="reviewCount" content="@Model.BeoordelingCount" />
+            </span>
+          }
+          <div class="fl tooltip">
+            <span><img src="@(cdn)/content/flat/images/icon_info_small.png" title="Info" alt="Info"></span>
+            <span>Een review is een persoonlijke ervaring van een consument. Alle reviews samen leiden tot een rapportcijfer. Houd er rekening mee dat niet alle consumenten hun ervaringen delen. Hierdoor is dit rapportcijfer geen gegeven, maar een subjectieve waarde.</span>
+          </div>
+          <div class="clear"></div>
+        }
+        else {
+          <p>@Model.Locatie.Naam heeft nog geen reviews.</p>
+        }
+      </div>
+      <div class="w50p">
+        @foreach (var score in Model.ScoreDetails) {
+          <div class="fl w50p">
+            @if (score.Slug == Model.ScopeFilter) {
+              <span class="bold">@score.Productgroep.TrimLength(40, "...")</span>
+            }
+            else {
+              if (string.IsNullOrEmpty(Model.ScopeFilter)) {
+                <span>@score.Productgroep.TrimLength(40, "...")</span>
+              }
+              else {
+                <span class="light-text">@score.Productgroep.TrimLength(40, "...")</span>
+              }
+            }
+          </div>
+          <div class="fl w10p">: @score.BeoordelingenCount</div>
+          <div class="fl w40p">
+            @if(Model.ScoreDetails.Count > 1) {
+              if (score.Slug == Model.ScopeFilter) {
+                @Html.RouteLink("wis filters", AdvieskeuzeRoutes.ShowBeoordelingen(Model.Locatie))
+              }
+              else {
+                @Html.RouteLink("bekijk", AdvieskeuzeRoutes.ShowBeoordelingen(Model.Locatie, score.Slug))
+              }
+            }
+          </div>
+        }
+        <div>&nbsp;</div>
+        <div class="clear"></div>
+      </div>
+      <div class="w25p">
+        @Html.RouteLink("Geef een review", AdvieskeuzeRoutes.Beoordeling(Model.Locatie), new { @class = "base-button button-solid-blue w100p" })
+        <div class="clear"></div>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="grid-cell100">
+      <h2 class="mb1">Filter reviews</h2>
+      <div class="w20p">
+        <img src="@cdn/content/flat/images/star1.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star0.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star0.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star0.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star0.png" alt="ster" title="ster" />
+        <div><input type="checkbox" class="checkboxFilter" id="filter_1" @(Model.ScoreFilterList.Contains(1) ? "checked" : "") /> (@Model.Reviews1Ster reviews)</div>
+      </div>
+      <div class="w20p">
+        <img src="@cdn/content/flat/images/star1.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star1.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star0.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star0.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star0.png" alt="ster" title="ster" />
+        <div><input type="checkbox" class="checkboxFilter" id="filter_2" @(Model.ScoreFilterList.Contains(2) ? "checked" : "") /> (@Model.Reviews2Sterren reviews)</div>
+      </div>
+      <div class="w20p">
+        <img src="@cdn/content/flat/images/star1.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star1.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star1.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star0.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star0.png" alt="ster" title="ster" />
+        <div><input type="checkbox" class="checkboxFilter" id="filter_3" @(Model.ScoreFilterList.Contains(3) ? "checked" : "") /> (@Model.Reviews3Sterren reviews)</div>
+      </div>
+      <div class="w20p">
+        <img src="@cdn/content/flat/images/star1.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star1.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star1.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star1.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star0.png" alt="ster" title="ster" />
+        <div><input type="checkbox" class="checkboxFilter" id="filter_4" @(Model.ScoreFilterList.Contains(4) ? "checked" : "") /> (@Model.Reviews4Sterren reviews)</div>
+      </div>
+      <div class="w20p">
+        <img src="@cdn/content/flat/images/star1.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star1.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star1.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star1.png" alt="ster" title="ster" />
+        <img src="@cdn/content/flat/images/star1.png" alt="ster" title="ster" />
+        <div><input type="checkbox" class="checkboxFilter" id="filter_5" @(Model.ScoreFilterList.Contains(5) ? "checked" : "") /> (@Model.Reviews5Sterren reviews)</div>
+      </div>
+    </div>
+  </div>
+
+  @foreach (var review in Model.BeoordelingenPagination) {
+    <div class="grid">
+      <div class="grid-cell100">
+        @Html.Partial("Controls/_Review", new Tuple<AdvieskeuzeCode.DataModel.Beoordeling, bool, bool, bool>(review, false, true, false))
+      </div>
+    </div>
+  }
+</div>
+
+<div class="grid">
+  <div class="grid-cell100 center">
+    @Html.Pager(Model.BeoordelingenPagination, "beoordelingPageNumber")
+    <a href="#" class="">Terug naar boven</a>
+  </div>
+</div>
+
+<div id="cValue" class="hidden">@Model.C</div>
+<div id="sfValue" class="hidden">@Model.ScopeFilter</div>
+
+<script type="text/javascript">
+  queue.wait(function () {
+    $(".checkboxFilter").change(function () {
+      var filterValue = "";
+      const cValue = $("#cValue").text();
+      const sfValue = $("#sfValue").text();
+      $('.checkboxFilter').each(function () {
+        if (this.checked) {
+          filterValue += this.id.replace("filter_", "");
+        }
+      });
+      if (!cValue) {
+        window.location = window.location.pathname + '?s=' + filterValue + '&scopefilter=' + sfValue;
+      }
+      else {
+        window.location = window.location.pathname + '?c=' + cValue + '&s=' + filterValue + '&scopefilter=' + sfValue;
+      }
+    });
+  });
+</script>
+

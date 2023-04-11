@@ -1,0 +1,36 @@
+﻿@using SharedCode
+@model Advieskeuze.Data.Domain.ViewModel.Home.HomeFront
+@{
+var cdn = GewrapteSettings.CDNUrl;
+}
+
+<div class="grid pt1">
+  <div class="grid-cell100">
+    <h1>Het bereik van Advieskeuze.nl</h1>
+    <p>De zoekresultaten van Advieskeuze.nl worden getoond op diverse websites van verzekeraars, banken, brancheorganisaties en overige partijen die samenwerken met adviseurs en dienstverleners.</p>
+    <h2>Partners</h2>
+    <ul>
+      <li>Verzekeraars die zoekmodules van Advieskeuze.nl tonen op hun eigen websites</li>
+      <li>Consumentenorganisaties zoals de Consumentenbond en Vereniging Eigen Huis</li>
+      <li>Landelijke adviesketens die zich profileren op Advieskeuze.nl</li>
+    </ul>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2 class="mb1">Alle partners</h2>
+    @foreach (var partnersite in Model.Partnersites) {
+      <div class="w20p h15rem">
+        <div>
+          <a href="@partnersite.PortalUrl" target="_blank">
+            @Html.Image(partnersite.VoorbeeldAfbeeldingID, partnersite.Titel, "", null, null, true, false, null, new { @class = "zwartwit" })
+          </a>
+          <br />
+          <a href="@partnersite.PortalUrl" target="_blank">@partnersite.Titel</a>
+        </div>
+      </div>
+    }
+    <div class="clear"></div>
+  </div>
+</div>

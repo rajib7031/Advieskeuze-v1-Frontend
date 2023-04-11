@@ -1,0 +1,31 @@
+﻿@using AdvieskeuzeCode.Routes
+@using SharedCode.Mvc
+@model Advieskeuze.Areas.Expert.Models.HomeModel
+
+<div class="expertvisual zoekvisual h18rem">
+  <div>&nbsp;</div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2 class="fl">Vraag</h2>
+    <div class="fr">Gesteld op: @Model.Vraag.DatumDisplayShort</div>
+    <div class="clear"></div>
+    <p>@Html.ShowMultilineText(Model.Vraag.Omschrijving)</p>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2>Antwoorden</h2>
+    <p>Er zijn helaas geen antwoorden gegeven op de door jouw gestelde vraag.</p>
+    <p>We vinden het heel jammer dat je vraag niet beantwoord kon worden. De experts op ons platform moesten binnen 24 uur een antwoord vinden op jouw vraag. Om je te helpen de vraag alsnog beantwoord te krijgen hebben we wat opties beschikbaar:</p>
+    <ol>
+      <li>Schrijf een andere vraag.</li>
+      <li>Zoek direct een adviseur om de vraag te stellen.</li>
+    </ol>
+    <p></p>
+    <div>@Html.RouteLink("Stel een nieuwe vraag", AdvieskeuzeRoutes.ExpertStelEenVraag(), new { @class = "base-button button-solid-green" })</div>
+    <div class="clear"></div>
+  </div>
+</div>

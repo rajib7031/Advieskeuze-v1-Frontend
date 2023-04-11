@@ -1,0 +1,62 @@
+﻿@using SharedCode
+@model Advieskeuze.Data.Domain.ViewModel.Home.Sitemap
+
+<div class="grid pt1">
+  <div class="grid-cell100">
+    <h1>Sitemap</h1>
+    <h2>Algemeen</h2>
+    <ul>
+      <li>@Html.RouteLink("Homepage", AdvieskeuzeRoutes.Home())</li>
+      <li>@Html.RouteLink("Particulier", AdvieskeuzeRoutes.ParticulierHome())</li>
+      <li>@Html.RouteLink("Zakelijk", AdvieskeuzeRoutes.ZakelijkHome())</li>
+      <li>@Html.RouteLink("Expertplatform", AdvieskeuzeRoutes.ExpertHome())</li>
+      <li>@Html.RouteLink("Blogs", AdvieskeuzeRoutes.Blogs())</li>
+      <li>@Html.RouteLink("Kennisbank", AdvieskeuzeRoutes.KennisbankHome())</li>
+      <li>@Html.RouteLink("Contact", AdvieskeuzeRoutes.Contact())</li>
+      <li>@Html.RouteLink("Veelgestelde vragen", AdvieskeuzeRoutes.Faq())</li>
+      <li>@Html.RouteLink("Over Advieskeuze.nl", AdvieskeuzeRoutes.OverOns())</li>
+      <li>@Html.RouteLink("Kernwaarden advieskeuze.nl", AdvieskeuzeRoutes.Kernwaarden())</li>
+      <li>@Html.RouteLink("Disclaimer", AdvieskeuzeRoutes.Disclaimer())</li>
+      <li>@Html.RouteLink("Privacy", AdvieskeuzeRoutes.Privacy())</li>
+      <li>@Html.RouteLink("Aanbieders", AdvieskeuzeRoutes.OverAanbieders())</li>
+      <li>@Html.RouteLink("Ketens", AdvieskeuzeRoutes.OverKetens())</li>
+      <li>@Html.RouteLink("Spelregels reviews", AdvieskeuzeRoutes.SpelregelsBeoordeling())</li>
+      <li>@Html.RouteLink("Voorwaarden reviews", AdvieskeuzeRoutes.VoorwaardenBeoordeling())</li>
+      <li>@Html.RouteLink("Reviewbeleid", AdvieskeuzeRoutes.Reviewbeleid())</li>
+      <li>@Html.RouteLink("Vacatures", AdvieskeuzeRoutes.Vacatures())</li>
+      <li>@Html.RouteLink("Branche- en keurmerkregisters", AdvieskeuzeRoutes.OverRegisters())</li>
+      <li>@Html.RouteLink("Beroeps- en specialistenregisters", AdvieskeuzeRoutes.OverRegisters())</li>
+    </ul>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2>Zoek in steden</h2>
+    <ul>
+      @foreach (var stad in Model.Steden) {
+        <li>@Html.RouteLink(stad, AdvieskeuzeRoutes.StadLandingspagina(stad))</li>
+      }
+    </ul>
+  </div>
+</div>
+
+@foreach (var pg in Model.Productgroepen) {
+  <div class="grid">
+    <div class="grid-cell100">
+      <h2>@pg.Naam</h2>
+      <ul>
+        <li>@Html.RouteLink(string.Format("{0} homepage", pg.Naam), AdvieskeuzeRoutes.ProductgroepHome(pg))</li>
+        @if (pg.DefaultZoekmoduleID.HasValue) {
+          <li>@Html.RouteLink(string.Format("Zoek een {0}", pg.AdviseurNaam), AdvieskeuzeRoutes.Zoekresultaat(pg))</li>
+        }
+        @if (pg.DefaultBeoordelingmoduleID.HasValue) {
+          <li>@Html.RouteLink(string.Format("Beoordeel een {0}", pg.AdviseurNaam), AdvieskeuzeRoutes.Beoordeling(pg))</li>
+        }
+        @if (pg.DefaultZoekmoduleID.HasValue) {
+          <li>@Html.RouteLink(string.Format("{0} in Nederland", pg.AdviseurNaamMeervoud.ToUpperFirstChar()), AdvieskeuzeRoutes.OverRegio(pg, null, null, null))</li>
+        }
+      </ul>
+    </div>
+  </div>
+}

@@ -1,0 +1,39 @@
+﻿@using Advieskeuze.Models
+@using SharedCode
+@model FaqIndexModel
+
+@{
+  var cdn = GewrapteSettings.CDNUrl;
+}
+
+<div class="faqvisual">
+  <div class="grid pt1">
+    <div class="grid-cell33 mb2 mt2">
+      <h1>Veelgestelde vragen</h1>
+      <p>Onderstaand lees je de vijf meestgestelde vragen. Heb je nog een andere vraag? Bekijk ze dan allemaal via de onderstaande button.</p>
+      @Html.RouteLink("Veelgestelde vragen", AdvieskeuzeRoutes.FaqOverzicht(), new { @class = "base-button button-solid-green" })
+    </div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <p class="fr">@Html.RouteLink("Bekijk alle veelgestelde vragen", AdvieskeuzeRoutes.FaqOverzicht())</p>
+    <h1>De @(Model.FaqVragen.Count()) meest gestelde vragen</h1>
+  </div>
+</div>
+
+@foreach (var vraag in Model.FaqVragen) {
+  <div class="grid">
+    <div class="grid-cell100">
+      <h2>@vraag.Titel</h2>
+      <p>@vraag.Tekst</p>
+    </div>
+  </div>
+}
+
+<div class="grid">
+  <div class="grid-cell100">
+    <p class="fr">@Html.RouteLink("Bekijk alle veelgestelde vragen", AdvieskeuzeRoutes.FaqOverzicht())</p>
+  </div>
+</div>

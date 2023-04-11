@@ -1,0 +1,198 @@
+﻿@using Advieskeuze.Models
+@using SharedCode
+@model HomeModel
+
+@{
+  string cdn = GewrapteSettings.CDNUrl;
+}
+
+<div class="zoekvisual beoordelingvisual center">
+  <h1 class="white-text pt5 pb5 bold">Jouw review helpt anderen<br />bij het vinden van een dienstverlener.</h1>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    @using (Html.BeginForm()) {
+      <h1>Welke dienstverlener wil jij een review geven?</h1> <br />
+      <div class="w33p">
+        <div>Ik geef een review aan mijn:</div>
+        @Html.DropDownListFor(m => m.IngevuldeProductgroep, Model.ProductgroepenLijst, "-", new { @class = "input100" }) @Html.ValidationMessageFor(m => m.IngevuldeProductgroep)
+        <div>Plaats:</div>
+        @Html.TextBoxFor(m => m.IngevuldePlaats, new { @class = "input100" })<br />@Html.ValidationMessageFor(m => m.IngevuldePlaats)
+        <div>Bedrijfsnaam:</div>
+        @Html.TextBoxFor(m => m.IngevuldeBedrijfsnaam, new { @class = "input100" })<br />@Html.ValidationMessageFor(m => m.IngevuldeBedrijfsnaam) @Html.HiddenFor(m => m.IngevuldeLocatieId)
+        <div>Naam van medewerker:</div>
+        @Html.TextBoxFor(m => m.IngevuldeDienstverlener, new { @class = "input100" })<br />@Html.ValidationMessageFor(m => m.IngevuldeDienstverlener) @Html.HiddenFor(m => m.IngevuldeDienstverlenerId)
+        @Html.HiddenFor(m => m.IngevuldeCompanyId)
+      </div>
+      <div class="clear"></div>
+
+      if (Model.Locatie != null && Model.Locatie.KorteReviewroute.HasValue) {
+        if (Model.Locatie.KorteReviewroute.Value) {
+          <input type="submit" name="submit-kort" value="Vul een review in" />
+        }
+        else {
+          <input type="submit" name="submit-normaal" value="Vul een review in" />
+        }
+      }
+      else {
+        <br />
+        <input type="submit" name="submit-kort" value="Vul een review in" />
+        <br />
+        <br />
+        <div>
+          <a id="submit-normaal-a" class="cursorLink">of vul een uitgebreide review in</a>
+        </div>
+      }
+      <div class="clear"></div>
+    }
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    @if (Model.Beoordelingen.Any()) {
+      <h2 class="mb2">MEER DAN 150.000 MENSEN GINGEN JOU VOOR!</h2>
+    }
+    @foreach (var beoordeling in Model.Beoordelingen) {
+      <div class="i w30p mr1 p05 word-wrap">
+        <h2>@beoordeling.Toelichting.TrimLength(25, "...")</h2>
+        <span class="fl">Door: @beoordeling.Naam</span>
+        <span class="fr">
+          <img src="@cdn/content/flat/images/star@(beoordeling.Waardering.Value > 0 ? "1" : "0").png" alt="@(beoordeling.Waardering.Value == 1 ? "1 ster" : beoordeling.Waardering.Value + " sterren")" title="@(beoordeling.Waardering.Value == 1 ? "1 ster" : beoordeling.Waardering.Value + " sterren")" />
+          <img src="@cdn/content/flat/images/star@(beoordeling.Waardering.Value > 1 ? "1" : "0").png" alt="@(beoordeling.Waardering.Value == 1 ? "1 ster" : beoordeling.Waardering.Value + " sterren")" title="@(beoordeling.Waardering.Value == 1 ? "1 ster" : beoordeling.Waardering.Value + " sterren")" />
+          <img src="@cdn/content/flat/images/star@(beoordeling.Waardering.Value > 2 ? "1" : "0").png" alt="@(beoordeling.Waardering.Value == 1 ? "1 ster" : beoordeling.Waardering.Value + " sterren")" title="@(beoordeling.Waardering.Value == 1 ? "1 ster" : beoordeling.Waardering.Value + " sterren")" />
+          <img src="@cdn/content/flat/images/star@(beoordeling.Waardering.Value > 3 ? "1" : "0").png" alt="@(beoordeling.Waardering.Value == 1 ? "1 ster" : beoordeling.Waardering.Value + " sterren")" title="@(beoordeling.Waardering.Value == 1 ? "1 ster" : beoordeling.Waardering.Value + " sterren")" />
+          <img src="@cdn/content/flat/images/star@(beoordeling.Waardering.Value > 4 ? "1" : "0").png" alt="@(beoordeling.Waardering.Value == 1 ? "1 ster" : beoordeling.Waardering.Value + " sterren")" title="@(beoordeling.Waardering.Value == 1 ? "1 ster" : beoordeling.Waardering.Value + " sterren")" />
+        </span>
+      </div>
+    }
+    <div class="clear"></div>
+  </div>
+</div>
+
+<script>
+  var plaatsHelper;
+  var productgroep;
+  var locatiehelper;
+  var companyId;
+  queue.wait(function () {
+    $("#submit-normaal-a").click(function () {
+      $("#submit-normaal-a").parent().html('<input type="hidden" name="submit-normaal" value="1" />');
+      $("form").submit();
+    });
+    plaatsHelper = $("#IngevuldePlaats").val();
+    productgroep = $("#IngevuldeProductgroep").val();
+    locatiehelper = $("#IngevuldeLocatieId").val();
+    companyId = $("#IngevuldeCompanyId").val();
+    $(function () {
+      $("#IngevuldeProductgroep").change(function () {
+        productgroep = $("#IngevuldeProductgroep").val();
+      });
+    });
+  });
+  queue.wait(function() {
+    $(function() {
+      plaatsHelper = '@(Model.IngevuldePlaats)';
+      $("#IngevuldePlaats").autocomplete({
+        source: "@Url.RouteUrl(AdvieskeuzeRoutes.PlaatsForAutoCompletion())",
+        select: function(e, ui) {
+          plaatsHelper = ui.item.value;
+          $(this).trigger("change");
+        }
+      });
+
+      $("#IngevuldePlaats").change(function() {
+        var plaatsnaam = $(this).val();
+        if (plaatsnaam.length !== 0) {
+          plaatsHelper = plaatsnaam;
+        }
+      });
+    });
+  });
+
+  queue.wait(function () {
+    $(function () {
+      locatiehelper = $("#IngevuldeLocatieId").val();
+        $("#IngevuldeBedrijfsnaam").change(function () {
+          if ($("#IngevuldeBedrijfsnaam").val().length == 0) {
+            $("#IngevuldeLocatieId").val("");
+          }
+      });
+      $("#IngevuldeBedrijfsnaam").autocomplete({
+        source: function (request, response) {
+          $.ajax({
+            url: "@Url.RouteUrl(AdvieskeuzeRoutes.LocatiesForAutoCompletionSlug())",
+            dataType: "json",
+            data: {
+              term: request.term,
+              plaats: ((typeof plaatsHelper === 'undefined') ? null : plaatsHelper),
+              companyId: ((typeof companyId === 'undefined') ? null : companyId),
+              productgroepSlug: ((typeof productgroep === 'undefined') ? null : productgroep),
+            },
+            success: function (data) {
+              response(data);
+            }
+          });
+        },
+        focus: function (event, ui) {
+          $("#IngevuldeBedrijfsnaam").val($("<div/>").html(ui.item.label.replace("'", "")).text());
+          $("#IngevuldeLocatieId").val(ui.item.value);
+          $(this).trigger("change");
+          return false;
+        },
+        select: function (e, ui) {
+          $("#IngevuldeBedrijfsnaam").val($("<div/>").html(ui.item.label.replace("'", "")).text());
+          locatiehelper = ui.item.value;
+          $(this).trigger("change");
+          return false;
+        }
+      }).data("ui-autocomplete")._renderItem = function (ul, item) {
+        return $("<li></li>")
+          .data("item.autocomplete", item)
+          .append(item.label + " &nbsp;&nbsp;&nbsp; (" + item.desc + ")")
+          .appendTo(ul);
+      };
+    });
+       });
+      queue.wait(function () {
+        $(function () {
+          $("#IngevuldeProductgroep option[value='']").attr('disabled', 'disabled');
+
+      $("#IngevuldeDienstverlener").autocomplete({
+        source: function (request, response) {
+          $.ajax({
+            url: "@Url.RouteUrl(AdvieskeuzeRoutes.AdviseursForAutoCompletionSlug())",
+            dataType: "json",
+            data: {
+              term: request.term,
+              plaats: ((typeof plaatsHelper === 'undefined') ? null : plaatsHelper),
+              locatieID: ((typeof locatiehelper === 'undefined') ? null : locatiehelper),
+              productgroepSlug: ((typeof productgroep === 'undefined') ? null : productgroep),
+            },
+            success: function (data) {
+              response(data);
+            }
+          });
+        },
+        focus: function (event, ui) {
+          $("#IngevuldeDienstverlener").val($("<div/>").html(ui.item.label.replace("'", "")).text());
+          $("#IngevuldeDienstverlenerId").val(ui.item.value);
+          $(this).trigger("change");
+          return false;
+        },
+        select: function (e, ui) {
+          $("#IngevuldeDienstverlener").val($("<div/>").html(ui.item.label.replace("'", "")).text());
+          $("#IngevuldeDienstverlenerId").val(ui.item.value);
+          $(this).trigger("change");
+          return false;
+        }
+      }).data("ui-autocomplete")._renderItem = function (ul, item) {
+        return $("<li></li>")
+          .data("item.autocomplete", item)
+          .append(item.label)
+          .appendTo(ul);
+      };
+    });
+  });
+</script>

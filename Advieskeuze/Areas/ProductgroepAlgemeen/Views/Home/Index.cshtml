@@ -1,0 +1,159 @@
+﻿@using SharedCode
+@model Advieskeuze.Data.Domain.ViewModel.Home.HomeFront
+@{
+  var cdn = GewrapteSettings.CDNUrl;
+}
+<script type="application/ld+json">
+  {"@@context": "http://schema.org","@@type": "WebSite","url": "https://www.advieskeuze.nl","potentialAction": {"@@type": "SearchAction","target": "https://www.advieskeuze.nl/@(Model.Productgroep.Slug)/zoekresultaat/in/{search_term}","query-input": "required name=search_term"}}
+</script>
+
+<div class="homevisual zoekvisual@(Model.Productgroep.ZoekenVisualClass ?? String.Empty)">
+  <div class="grid pt1">
+    <div class="grid-cell50 mb5 mt2">
+      @if (Model.Productgroep.IsZakelijk) {
+        <h1 class="mb2 blue-text">Advies over @Model.Productgroep.NaamMeervoud.ToLower() in:</h1>
+      }
+      else {
+        <h1 class="mb2 blue-text">Zoek een @Model.Productgroep.AdviseurNaam in de buurt van:</h1>
+      }
+      @using (Html.BeginForm()) {
+        @Html.Honeypot("FirstName")
+        @Html.TextBox("locatie", Model.PlaatsPrefill, new { @placeholder = "vul een postcode of plaats in", @class = "input100" })
+        <div>&nbsp;</div>
+        <div class="fl mt05">
+          <a href="#" id="viaBrowser"><img src="@cdn/content/base/images/googlemaps.png" alt="Via de browser opvragen" title="Via de browser opvragen" width="40" class="zwartwit" /></a>
+        </div>
+        <div class="fr mt05">
+          <input type="submit" class="button-solid-green" value="Zoek" />
+        </div>
+        <div class="clear"></div>
+      }
+    </div>
+  </div>
+</div>
+
+<div class="grid pt1">
+  <div class="grid-cell50">
+    <h2 class="mb1">Vindbaar via</h2>
+    @foreach (var partnersite in Model.Partnersites) {
+      <a href="@partnersite.PortalUrl" target="_blank" class="w33p mb05">
+        @Html.Image(partnersite.VoorbeeldAfbeelding.ID, partnersite.Titel, "", null, null, true, false, null, new { @class = "zwartwit" })
+      </a>
+    }
+    <div class="clear"></div>
+    <div>@Html.RouteLink(string.Format("Bekijk alle {0} websites", Model.AantalPartnersites), AdvieskeuzeRoutes.PartnerWebsites())</div>
+  </div>
+  <div class="grid-cell50">
+    <h2 class="mb1">Advieskeuze.nl</h2>
+    <div class="w10p">
+      <img src="@cdn/content/flat/images/ster_blauw.png" class="w60p" alt="Aantal bezoekers Advieskeuze.nl" title="Aantal bezoekers Advieskeuze.nl" />
+    </div>
+    <div class="w80p ml1">
+      <strong>@Model.AantalZoekopdrachten.ToString("###,###") bezoekers</strong><br />
+      <em>Per maand op zoek naar een adviseur</em>
+    </div>
+    <div class="clear"></div><br />
+    <div class="w10p">
+      <img src="@cdn/content/flat/images/ster_blauw.png" class="w60p" alt="Reviews en scores" title="Scores en reviews" />
+    </div>
+    <div class="w80p ml1">
+      <strong>@Model.AantalBeoordelingen.ToString("###,###") reviews</strong><br />
+      <em>Onafhankelijke klantervaringen<br />@Html.RouteLink("schrijf zelf een review", AdvieskeuzeRoutes.Beoordeling())</em>
+    </div>
+    <div class="clear"></div><br />
+    <div class="w10p">
+      <img src="@cdn/content/flat/images/locatie_blauw.png" class="w60p" alt="Kantoren" title="Kantoren" />
+    </div>
+    <div class="w80p ml1">
+      <strong>@Model.AantalLocaties.ToString("###,###") locaties</strong><br />
+      <em>Dienstverleners door heel Nederland</em>
+    </div>
+    <div class="clear"></div><br />
+    <div class="w10p">
+      <img src="@cdn/content/flat/images/locatie_blauw.png" class="w60p" alt="Adviseurs" title="Adviseurs" />
+    </div>
+    <div class="w80p ml1">
+      <strong>@Model.AantalAdviseurs.ToString("###,###") professionals</strong><br />
+      <em>Medewerkers bij bedrijven</em>
+    </div>
+    <div class="clear"></div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    @if (Model.Productgroep.IsZakelijk) {
+      <h2>Advies over @Model.Productgroep.NaamMeervoud.ToLower()</h2>
+      <p>@Model.Productgroep.HomeTekstZoek</p>
+      <p>Zoek direct een adviseur die jou kan helpen met @Model.Productgroep.NaamMeervoud.ToLower().</p>
+    }
+    else {
+      <h2>Zoek een @Model.Productgroep.AdviseurNaam</h2>
+      <p>@Model.Productgroep.HomeTekstZoek</p>
+      <p>Bekijk direct welke @Model.Productgroep.AdviseurNaam in de buurt jou kan helpen.</p>
+    }
+    @Html.RouteLink("Zoek", AdvieskeuzeRoutes.Zoekresultaat(Model.Productgroep), new { @class = "base-button button-solid-blue" })
+  </div>
+</div>
+
+
+<div class="grid">
+  <div class="grid-cell50">
+    <h2>Stel een vraag</h2>
+    <p>Het expertplatform is dé plek om vragen te stellen over allerlei financiële onderwerpen die je niet zomaar op het internet kan opzoeken.</p>
+    @Html.RouteLink("Stel een vraag", AdvieskeuzeRoutes.ExpertHome(), new { @class = "base-button button-solid-blue" })
+  </div>
+  <div class="grid-cell50">
+    <h2>Blogs</h2>
+    <p>Dienstverleners delen hun kennis graag via Advieskeuze.nl. Deze blogs zijn openbaar en voor iedereen in te zien.</p>
+    @Html.RouteLink("Lees blogs", AdvieskeuzeRoutes.Blogs(), new { @class = "base-button button-solid-blue" })
+  </div>
+</div>
+
+@foreach (var review in Model.Beoordelingen) {
+  <div class="grid">
+    <div class="grid-cell100">
+      @Html.Partial("Controls/_ReviewFlat", new Tuple<AdvieskeuzeCode.DataModel.Beoordeling, bool, bool, bool>(review, true, true, true))
+    </div>
+  </div>
+}
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2>Over Advieskeuze.nl</h2>
+    <p>Sommige keuzes in je leven hebben grote invloed op je financiële heden én toekomst. Je wilt daarin worden bijgestaan door vakbekwame mensen die je adviseren en ondersteuning bieden, zodat je de juiste beslissingen neemt. Een dienstverlener kost je wat, maar kan je uiteindelijk ook veel geld én leed besparen; maar dan wil je natuurlijk wel de beste dienstverlener. Op Advieskeuze.nl helpen wij je in de zoektocht naar een dienstverlener.</p>
+    @Html.RouteLink("Zoek een andere dienstverlener", AdvieskeuzeRoutes.Home())
+  </div>
+</div>
+
+<script type="text/javascript">
+  queue.wait(function () {
+    $(function () {
+      $("#viaBrowser").click(function (e) {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        }
+        else {
+          alert("Geolocatie niet ondersteund, vul met de hand een postcode in.");
+        }
+      });
+    });
+    function showPosition(position) {
+      var lat = position.coords.latitude;
+      var lng = position.coords.longitude;
+      $.ajax({
+        type: "GET",
+        url: "/home/getpostcode/",
+        data: { lat, lng },
+        success: function (result) {
+          if (result != null) {
+            $("#locatie").val(result);
+          }
+        },
+        error: function () {
+          alert("Geolocatie niet ondersteund, vul met de hand een postcode in.");
+        }
+      });
+    };
+  });
+</script>

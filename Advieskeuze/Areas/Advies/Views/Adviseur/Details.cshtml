@@ -1,0 +1,134 @@
+﻿@using AdvieskeuzeCode.DataModel
+@using SharedCode
+@model Advieskeuze.Models.Base.LocatieAdviseurModel
+
+@{
+  string cdn = GewrapteSettings.CDNUrl;
+}
+
+<div class="white-bg border-bottom">
+  <div class="grid">
+    <div class="grid-cell100 nopadding">
+      <div class="fl">
+        <span class="breadcrumbs">
+          @Html.RouteLink("Home", AdvieskeuzeRoutes.Home()) <span class="light-text"> &nbsp;>&nbsp; </span>
+        </span>
+        @if (AdvieskeuzeViewContext.CurrentProductgroep != null) {
+          <span class="breadcrumbs">
+            @Html.RouteLink(AdvieskeuzeViewContext.CurrentProductgroep.Naam, AdvieskeuzeRoutes.ProductgroepHome(AdvieskeuzeViewContext.CurrentProductgroep)) <span class="light-text"> &nbsp;>&nbsp; </span>
+          </span>
+          @Html.RouteLink("Zoekresultaat", AdvieskeuzeRoutes.Zoekresultaat(AdvieskeuzeViewContext.CurrentProductgroep)) <span class="light-text"> &nbsp;>&nbsp; </span>
+        }
+        @Html.RouteLink(Model.Locatie.Naam, AdvieskeuzeRoutes.ShowLocatie(Model.Locatie))
+      </div>
+      <div class="fr">
+        <span class="light-text"> &lt;&nbsp; </span>
+        @Html.RouteLink("Terug naar de kantoorpagina", AdvieskeuzeRoutes.ShowLocatie(Model.Locatie))
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
+
+<div class="grid pt1">
+  <div class="grid-cell67">
+    <h1>@Model.Persoon.VolledigeNaam</h1>
+    @if (string.IsNullOrEmpty(Model.Medewerker.Omschrijving)) {
+      <p>@Model.Persoon.VolledigeNaam werkt bij @Model.Locatie.Naam in @Model.Locatie.Plaats.</p>
+    }
+    else {
+      <p>@Html.ShowMultilineText(Model.Medewerker.Omschrijving)</p>
+    }
+
+    <table>
+      <thead>
+        <tr>
+          <th width="100" />
+          <th width="500" />
+        </tr>
+      </thead>
+      <tr>
+        <td class="i">Functie</td>
+        <td>: @Model.Medewerker.FunctieDisplay</td>
+      </tr>
+      @if (Model.Medewerker.ToonContactgegevens) {
+        <tr>
+          <td class="i">Telefoon</td>
+          <td>: @Model.Medewerker.TelefoonDisplay</td>
+        </tr>
+        <tr>
+          <td class="i">E-mailadres</td>
+          <td>: @Model.Medewerker.EmailadresDisplay</td>
+        </tr>
+      }
+    </table>
+
+    @if (Model.Specialisaties.Any()) {
+      <h2 class="mt2">Specialisaties</h2>
+      <ul>
+        @foreach (var s in Model.Specialisaties) {
+          <li>@s.NaamMeervoud</li>
+        }
+      </ul>
+    }
+  </div>
+
+  <div class="grid-cell33 center">
+    @if (Model.Persoon.FotoID.HasValue) {
+      <div style="min-height: 310px;">
+        @Html.Image(Model.Persoon.FotoID, string.Format("Foto van {0}", Model.Persoon.VolledigeNaam), "Geen foto", 300)
+      </div>
+    }
+    <div class="clear"></div>
+    @if (!string.IsNullOrEmpty(Model.Persoon.LinkedInUrl)) {
+      @Html.LinkedInLinkFlat(Model.Persoon.LinkedInUrl, "mr05")
+    }
+    @if (!string.IsNullOrEmpty(Model.Persoon.TwitterAccount)) {
+      @Html.TwitterLinkFlat(Model.Persoon.TwitterAccount, "mr05")
+    }
+    @if (!string.IsNullOrEmpty(Model.Persoon.FacebookUrl)) {
+      @Html.FacebookLinkFlat(Model.Persoon.FacebookUrl, "mr05")
+    }
+    @if (!string.IsNullOrEmpty(Model.Persoon.InstagramNaam)) {
+      @Html.InstagramLinkFlat(Model.Persoon.InstagramNaam, "mr05")
+    }
+    @if (!string.IsNullOrEmpty(Model.Persoon.YouTubeChannelUrl)) {
+      @Html.YouTubeChannelLinkFlat(Model.Persoon.YouTubeChannelUrl, "mr05")
+    }
+    <div class="clear"></div>
+    @if (Model.Locatie.HeeftMarketingpakket) {
+      @Html.RouteLink(Model.Persoon.Voornaam.Length > 2 && Model.Persoon.Voornaam.Length < 15 ? "Afspraak maken met " + Model.Persoon.Voornaam : "Afspraak maken", AdvieskeuzeRoutes.Adviesgesprek(Model.Locatie, AdvieskeuzeViewContext.CurrentProductgroep, Model.Persoon.Slug), new { @class = "base-button button-solid-green w100p mt1" })
+    }
+    @Html.RouteLink(Model.Persoon.Voornaam.Length > 2 && Model.Persoon.Voornaam.Length < 20 ? "Geef " + Model.Persoon.Voornaam + " een review" : "Geef een review", AdvieskeuzeRoutes.Beoordeling((Scope)null, Model.Locatie, Model.Persoon), new { @class = "base-button button-hollow-blue w100p mt1" })
+  </div>
+  <div class="clear"></div>
+</div>
+
+@if (Model.AdviseurRegisters.Any()) {
+  <div class="grid">
+    <div class="grid-cell100">
+      <h2 class="mb1">Beroeps- en specialistenregisters</h2>
+      @foreach (var keurmerk in Model.AdviseurRegisters) {
+        <div class="w20p">
+          <a href="@AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.OverRegister(keurmerk.Kwaliteitcontrole.Slug))">@Html.Image(keurmerk.Kwaliteitcontrole.LogoID, keurmerk.Kwaliteitcontrole.Naam, null, 140, 140, false)</a><br />
+        </div>
+      }
+      <div class="clear"></div>
+    </div>
+  </div>
+}
+
+@if (Model.AndereMedewerkers.Count() > 1) {
+  <div class="grid">
+    <div class="grid-cell100">
+      <h2>Andere medewerkers van @Model.Locatie.Naam</h2>
+      <p>
+        @foreach (var medewerker in Model.AndereMedewerkers.Where(la => la.Persoon.ID != Model.Persoon.ID).OrderBy(a => a.Persoon.Achternaam)) {
+          var persoon = medewerker.Persoon;
+          @Html.RouteLink(persoon.VolledigeNaam, AdvieskeuzeRoutes.ShowAdviseur(Model.Locatie, persoon))<text>, @medewerker.FunctieDisplay</text><br />
+        }
+      </p>
+    </div>
+  </div>
+}
+

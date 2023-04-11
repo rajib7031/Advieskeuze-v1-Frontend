@@ -1,0 +1,103 @@
+﻿@using AdvieskeuzeCode.BI.Advieskeuze.VraagAntwoordModel
+@using Advieskeuze.Data.VraagAntwoord
+@using SharedCode
+@model VraagAntwoordEnginePagina.Vraag
+
+@{
+  var renderHelper = new VraagRenderHelper<VraagAntwoordEnginePagina.Vraag>(Model, ViewData);
+}
+<style>
+  .datePicker { visibility: hidden; }
+</style>
+<div class="vraag">
+  <label>@Model.Label</label>
+</div>
+@if (@Model.Toelichting.IsNotNullOrEmpty()) {
+  @Html.ParseBBToHtml(Model.Toelichting, AdvieskeuzeCode.Util.BBFormatter.Universeel)
+}
+
+<select id="maand-selector" class="selectZonderPijltje verbergEersteOptie w15p">
+  <option value="" disabled selected>maand</option>
+</select>
+<select id="jaar-selector" class="selectZonderPijltje w15p pl1"></select>
+@Html.DatepickerFor(m => m.ValueDatetime)
+
+<script>
+  queue.wait(function() {
+    $(function () {
+      $('.datePicker').datepicker(
+            {
+              dateFormat: 'dd-mm-yy'
+            }
+      );
+      $.validator.addMethod('date',
+      function (value, element) {
+        return true;
+      });
+
+      zetJaren();
+
+      var newDate = new Date(@(DateTime.Now.Local().Year), @(DateTime.Now.Local().Month - 1), 1);
+      $(".datePicker").datepicker("setDate", newDate);
+
+      // zet de waarde van de date-picker als maand/jaar wordt gewijzigd
+      $("#maand-selector").change(function () {
+          var newDate = new Date($("#jaar-selector").val(), $("#maand-selector").val(), 1);
+          $(".datePicker").datepicker("setDate", newDate);
+      });
+      $("#jaar-selector").change(function () {
+        zetMaanden();
+        if ($("#maand-selector").val() != "maand") {
+          var newDate = new Date($("#jaar-selector").val(), $("#maand-selector").val(), 1);
+          $(".datePicker").datepicker("setDate", newDate);
+        }
+        else {
+          $(".datePicker").datepicker("setDate", null);
+        }
+      });
+
+      // Selecteer juiste jaar als deze al is ingevuld
+      if ($(".datePicker").datepicker("getDate") != null) {
+        $("#jaar-selector").val($(".datePicker").datepicker("getDate").getFullYear());
+      } else {
+        $("#jaar-selector").val(new Date().getFullYear());
+      }
+      zetMaanden();
+      $("#maand-selector").val($("#maand-selector option:first").val());
+
+      // Selecteer juiste maand als deze al is ingevuld
+      if ($(".datePicker").datepicker("getDate") != null) {
+        $("#maand-selector").val($(".datePicker").datepicker("getDate").getMonth());
+      }
+
+      function zetJaren() {
+        var ditJaar = new Date().getFullYear();
+        var vorigJaar = new Date().getFullYear() - 1;
+        $('#jaar-selector').append($("<option></option>").attr("value", ditJaar).text(ditJaar));
+        $('#jaar-selector').append($("<option></option>").attr("value", vorigJaar).text(vorigJaar));
+      }
+
+      function zetMaanden() {
+        $('#maand-selector').html('');
+        $('#maand-selector')
+          .append($("<option disabled></option>")
+            .attr("value", null)
+            .text("maand"));
+        var maanden = { 0: "Januari", 1: "Februari", 2: "Maart", 3: "April", 4: "Mei", 5: "Juni", 6: "Juli", 7: "Augustus", 8: "September", 9: "Oktober", 10: "November", 11: "December" };
+        // vul maandlijst
+        $.each(maanden, function (key, value) {
+          var datum = new Date($("#jaar-selector").val(), key, 1);
+          var vanaf = new Date().setDate(new Date().getDate() + -395);
+          var tot = new Date().setDate(new Date().getDate() + 0);
+          if (datum > vanaf && datum <= tot) {
+            $('#maand-selector')
+              .append($("<option></option>")
+                .attr("value", key)
+                .text(value));
+          }
+        });
+      }
+    }
+  );
+});
+</script>

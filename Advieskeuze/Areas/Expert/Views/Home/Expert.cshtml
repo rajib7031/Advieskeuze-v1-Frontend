@@ -1,0 +1,36 @@
+﻿@using AdvieskeuzeCode.Routes
+@using SharedCode.Mvc
+@model Advieskeuze.Areas.Expert.Models.HomeModel
+
+<div class="expertvisual zoekvisual h18rem">
+  <div>&nbsp;</div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <div class="mb2">@Html.RouteLink("Ga terug naar het overzicht", AdvieskeuzeRoutes.ExpertplatformZoeken(null))</div>
+    <div class="clear"></div>
+    <h1>@Model.Expert.Naam</h1>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2>Gegeven antwoorden</h2>
+  </div>
+</div>
+
+@foreach (var a in Model.AntwoordenPagination) {
+  <div class="grid">
+    <div class="grid-cell100">
+      <h3>@Html.RouteLink(a.ExpertVraag.Titel, AdvieskeuzeRoutes.ExpertVraagDetails(a.ExpertVraag.Slug))</h3>
+      <p>@Html.ShowMultilineText(a.Omschrijving)</p>
+    </div>
+  </div>
+}
+
+<div class="grid">
+  <div class="grid-cell100">
+    @Html.Pager(Model.AntwoordenPagination, "page")
+  </div>
+</div>

@@ -1,0 +1,126 @@
+﻿@model Advieskeuze.Models.Base.AdviesgesprekModel
+
+<div class="white-bg border-bottom">
+  <div class="grid">
+    <div class="grid-cell100 nopadding">
+      <div class="fl">
+        <span class="breadcrumbs">
+          @Html.RouteLink("Home", AdvieskeuzeRoutes.Home()) <span class="light-text"> &nbsp;>&nbsp; </span>
+        </span>
+        @if (AdvieskeuzeViewContext.CurrentProductgroep != null) {
+          <span class="breadcrumbs">
+            @Html.RouteLink(AdvieskeuzeViewContext.CurrentProductgroep.Naam, AdvieskeuzeRoutes.ProductgroepHome(AdvieskeuzeViewContext.CurrentProductgroep)) <span class="light-text"> &nbsp;>&nbsp; </span>
+          </span>
+          @Html.RouteLink("Zoekresultaat", AdvieskeuzeRoutes.Zoekresultaat(AdvieskeuzeViewContext.CurrentProductgroep)) <span class="light-text"> &nbsp;>&nbsp; </span>
+        }
+        @Html.RouteLink(Model.Locatie.Naam, AdvieskeuzeRoutes.ShowLocatie(Model.Locatie))
+        @if (Model.Adviseur != null) {
+          <span class="light-text"> &nbsp;>&nbsp; </span>
+          @Html.RouteLink(Model.Adviseur.VolledigeNaam, AdvieskeuzeRoutes.ShowAdviseur(Model.Locatie, Model.Adviseur))
+        }
+      </div>
+      <div class="fr">
+        <span class="light-text"> &lt;&nbsp; </span>
+        @if (Model.Adviseur == null) {
+          @Html.RouteLink("Terug", AdvieskeuzeRoutes.ShowLocatie(Model.Locatie))
+        }
+        else {
+          @Html.RouteLink("Terug", AdvieskeuzeRoutes.ShowAdviseur(Model.Locatie, Model.Adviseur))
+        }
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
+
+<div class="grid pt1">
+  <div class="grid-cell100">
+    @if (Model.Adviseur == null) {
+      <h1>Neem contact op met @Model.Locatie.Naam</h1>
+    }
+    else {
+      <h1>Neem contact op met @Model.Adviseur.VolledigeNaam van @Model.Locatie.Naam</h1>
+    }
+    @if (string.IsNullOrEmpty(Model.Locatie.Emailadres)) {
+      <p>Het e-mailadres van @Model.Locatie.Naam is bij ons niet bekend, daarom is het onmogelijk om online contact op te nemen.</p>
+      if (!string.IsNullOrEmpty(Model.Locatie.Telefoon)) {
+        <p>Je kan telefonisch contact met ze opnemen via @Model.Locatie.TelefoonDisplay</p>
+      }
+      <p>@Html.RouteLink("Ga terug", AdvieskeuzeRoutes.ShowLocatie(Model.Locatie))</p>
+    }
+    else {
+      <p class="mb2">
+        Advieskeuze.nl stuurt je contactgegevens door met het verzoek om persoonlijk contact met je op te nemen.<br />
+        Hoe gaan wij om met je gegevens? Lees ons @Html.RouteLink("privacystatement", AdvieskeuzeRoutes.Privacy()).
+      </p>
+      using (Html.BeginForm()) {
+        @Html.Honeypot("FirstName")
+
+        if (string.IsNullOrEmpty(Model.Invulformulier.ProductgroepSlug)) {
+          @Html.VraagLabelFor(m => m.Invulformulier.ProductgroepSlug)
+          <div class="clear"></div>
+          <div class="w25p">
+            @Html.DropDownListFor(m => m.Invulformulier.ProductgroepSlug, Model.ProductgroepList, " selecteer ", new { @class = "input100" })
+          </div>
+          <div class="clear"></div>
+          @Html.ValidationMessageFor(m => m.Invulformulier.ProductgroepSlug)
+        }
+
+        <div>
+          @Html.VraagLabelFor(m => m.Invulformulier.ContactMomentSlug)
+          <div class="clear"></div>
+          <div class="w25p">
+            @Html.DropDownListFor(m => m.Invulformulier.ContactMomentSlug, Model.ContactMomentList, " selecteer ", new { @class = "input100" })
+          </div>
+          <div class="clear"></div>
+          @Html.ValidationMessageFor(m => m.Invulformulier.ContactMomentSlug)
+        </div>
+
+        @Html.VraagLabelFor(m => m.Invulformulier.Naam)
+        <div class="clear"></div>
+        <div class="w25p">
+          @Html.TextBoxFor(m => m.Invulformulier.Naam, new { @class = "input100" })
+        </div>
+        <div class="clear"></div>
+        @Html.ValidationMessageFor(m => m.Invulformulier.Naam)
+
+        if (AdvieskeuzeViewContext.CurrentProductgroep != null && AdvieskeuzeViewContext.CurrentProductgroep.IsZakelijk) {
+          @Html.VraagLabelFor(m => m.Invulformulier.Bedrijfsnaam)
+          <div class="clear"></div>
+          <div class="w25p">
+            @Html.TextBoxFor(m => m.Invulformulier.Bedrijfsnaam, new { @class = "input100" })
+          </div>
+          <div class="clear"></div>
+          @Html.ValidationMessageFor(m => m.Invulformulier.Bedrijfsnaam)
+        }
+
+        @Html.VraagLabelFor(m => m.Invulformulier.Emailadres)
+        <div class="clear"></div>
+        <div class="w25p">
+          @Html.TextBoxFor(m => m.Invulformulier.Emailadres, new { @class = "input100" })
+        </div>
+        <div class="clear"></div>
+        @Html.ValidationMessageFor(m => m.Invulformulier.Emailadres)
+
+        @Html.VraagLabelFor(m => m.Invulformulier.Telefoon)
+        <div class="clear"></div>
+        <div class="w25p">
+          @Html.TextBoxFor(m => m.Invulformulier.Telefoon, new { @class = "input100" }) <span class="i">optioneel</span>
+        </div>
+        <div class="clear"></div>
+        @Html.ValidationMessageFor(m => m.Invulformulier.Telefoon)
+
+        <div>
+          @Html.VraagLabelFor(m => m.Invulformulier.ToestemmingVervolgTraject)
+          @Html.RadiobuttonList("Invulformulier.ToestemmingVervolgTraject", Model.JaNee, Model.Invulformulier.ToestemmingVervolgTraject.ToString(), v => v.Value, v => v.Text, "", null, true, true, true, null)
+          @Html.ValidationMessageFor(m => m.Invulformulier.ToestemmingVervolgTraject)
+        </div>
+
+        @Html.ValidationSummary(true)
+
+        <div>&nbsp;</div>
+        @Html.SubmitButton("Verzenden", false, false)
+      }
+    }
+  </div>
+</div>

@@ -1,0 +1,24 @@
+﻿@using AdvieskeuzeCode.DataModel
+@model List<Kwaliteitcontrole>
+
+<div class="grid pt1">
+  <div class="grid-cell100">
+    <h1>Branche- en keurmerkregisters</h1>
+    <ul>
+      @foreach (var register in Model.Where(rr => rr.EntityType == (int)EntityType.Locatie)) {
+        <li>@Html.RouteLink(register.Naam, AdvieskeuzeRoutes.OverRegister(register.Slug))</li>
+      }
+    </ul>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h1>Beroeps- en specialistenregisters</h1>
+    <ul>
+      @foreach (var register in Model.Where(rr => rr.EntityType == (int)EntityType.Adviseur)) {
+        <li>@Html.RouteLink(register.Naam, AdvieskeuzeRoutes.OverRegister(register.Slug))</li>
+      }
+    </ul>
+  </div>
+</div>

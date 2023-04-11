@@ -1,0 +1,22 @@
+﻿@using Advieskeuze.Models
+@model ToelichtenModel
+
+<div class="grid pt1">
+  <div class="grid-cell100">
+    <h1>Reactie op je review</h1>
+    @if (Model.Email != null) {
+      <p>@Html.Raw(Model.Email.BodyHtml ?? Model.Email.BodyTekst)</p>
+    }
+    else {
+      <p>Wij hebben je per e-mail gevraagd jouw review nog wat nader toe te lichten. Dat kan via onderstaande invoerveld:</p>
+    }
+    <hr />
+    <h2>Geef je reactie</h2>
+    @using (Html.BeginForm()) {
+      @Html.ValidationSummary(false)
+      @Html.TextAreaFor(m => m.Reactie.Body)
+      @Html.ValidationMessageFor(m => m.Reactie.Body)
+      @Html.SubmitButton("Verzenden")
+    }
+  </div>
+</div>

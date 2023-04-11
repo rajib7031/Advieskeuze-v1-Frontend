@@ -1,0 +1,109 @@
+﻿@using Advieskeuze.Models
+@model HypothecaireLeningModel
+
+<div class="alternating">
+  <div class="altblock">
+    <div class="container">
+      <h1>Bereken je maximale hypotheek</h1>
+      <p>Onderstaande berekening is gebaseerd op de lasten behorende bij een annuïtaire lening met een looptijd van 30 jaar voor personen die jonger zijn dan 65 jaar. Verder wordt er rekening gehouden met de Loan-to-Value, dit betekent dat in 2015 een hypotheek tot maximaal 103% van de waarde van de koopwoning mag gaan.</p>
+    </div>
+  </div>
+
+  <div class="altblock">
+    <div class="container">
+      <div class="container50p fl">
+        @using (Html.BeginForm()) {
+          @Html.Honeypot("FirstName")
+          
+          @Html.VraagLabel("burgerlijkestaat", "Burgelijke staat", true)
+          @Html.DropDownList("burgerlijkestaat", Model.burgerlijkestaatItems)
+
+          @Html.VraagLabelFor(m => m.BrutoInkomen)
+          @Html.TextBoxFor(m => m.BrutoInkomen, new { type = "number", Value = "35000" })
+          @Html.ValidationMessageFor(m => m.BrutoInkomen)
+
+          <div class="dependable-question" data-dependable-on="burgerlijkestaat" data-trigger="2">
+            @Html.VraagLabelFor(m => m.BrutoInkomenPartner)
+            @Html.TextBoxFor(m => m.BrutoInkomenPartner, new { type = "number" })
+            @Html.ValidationMessageFor(m => m.BrutoInkomenPartner)
+          </div>
+
+          @Html.VraagLabelFor(m => m.Rentepercentage)
+          @Html.TextBoxFor(m => m.Rentepercentage, new { type = "number", max = "20", min = "0", step = "0.05", Value = "5" })
+
+          @Html.VraagLabelFor(m => m.Looptijd)
+          @Html.TextBoxFor(m => m.Looptijd, new { type = "number", max = "100", min = "1", Value = "30" })
+
+          @Html.VraagLabelFor(m => m.WaardeWoning)
+          @Html.TextBoxFor(m => m.WaardeWoning, new { type = "number", min = "0", Value = "" })
+        }
+      </div>
+      <div class="container50p fl hidden" id="hypotheek-result">
+        <h2>Maximale hypotheekbedrag</h2>
+        <p>Je kan ongeveer maximaal € <span id="maximum-hypotheek" class="b">100.000</span> lenen.</p>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+
+  <div class="altblock mt2">
+    <div class="container">
+      <div class="fl">
+        @Html.RouteLink("Bekijk alle rekentools", AdvieskeuzeRoutes.BerekenIndex())
+      </div>
+      <div class="buttonBlauw fr container33p">
+        @Html.RouteLink("Zoek een hypotheekadviseur", AdvieskeuzeRoutes.ProductgroepHome(Model.Productgroep))
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  queue.wait(function() {
+    $(function() {
+      $('form').submit(function(e) {
+        var inputTotaalInkomen = parseInt($('#BrutoInkomen').val()) + parseInt($('#BrutoInkomenPartner').val()); if (!(inputTotaalInkomen > 0)) inputTotaalInkomen = 0;
+        var inputRenteVoet = $('#Rentepercentage').val(); if (!(inputRenteVoet > 0)) inputRenteVoet = 0;
+        var inputLooptijd = $('#Looptijd').val(); if (!(inputLooptijd > 0)) inputLooptijd = 0;
+        var inputWaardeWoning = $('#WaardeWoning').val();
+        $.getJSON('@Url.Action("MaximaleHypotheekResultaat")', {
+          totaalInkomen: inputTotaalInkomen,
+          renteVoet: inputRenteVoet,
+          looptijd: inputLooptijd,
+          waardeWoning: inputWaardeWoning
+        }, function(data) {
+          $('#hypotheek-result').show();
+          $('#maximum-hypotheek').html(data[0].toLocaleString("nl-NL"));
+        });
+        e.preventDefault();
+      });
+
+      $('.dependable-question').each(function() {
+        var triggered = $(this).attr('data-trigger') === $('[name="' + $(this).attr('data-dependable-on') + '"]').prop('value');
+        if (triggered) {
+          $(this).show();
+        }
+      });
+
+      $('form').on('change', function() {
+        var dependentObjects = $('[data-dependable-on]');
+        if (dependentObjects.length > 0) {
+          dependentObjects.each(function() {
+            var dependentObjectValue = $('[name="' + $(this).attr('data-dependable-on') + '"]').prop('value');
+            if ($(this).attr('data-trigger') === dependentObjectValue) {
+              $(this).slideDown();
+            } else {
+              $(this).slideUp();
+              $(this).find(':input').val(0);
+            }
+          });
+        }
+        $('form').submit();
+      });
+
+      $('form').submit();
+    });
+  });
+</script>

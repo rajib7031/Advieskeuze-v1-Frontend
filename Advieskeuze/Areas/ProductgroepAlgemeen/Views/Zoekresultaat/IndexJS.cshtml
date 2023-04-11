@@ -1,0 +1,233 @@
+﻿@*
+      Dit is de originele javascript van Index.cshtml. Pas deze aan en minify deze via https://javascript-minifier.com/
+
+  <script type="text/javascript">
+      queue.wait(function () {
+        $(function () {
+
+          $("#aNationwide").click(function () {
+            $("#pagerDiv").hide();
+            $("#aNationwide").hide();
+            $("#aLocal").show();
+            $("#localresultContainer").hide();
+            $("#nationwideresultContainer").show();
+          });
+          $("#aLocal").click(function () {
+            $("#pagerDiv").show();
+            $("#aNationwide").show();
+            $("#aLocal").hide();
+            $("#localresultContainer").show();
+            $("#nationwideresultContainer").hide();
+          });
+
+          // Add the sorting events
+          $("#sortSelect").change(function () {
+            $("#sortValue").html(this.value);
+            getSearchresults();
+          });
+
+          // Add the search event
+          $("#btn_postcodeplaats").click(function () {
+            getSearchresults();
+          });
+          $("#search_postcodeplaats").keyup(function (e) {
+            if (e.keyCode == 13) {
+              getSearchresults();
+            }
+          });
+
+          // Add the filtering events
+          $(".checkboxFilter").change(function () {
+            getFiltervalue();
+          });
+          $(".dropdownFilter").change(function () {
+            getFiltervalue();
+          });
+          $(".textboxFilter").keyup(function (e) {
+            if (e.keyCode == 13) {
+              getFiltervalue();
+            }
+          });
+
+          // Add the pager events
+          $('#pagerDiv').on('click', '.pagerClick', function () {
+            $("#pagerDiv").html("");
+            var page = $(this).text();
+            setPager(page);
+          });
+
+          // Top10 filter reset
+          $('#top10reset').click(function () {
+            $("#filter_tt").val("");
+            getFiltervalue();
+          });
+
+          // Start the searching!
+          getFiltervalue();
+        });
+
+        function setPager(page) {
+          $("#pValue").html(page);
+          getSearchresults();
+        }
+
+        function setPagerLinks(pValue, count, resultsPerPage) {
+          const pager = $("#pagerDiv");
+          pager.html("");
+          var pages = Math.ceil(count / resultsPerPage);
+          if (pages > 0) {
+            const pagerItem = $("<span>Pagina &nbsp;</span>");
+            pagerItem.appendTo(pager);
+          }
+          for (i = 1; i <= pages; i++) {
+            if (i == pValue) {
+              const pagerItem = $("<span class='b'>" + i + "&nbsp;&nbsp;</span>");
+              pagerItem.appendTo(pager);
+            }
+            else {
+              const pagerItem = $("<span class='pagerClick blue-text cursorLink'>" + i + "&nbsp;&nbsp;</span>");
+              pagerItem.appendTo(pager);
+            }
+          }
+        }
+
+        function getFiltervalue() {
+          var filterValue = "";
+          $('.checkboxFilter').each(function () {
+            if (this.checked) {
+              filterValue += this.id.replace("filter_", "") + "_true";
+            }
+            else {
+              filterValue += this.id.replace("filter_", "") + "_false"; /* explicit false to overrule some default=true filters */
+            }
+            filterValue += "-";
+          });
+          $('.dropdownFilter').each(function () {
+            if ($(this).val().length > 0) {
+              filterValue += this.id.replace("filter_", "") + "_" + $(this).val();
+              filterValue += "-";
+            }
+          });
+          $('.textboxFilter').each(function () {
+            if ($(this).val().length > 0) {
+              filterValue += this.id.replace("filter_", "") + "_" + $(this).val();
+              filterValue += "-";
+            }
+          });
+
+          if (filterValue.includes("tt_")) {
+            if (filterValue.includes("tt_gekozen")) {
+              $('#top10title').html('@(Model.Top10GekozenTitle)');
+              $('#top10description').html('@(Model.Top10GekozenDescription)');
+            }
+            else if (filterValue.includes("tt_beoordeeld")) {
+              $('#top10title').html('@(Model.Top10BeoordeeldTitle)');
+              $('#top10description').html('@(Model.Top10BeoordeeldDescription)');
+            }
+            else if (filterValue.includes("tt_bekeken")) {
+              $('#top10title').html('@(Model.Top10BekekenTitle)');
+              $('#top10description').html('@(Model.Top10BekekenDescription)');
+            }
+            $('#top10').show();
+            $('#sortSelect').hide();
+            $('.zoek-header').hide();
+            $("#aNationwide").show();
+            $("#aLocal").hide();
+            $("#localresultContainer").show();
+            $("#nationwideresultContainer").hide();
+          }
+          else {
+            $('#top10').hide();
+            $('#sortSelect').show();
+            $('.zoek-header').show();
+          }
+
+          $.ajax({
+            type: "GET",
+            url: ("@(AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.EncryptFilter()))/" + filterValue.slice(0, -1)),
+            cache: false,
+            success: function (data) {
+              $("#filterValue").html(data);
+              const searchValue = $("#search_postcodeplaats").val();
+              const cValue = $("#cValue").text();
+              $("#filterMobile").attr("href", "/@(Model.Scope.Slug)/zoekresultaat/filteren/?f=" + data + "&geolocation=" + searchValue + "&c=" + cValue);
+              getSearchresults();
+            }
+          });
+        }
+
+        function getSearchresults() {
+          $(".resultLoader").show();
+          $(".resultContainer").hide();
+
+          const searchValue = $("#search_postcodeplaats").val();
+          const cValue = $("#cValue").text();
+          const filterValue = $("#filterValue").text();
+          const sortValue = $("#sortValue").text();
+          const scopeValue = $("#scopeValue").text();
+          const slugAdvies = $("#slugAdvies").text();
+          const pValue = $("#pValue").text();
+          const sValue = $("#sValue").text();
+
+          $.ajax({
+            type: "GET",
+            url: ("@(api)/searchresultv2/search?scope=" + scopeValue + "&sort=" + sortValue + "&search=" + searchValue + "&filter=" + filterValue + "&p=" + pValue + "&c=" + cValue + "&s=" + sValue),
+            success: function (data) {
+              $(".labelCount").html(data.CountLocal);
+              $(".labelSearch").html(data.City);
+              setPagerLinks(pValue, data.CountLocal, data.ResultsPerPage);
+              const localContainer = $("#localresultContainer");
+              const nationwideContainer = $("#nationwideresultContainer");
+              $(localContainer).empty();
+              $(nationwideContainer).empty();
+              $.each(data.Locations, function (key, item) {
+                const containerItem = renderResultItem(slugAdvies, item, filterValue, searchValue, cValue);
+                if (item.Nationwide) {
+                  containerItem.appendTo(nationwideContainer);
+                }
+                else {
+                  containerItem.appendTo(localContainer);
+                }
+              });
+
+              $(".resultLoader").hide();
+              $(".resultContainer").show();
+            }
+          });
+        }
+
+        function renderResultItem(slugAdvies, item, filterValue, searchValue, cValue) {
+          return $("<div class='pt2 relative'> \
+    <div style='float:left;width:120px;'> \
+    " + (item.ThumbnailUrl != '' ? "<a href='/" + slugAdvies + "/" + item.Postcode.toLowerCase() + "/" + item.Slug + "?f=" + filterValue + "&g=" + searchValue + "&c=" + cValue + "'><img src='" + item.ThumbnailUrl + "' style='max-width: 110px; max-height: 110px;' alt='" + item.Name + "' title='" + item.Name + "' /></a>" : '&nbsp;') + "\
+    </div> \
+    <div class='fl w67p'> \
+    <img src='@(cdn)/content/base/images/badges/duimpje.png' alt='Gecheckt door Advieskeuze.nl' title='Gecheckt door Advieskeuze.nl' width='30' " + (item.DataChecked ? 'class=\'fl mr05\'' : 'class=\'hidden\'') + "/> \
+    <h3 class='nomargin fl pb05'> \
+    <a href='/" + slugAdvies + "/" + item.Postcode.toLowerCase() + "/" + item.Slug + "?f=" + filterValue + "&g=" + searchValue + "&c=" + cValue + "' class=\'blue-text\'>" + item.Name + "</a> \
+    </h3> \
+    <div class='clear'></div> \
+    <div class=''> \
+    <div class='fl'> \
+    <div>" + item.Address + " " + item.City + "</div> \
+    <table class='\mb05'\> \
+    <tbody> \
+    " + (item.Distance > 0 ? "<tr><td width='70'>Afstand</td><td>: " + item.Distance + "km</td></tr>" : '') + "\
+    " + (item.Price > 0 ? "<tr><td width='70'>Tarief</td><td>: € " + item.Price + "</td></tr>" : '') + "\
+    <tr><td width='70'>Reviews</td><td>: <span class='darkgray'>" + (item.ReviewsScope == 0 ? 'geen' : item.ReviewsScope) + "</span><span>" + (item.ReviewDateScope != null ? ', meest recente: ' + item.ReviewDateScopeDisplay : '') + "</span></td></tr> \
+    </tbody> \
+    </table> \
+    </div> \
+    </div> \
+    </div> \
+    <div class='fr mb1 mt1'> \
+    <a href='/" + slugAdvies + "/" + item.Postcode.toLowerCase() + "/" + item.Slug + "?f=" + filterValue + "&g=" + searchValue + "&c=" + cValue + "' class=\'base-button button-solid-blue w100p\'>Meer informatie</a> \
+    <br /><a href='/" + slugAdvies + "/" + item.Postcode.toLowerCase() + "/" + item.Slug + "/adviesgesprek?f=" + filterValue + "&g=" + searchValue + "&c=" + cValue + "' class=\'base-button button-hollow-blue w100p mt1\'>Maak afspraak</a> \
+    </div> \
+    <div class='clear'></div> \
+    <div style='background-color: #f6f6f6; height:1rem; left: -1rem; right:-1rem; position: absolute;'></div> \
+    </div>");
+        }
+      });
+  </script>
+*@

@@ -1,0 +1,19 @@
+﻿@using SharedCode.Mvc
+@using AdvieskeuzeCode.Routes
+@model Advieskeuze.Areas.Expert.Models.VraagModel
+
+@Html.VraagLabelFor(m => m.Pagina1.Naam)
+<p>Kies je eigen volledige naam of bijvoorbeeld alleen je voornaam of voorletters.</p>
+@Html.EditorFor(m => m.Pagina1.Naam)
+@Html.ValidationMessageFor(m => m.Pagina1.Naam)
+
+<hr />
+
+@Html.VraagLabelFor(m => m.Pagina1.Emailadres)
+<p>We vragen naar je e-mailadres omdat we na afloop een bevestigingsmail sturen waarmee de vraag definitief kan worden gemaakt. We respecteren je privacy. Bekijk de @Html.RouteLink("privacyvoorwaarden van Advieskeuze.nl", AdvieskeuzeRoutes.Privacy(true), new { @target = "_blank" }).</p>
+@Html.EditorFor(m => m.Pagina1.Emailadres)
+@Html.ValidationMessageFor(m => m.Pagina1.Emailadres)
+
+<p>De vraag wordt na indienen voorgelegd aan een of meerdere adviseurs en zal anoniem zichtbaar worden op het @Html.RouteLink("expertplatform", AdvieskeuzeRoutes.ExpertHome()).</p>
+
+@Html.HiddenFor(m => m.PaginaNr)

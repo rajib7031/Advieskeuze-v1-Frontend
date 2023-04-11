@@ -1,0 +1,9 @@
+﻿@model Tuple<Advieskeuze.Data.Domain.ViewModel.Locaties.KantoorDetailModel, AdvieskeuzeCode.BI.Common.LocatieModel.KantoorContactOpties>
+@if ((!string.IsNullOrEmpty(Model.Item1.Kantoor.BelMeTerugMailadres) || !string.IsNullOrEmpty(Model.Item1.Kantoor.BelMeTerugMobielNummer)) && Model.Item1.Kantoor.HeeftMarketingpakket) {
+  if (Model.Item2.ContactOptieActief) {
+    @Html.RouteLink(Model.Item2.ContactOptieTekst, AdvieskeuzeRoutes.Belmeterug(Model.Item1.KantoorLink, Model.Item1.Productgroep), new { @class = "base-button button-solid-green w100p mb1" })
+  }
+  else if (string.IsNullOrEmpty(Model.Item2.ContactOptieTekst)) {
+    @Html.RouteLink("Bel me terug!", AdvieskeuzeRoutes.Belmeterug(Model.Item1.KantoorLink, Model.Item1.Productgroep), new { @class = "base-button button-solid-green w100p mb1" })
+  }
+}

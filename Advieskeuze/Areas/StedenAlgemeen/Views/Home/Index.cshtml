@@ -1,0 +1,45 @@
+﻿@model Advieskeuze.Areas.StedenAlgemeen.Models.StadModel
+
+<div class="homevisual zoekvisualhome">
+  <div class="grid pt1">
+    <div class="grid-cell50">
+      <h1 class="mb1">CONSUMENT</h1>
+      <h2 class="mb1">In @Model.Plaats.Naam als particulier op zoek naar een...</h2>
+      <a href="/hypotheek/zoekresultaat/in/@(Model.Plaats.Slug)?sortering=2">Hypotheekadviseur</a><br />
+      <a href="/verzekering/zoekresultaat/in/@(Model.Plaats.Slug)?sortering=2">Verzekeringsadviseur</a><br />
+      <a href="/pensioen/zoekresultaat/in/@(Model.Plaats.Slug)?sortering=2">Pensioenadviseur</a><br />
+      <a href="/financieleplanning/zoekresultaat/in/@(Model.Plaats.Slug)?sortering=2">Financieel planner</a><br />
+      <a href="/aankoopmakelaar/zoekresultaat/in/@(Model.Plaats.Slug)?sortering=2">Aankoopmakelaar</a><br />
+      <a href="/verkoopmakelaar/zoekresultaat/in/@(Model.Plaats.Slug)?sortering=2">Verkoopmakelaar</a><br />
+      <a href="/notariaat/zoekresultaat/in/@(Model.Plaats.Slug)?sortering=2">Notaris</a><br />
+      <a href="/bankzaken/zoekresultaat/in/@(Model.Plaats.Slug)?sortering=2">Bankmedewerker</a><br /><br />
+      <div class="fr">
+        @Html.RouteLink("Bekijk alle particuliere onderwerpen...", AdvieskeuzeRoutes.ParticulierHome())
+      </div>
+    </div>
+
+    <div class="grid-cell50">
+      <h1 class="mb1">BEDRIJF</h1>
+      <h2 class="mb1">In @Model.Plaats.Naam zakelijk op zoek naar advies over...</h2>
+      <a href="/arbeidsongeschiktheidsverzekering/zoekresultaat/in/@(Model.Plaats.Slug)?sortering=2">Arbeidsongeschiktheidsverzekeringen</a><br />
+      <a href="/bedrijfsschadeverzekering/zoekresultaat/in/@(Model.Plaats.Slug)?sortering=2">Bedrijfsschadeverzekeringen</a><br />
+      <a href="/pensioenregeling/zoekresultaat/in/@(Model.Plaats.Slug)?sortering=2">Pensioenregelingen</a><br />
+      <a href="/aansprakelijkheidsverzekering/zoekresultaat/in/@(Model.Plaats.Slug)?sortering=2">Aansprakelijkheidsverzekeringen</a><br />
+      <a href="/betalingsrisicoverzekering/zoekresultaat/in/@(Model.Plaats.Slug)?sortering=2">Betalingsrisicoverzekeringen</a><br />
+      <a href="/verzuimverzekering/zoekresultaat/in/@(Model.Plaats.Slug)?sortering=2">Verzuimverzekeringen</a><br />
+      <a href="/rechtsbijstandverzekering/zoekresultaat/in/@(Model.Plaats.Slug)?sortering=2">Rechtsbijstandverzekeringen</a><br />
+      <a href="/zakelijke-financiering/zoekresultaat/in/@(Model.Plaats.Slug)?sortering=2">Zakelijke financieringen</a><br /><br />
+      <div class="fr">
+        @Html.RouteLink("Bekijk alle zakelijke onderwerpen...", AdvieskeuzeRoutes.ZakelijkHome())
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h1 class="mb1">@Model.Plaats.Naam</h1>
+    <h2>Er zijn @Model.AantalDienstverleners bedrijven bij ons bekend in @Model.Plaats.Naam</h2>
+  </div>
+</div>
+

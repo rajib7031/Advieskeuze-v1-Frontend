@@ -1,0 +1,75 @@
+﻿@model Advieskeuze.Areas.Kennisbank.Models.ZoekresultaatModel
+@using AdvieskeuzeCode.Routes
+@using SharedCode.Mvc
+@using AdvieskeuzeCode.Mvc
+@using SharedCode
+
+@{
+  string cdn = GewrapteSettings.CDNUrl;
+}
+
+<div class="expertvisual zoekvisual h18rem">
+  <div>&nbsp;</div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <div class="fl ml05 mb05">
+      <h1>@Html.RouteLink("Kennisbank", AdvieskeuzeRoutes.KennisbankHome()) &gt; Zoekresultaten</h1>
+    </div>
+
+    <div class="fr">
+      @switch (@Model.Zoekresultaat.TotalItems) {
+        case 0:
+          @Html.Raw("Geen resultaten");
+          break;
+        case 1:
+          @Html.Raw("1 resultaat");
+          break;
+        default:
+          @Html.Raw(@Model.Zoekresultaat.TotalItems + " resultaten");
+          break;
+      }
+      gevonden
+      @if (!string.IsNullOrEmpty(Model.ZoekTerm)) {
+        @Html.Raw("bij \"") @Model.ZoekTerm @Html.Raw("\"")
+      }
+    </div>
+  </div>
+</div>
+
+<div class="clear"></div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    @using (Html.BeginForm()) {
+      <label for="ZoekTerm">Zoek op trefwoord</label>
+      @Html.TextBoxFor(m => m.ZoekTerm)
+      @Html.SubmitButton("Zoek")
+    }
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    @foreach (var a in @Model.Zoekresultaat) {
+      <div class="p1">
+        <div class="fr">@Html.Image(a.AfbeeldingID, a.Titel, "", 185, null, true)</div>
+        <h3>
+          <a href="@(Url.RouteUrl(AdvieskeuzeRoutes.Artikel(a.Slug)))">@a.Titel</a>
+        </h3>
+        <p>@a.Samenvatting</p>
+        <p class="em09">Trefwoorden: @Html.Raw(string.Join(", ", a.Trefwoorden.Select(s => @Html.RouteLink(s, AdvieskeuzeRoutes.SleutelwoordZoeken(s)))))</p>
+        <p class="em09">
+          Bron: <a href="@a.Bron" target="_blank">@AdvieskeuzeCode.Util.UrlFormatter.StripToCleanUrl(a.Bron)</a>
+        </p>
+<hr />
+      </div>
+    }
+    @if (Model.Zoekresultaat.TotalPages > 1) {
+      <div class="m1">
+        @Html.Pager(Model.Zoekresultaat, queryStringParam: "sorting.page")
+      </div>
+    }
+  </div>
+</div>

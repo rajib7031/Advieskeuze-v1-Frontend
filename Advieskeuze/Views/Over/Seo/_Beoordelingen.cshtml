@@ -1,0 +1,25 @@
+﻿@using Advieskeuze.Data.Domain.ViewModel.Over
+@model OverRegio
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2 class="pb05">Recente reviews in @Model.Data.RegioNaam</h2>
+  </div>
+</div>
+
+@if (!Model.Data.RecenteKantoorBeoordelingen.Any()) {
+  <div class="grid">
+    <div class="grid-cell100">
+      <div>Er zijn geen reviews gevonden</div>
+    </div>
+  </div>
+}
+else {
+  foreach (var review in Model.Data.RecenteKantoorBeoordelingen) {
+    <div class="grid">
+      <div class="grid-cell100">
+        @Html.Partial("Controls/_ReviewFlat", new Tuple<AdvieskeuzeCode.DataModel.Beoordeling, bool, bool, bool>(review, true, true, true))
+      </div>
+    </div>
+  }
+}

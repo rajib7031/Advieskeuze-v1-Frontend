@@ -1,0 +1,72 @@
+﻿@using SharedCode
+@using AdvieskeuzeCode.DataModel
+@model Scope
+
+@{
+  string cdn = GewrapteSettings.CDNUrl;
+}
+
+<div class="grid pt1">
+  <div class="grid-cell100">
+    <div class="mb1">
+      < @Html.RouteLink("Terug naar het zoekresultaat", AdvieskeuzeRoutes.Zoekresultaat(Model))
+    </div>
+    <h1>Hoe werkt het zoekresultaat?</h1>
+    <p>Advieskeuze.nl helpt je bij het vinden van een gespecialiseerde dienstverlener bij jouw in de buurt. Ruim 16.000 dienstverleners hebben een vermelding op Advieskeuze.nl.</p>
+    <p>Hieronder leggen we uit hoe je met de zoekfuncties (filtering en sortering) de dienstverlener kunt vinden waar jij naar op zoek bent.</p>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2>Zoeken op locatie</h2>
+    <p>De meest gebruikte sortering is op locatie. Je vult dan je plaatsnaam of postcode in en er wordt een zoekresultaat van kantoren getoond. Indien je zoekt op postcode dan worden de kantoren getoond die binnen een straal van X km liggen aangevuld met de overige kantoren in de betreffende plaats. Indien je zoekt op plaatsnaam dan worden alle kantoren in de betreffende plaats getoond. Zoek je bijvoorbeeld in ‘Amsterdam’ of een postcode van Amsterdam binnen een straal van 5 km dan worden alle kantoren binnen Amsterdam getoond, ook als ze buiten de straal van 5 km liggen.</p>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2>Hoe zijn de dienstverleners gesorteerd?</h2>
+    <p>Bovenaan de zoekresultaten zie je standaard de organisatie die de meest recente review van het onderwerp van het zoekresultaat heeft ontvangen. Zoek je op hypotheekadviseur, dan sorteert het resultaat op de meest recente reviewdatum van hypotheekadvies. Zoek je op pensioenadvies, dan geldt de laatste pensioenreview etc. Bovenaan de zoekresultaten kun je een andere sortering selecteren. Er zijn vier sorteringen mogelijk:</p>
+    <ul>
+      <li><b>Laatste review (standaard)</b>: sorteert op de datum van de meest recente review van een dienstverlener (binnen de scope van het zoekresultaat).</li>
+      <li><b>Reviews</b>: sorteert op het aantal reviews voor het gezochte product (bijvoorbeeld hypotheekadvies).</li>
+      <li><b>Afstand</b>: sorteert op absolute afstand tussen de geografische zoekopdracht en de dienstverlener.</li>
+      <li><b>Naam</b>: sorteert op naam (alfabetische volgorde) van de dienstverlener.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2>Hoe werken de filters?</h2>
+    <p>Het zoekresultaat van Advieskeuze.nl toont maximaal 200 bedrijven in de omgeving van jouw zoekopdracht. Je kunt het aantal zoekresultaten terugbrengen door één of meer filters toe te passen. De filters verschillen per productgroep.</p>
+    <p>Bij financiële producten staat de filter ‘Alleen gecontroleerde data’ standaard aangevinkt. Dit betekent dat het zoekresultaat alleen de kantoren toont die hun gegevens op Advieskeuze.nl door ons hebben laten controleren (zie ook ‘Wat betekent het logo ‘Gecheckt door Advieskeuze.nl?’). Als je deze filter uitvinkt zie je alle kantoren in jouw omgeving.</p>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2 class="mb1">Wat betekent het logo ‘Gecheckt door Advieskeuze.nl?</h2>
+    <div class="w60p">
+      Dienstverleners kunnen hun profielpagina op Advieskeuze.nl zelf beheren en vullen met informatie. Kantoren kunnen er vervolgens voor kiezen deze gegevens door ons te laten controleren op betrouwbaarheid en actualiteit. Deze kantoren krijgen het ‘Gecheckt door Advieskeuze.nl’-stempel. Dit stempel verzekert jou ervan dat de informatie die jij ziet op de profielpagina (gegevens en tarieven) klopt. Kantoren betalen €100 per jaar voor deze dienst.
+    </div>
+    <div class="w40p">
+      <img src="@cdn/content/base/images/badges/gechecktstempel.png" class="fr" />
+    </div>
+    <div class="clear"></div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2>Hoe krijgen kantoren een score?</h2>
+    <p>Als je doorklikt op een profielpagina zie je dat sommige dienstverleners een score hebben en anderen niet. Wij berekenen de score als volgt:</p>
+    <ul class="mb1">
+      <li>Een dienstverlener krijgt een score als er tenminste <b>1 goedgekeurde review</b> bekend is in de afgelopen <b>24 maanden</b>.</li>
+      <li>Een oude review telt minder zwaar mee in de score dan een recente review.</li>
+      <li>De score is een gemiddelde van alles goedgekeurde reviews van een dienstverlener (waarbij we rekening houden met de afwaardering door tijd).</li>
+      <li>De 5-puntsschaal van de review vertalen we naar een cijfer van 2 t/m 10.</li>
+    </ul>
+  </div>
+</div>

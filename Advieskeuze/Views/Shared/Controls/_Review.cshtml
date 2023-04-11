@@ -1,0 +1,61 @@
+﻿@using SharedCode
+@model Tuple<AdvieskeuzeCode.DataModel.Beoordeling, bool, bool, bool>
+
+@{
+  string cdn = GewrapteSettings.CDNUrl;
+  var review = Model.Item1;
+  var renderHeader = Model.Item2;
+  var renderDetailslink = Model.Item3;
+  var renderIngekort = Model.Item4;
+}
+@if (renderHeader) {
+  <h2 class="mb1">Review voor @review.BeoordeeldeEntityNaam.TrimLength(50, "...")</h2>
+}
+<div itemprop="review" itemscope="" itemtype="http://schema.org/Review">
+  <meta content="@review.Naam" itemprop="author" />
+  <span content="@review.BeoordeeldeEntityNaam" itemprop="name"></span>
+  <span content="@review.ZichtbaarVanafDisplayVS" itemprop="datePublished"></span>
+  <div class="fr i">
+    <div class="fl mr05">
+      @review.Naam | @review.Thema
+    </div>
+    @if (review.IsVerduurzaming.HasValue && review.IsVerduurzaming.Value) {
+      <div class="fl tooltip mr05">
+        <span><img src="@(cdn)/content/advieskeuze/images/leaf.png" title="Info" alt="Info"></span>
+        <span>De reviewgever heeft aangegeven dat verduurzaming is besproken door de medewerker van het advieskantoor.</span>
+      </div>
+    }
+    <div class="fl">
+      @review.ZichtbaarVanaf.Value.ToString("dd-MM-yyyy") &nbsp;
+      @if (renderDetailslink) {
+        @Html.RouteLink("details", AdvieskeuzeRoutes.ShowBeoordeling(review))
+      }
+    </div>
+  </div>
+  <div class="fl" itemprop="reviewRating" itemscope="" itemtype="http://schema.org/Rating">
+    <meta content="@review.Waardering.Value" itemprop="ratingValue" />
+    <meta content="1" itemprop="worstRating" />
+    <meta content="5" itemprop="bestRating" />
+    <img src="@cdn/content/flat/images/star@(review.Waardering.Value > 0 ? "1" : "0").png" alt="@(review.Waardering.Value == 1 ? "1 ster" : review.Waardering.Value + " sterren")" title="@(review.Waardering.Value == 1 ? "1 ster" : review.Waardering.Value + " sterren")" />
+    <img src="@cdn/content/flat/images/star@(review.Waardering.Value > 1 ? "1" : "0").png" alt="@(review.Waardering.Value == 1 ? "1 ster" : review.Waardering.Value + " sterren")" title="@(review.Waardering.Value == 1 ? "1 ster" : review.Waardering.Value + " sterren")" />
+    <img src="@cdn/content/flat/images/star@(review.Waardering.Value > 2 ? "1" : "0").png" alt="@(review.Waardering.Value == 1 ? "1 ster" : review.Waardering.Value + " sterren")" title="@(review.Waardering.Value == 1 ? "1 ster" : review.Waardering.Value + " sterren")" />
+    <img src="@cdn/content/flat/images/star@(review.Waardering.Value > 3 ? "1" : "0").png" alt="@(review.Waardering.Value == 1 ? "1 ster" : review.Waardering.Value + " sterren")" title="@(review.Waardering.Value == 1 ? "1 ster" : review.Waardering.Value + " sterren")" />
+    <img src="@cdn/content/flat/images/star@(review.Waardering.Value > 4 ? "1" : "0").png" alt="@(review.Waardering.Value == 1 ? "1 ster" : review.Waardering.Value + " sterren")" title="@(review.Waardering.Value == 1 ? "1 ster" : review.Waardering.Value + " sterren")" />
+  </div>
+  <div class="clear"></div>
+  <div class="word-wrap" itemprop="reviewBody">
+    @Html.ShowMultilineText(renderIngekort ? review.Toelichting.TrimLength(300, "...") : review.Toelichting)
+  </div>
+  @if (review.HeeftReactie && !renderIngekort) {
+    <div class="mt1 i">Reactie van @review.GegevenReactie.Afzender:</div>
+    <div>
+      @Html.ShowMultilineText(review.GegevenReactie.Tekst)
+    </div>
+  }
+  @if (review.Status == AdvieskeuzeCode.DataModel.BeoordelingStatus.KlantBevestigd) {
+    <div class="mt1 i">Let op: deze review is nog niet door Advieskeuze.nl op echtheid gecontroleerd.</div>
+  }
+  else if (review.Status == AdvieskeuzeCode.DataModel.BeoordelingStatus.InOnderzoek) {
+    <div class="mt1 i">Let op: deze review wordt onderzocht door Advieskeuze.nl.</div>
+  }
+</div>

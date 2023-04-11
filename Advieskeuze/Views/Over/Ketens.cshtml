@@ -1,0 +1,14 @@
+﻿@using AdvieskeuzeCode.DataModel
+@model List<Company>
+
+<div class="grid mt1">
+  <div class="grid-cell100">
+    <h1>Ketens</h1>
+    <p>Dit is een overzicht van alle ketens.</p>
+    <ul>
+      @foreach (var company in Model) {
+        <li>@Html.RouteLink(company.Name, AdvieskeuzeRoutes.OverKeten(company.Slug))</li>
+      }
+    </ul>
+  </div>
+</div>

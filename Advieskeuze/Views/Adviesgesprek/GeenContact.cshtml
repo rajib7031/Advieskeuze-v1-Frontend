@@ -1,0 +1,10 @@
+﻿@using AdvieskeuzeCode.DataModel
+@model Locatie
+
+<div class="grid mt1">
+  <div class="grid-cell100">
+    <h1>Bedankt</h1>
+    <p>Vervelend om te horen dat @Model.Naam geen gehoor heeft gegeven aan jouw contactverzoek.<br />Als je wil, kan je via onze homepage een andere dienstverlener vinden.</p>
+    <p>@Html.RouteLink("Zoek een dienstverlener", AdvieskeuzeRoutes.Home(), new { @class = "base-button button-solid-green" })</p>
+  </div>
+</div>

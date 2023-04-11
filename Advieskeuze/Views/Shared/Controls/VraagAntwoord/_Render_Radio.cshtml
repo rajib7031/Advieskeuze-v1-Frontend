@@ -1,0 +1,67 @@
+﻿@using AdvieskeuzeCode.BI.Advieskeuze.VraagAntwoordModel
+@using Advieskeuze.Data.VraagAntwoord
+@model VraagAntwoordEnginePagina.Vraag
+@{
+  var renderHelper = new VraagRenderHelper<VraagAntwoordEnginePagina.Vraag>(Model, ViewData);
+  var eersteKeerOpPagina = !Model.VraagEerderGetoond;
+  var voorgaandeVraagZelfdeType = Model.RenderType == Model.VoorgaandeVraagRenderType && Model.AntwoordLijst == Model.VoorgaandeVraagAntwoordLijst;
+}
+@if (Model.MogelijkeAntwoorden == null || !Model.MogelijkeAntwoorden.Any()) {
+  <p>@Model.Label<br /><b>ERROR:</b> Lijst mist of is leeg, required bij Radio</p>
+}
+else if (!renderHelper.ListInt) {
+  <p><b>ERROR:</b> kan lijsttype niet bepalen of lijsttype niet ondersteund bij Radio</p>
+} else if (renderHelper.IsScore || renderHelper.IsEensOneens) {
+  if (Model.InContainer) {
+    <div class="waarderingVraag@(renderHelper.IsEensOneens ? "Agree" : "")">
+      <div class="vraag">
+        <label>@Model.Label</label>
+      </div>
+    </div>
+    <div class="waarderingAntwoord@(renderHelper.IsEensOneens ? "Agree" : "")">
+      <div class="score-vraag">
+        @foreach (var star in Model.MogelijkeAntwoorden) {
+          <input id="@renderHelper.GetName()@star.Value" type="radio" name="@renderHelper.GetName()" value="@star.Value"><label for="@renderHelper.GetName()@star.Value">@star.Value</label>
+        }
+        <span class="field-validation-error hidden" id="Error_@(renderHelper.GetName())">Dit veld is verplicht.</span>
+      </div>
+        @if (!Model.AntwoordVerplicht) {
+          @Html.CheckBox("neutraal", !(renderHelper.HeeftAntwoord || eersteKeerOpPagina), "Geen mening", new { @class = "ml1" })
+          <span class="field-validation-error hidden" id="Error_@(renderHelper.GetName())">Dit veld is verplicht.</span>
+          <div class="clear"></div>
+        }
+        <div class="clear"></div>
+      </div>
+    <div class="clear"></div>
+  } else {
+    var antwoordRaw = Model.GetAntwoordRaw();
+    <div class="vraag">
+      <label>@Model.Label</label>
+    </div>
+    <div class="fl mr1">@Model.MogelijkeAntwoorden.Min(a => Int32.Parse(a.Value)) = @renderHelper.RadioLabelLinks, @Model.MogelijkeAntwoorden.Max(a => Int32.Parse(a.Value)) = @renderHelper.RadioLabelRechts</div>
+    <div class="clear"></div>
+    <div class="waarderingAntwoord@(renderHelper.IsEensOneens ? "Agree" : "")">
+      <div class="score-vraag">
+        @foreach (var star in Model.MogelijkeAntwoorden) {
+          var required = Model.Validatie.FirstOrDefault(v => v is SharedCode.IValidationFragmentRequired) as SharedCode.IValidationFragmentRequired;
+          if (required != null && required.Required) {
+            <input type="radio" @(antwoordRaw != null && star.Value == antwoordRaw.ToString() ? "checked" : "") id="@renderHelper.GetName()@star.Value" data-val="true" data-val-number="Dit veld moet een getal bevatten." data-val-required="Dit veld is verplicht." name="@renderHelper.GetName()" value="@star.Value"><label for="@renderHelper.GetName()@star.Value">@star.Value</label>
+          }
+          else {
+            <input type="radio" name="@renderHelper.GetName()" value="@star.Value"><label for="@renderHelper.GetName()@star.Value">@star.Value</label>
+          }
+        }
+        <span class="field-validation-error hidden" id="Error_@(renderHelper.GetName())">Dit veld is verplicht.</span>
+        <div class="clear"></div>
+      </div>
+    </div>
+  }
+}
+else {
+  <div class="vraag">
+    <label>@Model.Label</label>
+  </div>
+  <span class="fl block">@Html.RadiobuttonListFor(m => m.ValueInt, Model.MogelijkeAntwoorden, true, true, null, Model.Validatie)</span>
+}
+<div class="clear"></div>
+@Html.ValidationMessage(Model.GetAntwoordFieldName())

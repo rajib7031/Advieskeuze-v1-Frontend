@@ -1,0 +1,45 @@
+﻿@using Advieskeuze.Data.Domain.ViewModel.Banner
+@using SharedCode
+@model BannerModelLocatie
+
+@{
+  Layout = "~/Views/Shared/_Banner.cshtml";
+  var cdn = GewrapteSettings.CDNUrl;
+  var kantoorPagina = AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.ShowLocatie(Model.KantoorLink));
+  var advieskeuzeimg = cdn + "/content/base/images/advieskeuze_lr.png";
+  var breedte = Model.BannerSettings.PropertyContainer.CustomBreedte > 0 ? Model.BannerSettings.PropertyContainer.CustomBreedte : Model.BannerSettings.PropertyContainer.HuidigeAfmeting.Width;
+  var margin = (int)(0.09 * breedte);
+
+  if (Model.BannerSettings.VoorbeeldModus) {
+    kantoorPagina = AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.Home());
+  }
+}
+
+<div style="width: @(breedte)px; background-color: white;">
+  <div class="center relative">
+    <a href="@kantoorPagina" target="_blank">
+      <img src="@advieskeuzeimg" alt="Advieskeuze.nl" title="Advieskeuze.nl" width="@(breedte - margin * 2)"/>
+    </a>
+    @if (Model.BannerSettings.VoorbeeldModus) {
+  <div id="banner-no-access">Let op! Ongeldig</div>
+    }
+    @if (!Model.Score.HeeftScore) {
+      <div>Geen score beschikbaar</div>
+    } else {
+      <div class="cursorLink mt05" id="goToLink">
+        <div class="scoreLarge"><span>@Model.Score.WaardeDisplay</span></div>
+        <div class="center"><div class="inlineBlock">@Html.ScoreDetailsBar(Model.Score.Waarde)</div></div>
+      </div>
+      <span>Deze waardering is gebaseerd<br />op @Model.Score.AantalTotaal beoordelingen.</span>
+      <div class="smallfont mt1">
+        @foreach (var score in Model.Score.AantalPerProductgroep) {
+          <div>@score.Productgroep : @score.Aantal</div>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+<script>
+  document.getElementById("goToLink").onclick = function () { window.open('@kantoorPagina', '_blank'); };
+</script>

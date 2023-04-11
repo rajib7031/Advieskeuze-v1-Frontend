@@ -1,0 +1,4 @@
+﻿@model AdvieskeuzeCode.BI.Common.LocatieModel.TariefBasis
+<div class="w60p">@Html.RouteLink(Model.Omschrijving, AdvieskeuzeRoutes.Tarieven(Model.LinkPostcode, Model.LinkSlug, Model.Slug)) @(string.IsNullOrEmpty(Model.TypeOmschrijving) ? "" : "(" + Model.TypeOmschrijving.ToLower() + ")")</div>
+<div class="w40p"><span class="hide-mobile">:</span> @(Model.Tarief.HasValue ? Model.Tarief.Value.ToString("c").Replace(",00", ",-") : (string.IsNullOrEmpty(Model.TypeOmschrijving) ? "n.v.t." : "geen"))</div>
+<div class="clear"></div>

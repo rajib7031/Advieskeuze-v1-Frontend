@@ -1,0 +1,8 @@
+﻿User-agent: *
+Disallow:
+Allow: /
+Sitemap: https://www.advieskeuze.nl/sitemap
+Sitemap: https://www.advieskeuze.nl/sitemap/beoordelingen
+Sitemap: https://www.advieskeuze.nl/sitemap/blogs
+Sitemap: https://www.advieskeuze.nl/sitemap/kantoren
+Sitemap: https://www.advieskeuze.nl/sitemap/kennisbank

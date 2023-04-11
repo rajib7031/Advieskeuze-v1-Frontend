@@ -1,0 +1,16 @@
+﻿@using SharedCode
+@model Tuple<Advieskeuze.Data.Domain.ViewModel.Locaties.KantoorDetailModel, AdvieskeuzeCode.BI.Common.LocatieModel.KantoorContactOpties>
+@if (!string.IsNullOrEmpty(Model.Item1.Kantoor.WhatsAppNummer) && Model.Item1.Kantoor.HeeftMarketingpakket) {
+  if (Model.Item2.ContactOptieActief) {
+    string cdn = GewrapteSettings.CDNUrl;
+    <div class="clear"></div>
+    <div class="fl mr05"><a href="@Model.Item1.Kantoor.WhatsAppNummerLink" target="_blank"><img src="@cdn/content/base/images/whatsapp.png" alt="WhatsApp @(Model.Item1.Kantoor.Naam)" width="48" /></a></div>
+    if (Model.Item2.ContactOptieTekst.Replace("-", "").Replace(" ", "") == Model.Item1.Kantoor.WhatsAppNummer) {
+      <div class="w80p mt05"><b><a href="@Model.Item1.Kantoor.WhatsAppNummerLink" target="_blank">@Model.Item1.Kantoor.WhatsAppNummer</a></b></div>
+    }
+    else {
+      <div class="w80p">@Model.Item2.ContactOptieTekst <b><a href="@Model.Item1.Kantoor.WhatsAppNummerLink" target="_blank">@Model.Item1.Kantoor.WhatsAppNummer</a></b></div>
+    }
+    <div class="clear"></div>
+  }
+}

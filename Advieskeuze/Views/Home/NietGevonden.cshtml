@@ -1,0 +1,21 @@
+﻿<div class="grid pt1">
+  <div class="grid-cell100">
+    <h1>Niet gevonden</h1>
+    <p>
+      De dienstverlener waar je naar op zoek bent, kan niet worden gevonden op Advieskeuze.nl.<br />
+      Ga naar <b>@Html.RouteLink("de homepage", AdvieskeuzeRoutes.Home())</b> of klik op een van de zoekbuttons.
+    </p>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell33 center">
+    @Html.RouteLink("Homepage", AdvieskeuzeRoutes.Home(), new { @class = "base-button button-solid-green" })
+  </div>
+  <div class="grid-cell33 center">
+    @Html.RouteLink("Zoek als particulier", AdvieskeuzeRoutes.ParticulierHome(), new { @class = "base-button button-solid-green" })
+  </div>
+  <div class="grid-cell33 center">
+    @Html.RouteLink("Zoek als bedrijf", AdvieskeuzeRoutes.ZakelijkHome(), new { @class = "base-button button-solid-green" })
+  </div>
+</div>

@@ -1,0 +1,34 @@
+﻿@using AdvieskeuzeCode.DataModel
+@model Locatie
+
+<div class="white-bg border-bottom">
+  <div class="grid">
+    <div class="grid-cell100 nopadding">
+      <div class="fl">
+        <span class="breadcrumbs">
+          @Html.RouteLink("Home", AdvieskeuzeRoutes.Home()) <span class="light-text"> &nbsp;>&nbsp; </span>
+        </span>
+        @if (AdvieskeuzeViewContext.CurrentProductgroep != null) {
+          <span class="breadcrumbs">
+            @Html.RouteLink(AdvieskeuzeViewContext.CurrentProductgroep.Naam, AdvieskeuzeRoutes.ProductgroepHome(AdvieskeuzeViewContext.CurrentProductgroep)) <span class="light-text"> &nbsp;>&nbsp; </span>
+          </span>
+          @Html.RouteLink("Zoekresultaat", AdvieskeuzeRoutes.Zoekresultaat(AdvieskeuzeViewContext.CurrentProductgroep)) <span class="light-text"> &nbsp;>&nbsp; </span>
+        }
+        @Html.RouteLink(Model.Naam, AdvieskeuzeRoutes.ShowLocatie(Model))
+        </div>
+      <div class="fr">
+        <span class="light-text"> &lt;&nbsp; </span>
+        @Html.RouteLink("Terug", AdvieskeuzeRoutes.ShowLocatie(Model))
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
+
+<div class="grid pt1">
+  <div class="grid-cell100">
+    <h1>Bedankt voor het invullen!</h1>
+    <p>Wij hebben je aanvraag doorgestuurd naar @Model.Naam met het verzoek om je z.s.m. terug te bellen.</p>
+    @Html.RouteLink("Ga terug", AdvieskeuzeRoutes.ShowLocatie(Model), new { @class = "base-button button-solid-blue" })
+  </div>
+</div>

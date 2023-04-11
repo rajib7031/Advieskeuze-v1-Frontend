@@ -1,0 +1,164 @@
+﻿@using AdvieskeuzeCode.BI.Advieskeuze.VraagAntwoordModel
+@using Advieskeuze.Data.VraagAntwoord
+@using SharedCode
+@model VraagAntwoordEnginePagina.Vraag
+
+@{
+  var renderHelper = new VraagRenderHelper<VraagAntwoordEnginePagina.Vraag>(Model, ViewData);
+  var controller = ViewContext.Controller as Advieskeuze.Data.BaseController;
+}
+
+@if (Model.InContainer) {
+  <div class="w33p">@Model.Label:</div>
+  <div class="w67p">
+    @Html.TextBoxFor(m => m.ValueString, Model.Validatie)
+  </div>
+  if (Model.Toelichting.IsNotNullOrEmpty()) {
+    @Html.ParseBBToHtml(Model.Toelichting, AdvieskeuzeCode.Util.BBFormatter.Universeel)
+  }
+  <div class="fr">@Html.ValidationMessage(Model.GetAntwoordFieldName())</div>
+  <div class="clear"></div>
+  <div class="mt1"></div>
+}
+else {
+  <div class="vraag">
+    <label>@Model.Label</label>
+  </div>
+  if (Model.Toelichting.IsNotNullOrEmpty()) {
+    @Html.ParseBBToHtml(Model.Toelichting, AdvieskeuzeCode.Util.BBFormatter.Universeel)
+  }
+  @Html.TextBoxFor(m => m.ValueString, Model.Validatie)
+  @Html.ValidationMessage(Model.GetAntwoordFieldName())
+}
+
+@if (Model.EntityType.HasValue && controller != null) {
+  if (Model.EntityType.Value == AdvieskeuzeCode.DataModel.EntityType.Plaats) {
+<script>
+  var plaatsHelper;
+  queue.wait(function() {
+    $(function() {
+      plaatsHelper = '@(Model.ValueString)';
+      $("#@(renderHelper.GetID())").autocomplete({
+        source: "@Url.RouteUrl(AdvieskeuzeRoutes.PlaatsForAutoCompletion())",
+        select: function(e, ui) {
+          plaatsHelper = ui.item.value;
+          $(this).trigger("change");
+        }
+      });
+
+      $("#@(renderHelper.GetID())").change(function() {
+        var plaatsnaam = $(this).val();
+        if (plaatsnaam.length !== 0) {
+          plaatsHelper = plaatsnaam;
+        }
+      });
+    });
+  });
+</script>
+  }
+  else if (Model.EntityType.Value == AdvieskeuzeCode.DataModel.EntityType.Locatie) {
+<script>
+  var locatiehelper;
+  var selectiecompanyid = '@(renderHelper.CompanyId)';
+  queue.wait(function () {
+    $(function () {
+      @if (Model.IsAfhankelijk && Model.AfhankelijkVraag.Type == VraagAntwoordEnginePagina.VraagVerwijzingType.Invullen) {
+        @:locatiehelper = $("#@(renderHelper.GetVerwijzingID())").val();
+      }
+      $("#@(renderHelper.GetID())").change(function () {
+        @if (Model.IsAfhankelijk && Model.AfhankelijkVraag.Type == VraagAntwoordEnginePagina.VraagVerwijzingType.Invullen) {
+          <text>
+          if ($("#@(renderHelper.GetID())").val().length == 0) {
+            $("#@(renderHelper.GetVerwijzingID())").val("");
+          }
+          </text>
+        }
+      });
+      $("#@(renderHelper.GetID())").autocomplete({
+        source: function (request, response) {
+          $.ajax({
+            url: "@Url.RouteUrl(AdvieskeuzeRoutes.LocatiesForAutoCompletion(renderHelper.EngineProductgroep))",
+            dataType: "json",
+            data: {
+              term: request.term,
+              plaats: ((typeof plaatsHelper === 'undefined') ? null : plaatsHelper),
+              companyid: ((typeof selectiecompanyid === 'undefined') ? null : selectiecompanyid)
+            },
+            success: function (data) {
+              response(data);
+            }
+          });
+        },
+        focus: function (event, ui) {
+          $("#@(renderHelper.GetID())").val($("<div/>").html(ui.item.label).text());
+          @if (Model.IsAfhankelijk && Model.AfhankelijkVraag.Type == VraagAntwoordEnginePagina.VraagVerwijzingType.Invullen) {
+            <text>$("#@(renderHelper.GetVerwijzingID())").val(ui.item.value);</text>
+          }
+          $(this).trigger("change");
+          return false;
+        },
+        select: function (e, ui) {
+          $("#@(renderHelper.GetID())").val($("<div/>").html(ui.item.label).text());
+          @if (Model.IsAfhankelijk && Model.AfhankelijkVraag.Type == VraagAntwoordEnginePagina.VraagVerwijzingType.Invullen) {
+            <text>$("#@(renderHelper.GetVerwijzingID())").val(ui.item.value);</text>
+          }
+          locatiehelper = ui.item.value;
+          $(this).trigger("change");
+          return false;
+        }
+      }).data("ui-autocomplete")._renderItem = function (ul, item) {
+        return $("<li></li>")
+          .data("item.autocomplete", item)
+          .append(item.label + " &nbsp;&nbsp;&nbsp; (" + item.desc + ")")
+          .appendTo(ul);
+      };
+    });
+  });
+</script>
+  }
+  else if (Model.EntityType.Value == AdvieskeuzeCode.DataModel.EntityType.Adviseur) {
+<script>
+  queue.wait(function () {
+    $(function () {
+      $("#@(renderHelper.GetID())").autocomplete({
+        source: function (request, response) {
+          $.ajax({
+            url: "@Url.RouteUrl(AdvieskeuzeRoutes.AdviseursForAutoCompletion(renderHelper.EngineProductgroep))",
+            dataType: "json",
+            data: {
+              term: request.term,
+              plaats: ((typeof plaatsHelper === 'undefined') ? null : plaatsHelper),
+              locatieID: ((typeof locatiehelper === 'undefined') ? null : locatiehelper)
+            },
+            success: function (data) {
+              response(data);
+            }
+          });
+        },
+        focus: function (event, ui) {
+          $("#@(renderHelper.GetID())").val(ui.item.label);
+          @if (Model.IsAfhankelijk && Model.AfhankelijkVraag.Type == VraagAntwoordEnginePagina.VraagVerwijzingType.Invullen) {
+            <text>$("#@(renderHelper.GetVerwijzingID())").val(ui.item.value);</text>
+          }
+          $(this).trigger("change");
+          return false;
+        },
+        select: function (e, ui) {
+          $("#@(renderHelper.GetID())").val(ui.item.label);
+          @if (Model.IsAfhankelijk && Model.AfhankelijkVraag.Type == VraagAntwoordEnginePagina.VraagVerwijzingType.Invullen) {
+            <text>$("#@(renderHelper.GetVerwijzingID())").val(ui.item.value);</text>
+          }
+          $(this).trigger("change");
+          return false;
+        }
+      }).data("ui-autocomplete")._renderItem = function (ul, item) {
+        return $("<li></li>")
+          .data("item.autocomplete", item)
+          .append(item.label)
+          .appendTo(ul);
+      };
+    });
+  });
+</script>
+  }
+}

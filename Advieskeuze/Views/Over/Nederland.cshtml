@@ -1,0 +1,49 @@
+﻿@using Advieskeuze.Data.Domain.ViewModel.Over
+@model OverRegio
+
+<div class="grid pt1">
+  <div class="grid-cell100">
+    <h1 class="pb05">
+      @if ((int)Model.Data.Type > (int)OverRegio.RegioType.Landelijk) {
+        @Html.RouteLink("Nederland", AdvieskeuzeRoutes.OverRegio(Model.Productgroep, null, null, null)) <text>&gt;</text>
+      }
+      else {
+        <text>Nederland</text>
+      }
+      @if ((int)Model.Data.Type > (int)OverRegio.RegioType.Provincie) {
+        @Html.RouteLink(Model.Data.ProvincieNaam, AdvieskeuzeRoutes.OverRegio(Model.Productgroep, Model.Data.ProvincieSlug, null, null)) <text>&gt;</text>
+      }
+      else {
+        @Model.Data.ProvincieNaam
+      }
+      @if ((int)Model.Data.Type > (int)OverRegio.RegioType.Gemeente) {
+        @Html.RouteLink(Model.Data.GemeenteNaam, AdvieskeuzeRoutes.OverRegio(Model.Productgroep, Model.Data.ProvincieSlug, Model.Data.GemeenteSlug, null))
+        <text>&gt;</text> @Model.Data.PlaatsNaam
+      }
+      else {
+        @Model.Data.GemeenteNaam
+      }
+    </h1>
+  </div>
+</div>
+
+<div class="grid">
+  @Html.Partial("Seo/_Info", Model)
+</div>
+
+@Html.Partial("Seo/_Beoordelingen", Model)
+
+@if (Model.Data.Type != OverRegio.RegioType.Plaats) {
+  <div class="grid">
+    <div class="grid-cell100">
+      @Html.Partial("Seo/_Regio", Model)
+    </div>
+  </div>
+}
+else {
+  <div class="grid">
+    <div class="grid-cell100">
+      @Html.Partial("Seo/_Regio", Model)
+    </div>
+  </div>
+}

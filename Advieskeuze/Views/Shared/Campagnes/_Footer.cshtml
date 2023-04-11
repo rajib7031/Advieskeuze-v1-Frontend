@@ -1,0 +1,4 @@
+﻿@model string
+@if (CampagneActiviteitContext.Current.GetActieveBranding(AdvieskeuzeCode.DataModel.CampagneActiviteitBranding.Style_PoweredBy) && Model != "zoekresultaat") {
+  @Html.Partial("controls/_Poweredby_large", true)
+}

@@ -1,0 +1,48 @@
+﻿@using AdvieskeuzeCode.BI.Advieskeuze.VraagAntwoordModel
+@using Advieskeuze.Data.VraagAntwoord
+@using SharedCode
+@model VraagAntwoordEnginePagina.Vraag
+
+@{
+  var renderHelper = new VraagRenderHelper<VraagAntwoordEnginePagina.Vraag>(Model, ViewData);
+  var datumValidatie = Model.Validatie.FirstOrDefault(v => v is IValidationFragmentDate) as IValidationFragmentDate;
+}
+
+<style>
+  .ui-datepicker-calendar { display: none; }
+  .ui-datepicker-month { width: 160px !important; }
+  .ui-datepicker-year { width: 160px !important; }
+</style>
+
+<div class="vraag">
+  <label>@Model.Label</label>
+</div>
+@if (@Model.Toelichting.IsNotNullOrEmpty()) {
+  @Html.ParseBBToHtml(Model.Toelichting, AdvieskeuzeCode.Util.BBFormatter.Universeel)
+}
+
+@Html.DatepickerFor(m => m.ValueDatetime, Model.Validatie)
+@Html.ValidationMessage(Model.GetAntwoordFieldName())
+
+<script>
+  queue.wait(function() {
+    $(function() {
+      $(function() {
+        $('.datePicker').datepicker( {
+          changeMonth: true,
+          changeYear: true,
+          changeDay: false,
+          onClose: function(dateText, inst) {
+            var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            $(this).datepicker('setDate', new Date(year, month, 1));
+          },
+          @if (datumValidatie != null) {
+            @:minDate: @((int)(datumValidatie.FromDate - DateTime.Now.Local()).TotalDays),
+            @:maxDate: "@((int)(datumValidatie.ToDate - DateTime.Now.Local()).TotalDays)d"
+          }
+        });
+      });
+    });
+  });
+</script>

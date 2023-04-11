@@ -1,0 +1,70 @@
+﻿@using AdvieskeuzeCode.BI.Advieskeuze.VraagAntwoordModel
+@using Advieskeuze.Data.VraagAntwoord
+@using SharedCode
+@model VraagAntwoordEnginePagina.Vraag
+
+@{
+  var renderHelper = new VraagRenderHelper<VraagAntwoordEnginePagina.Vraag>(Model, ViewData);
+  var val = (Model.Validatie.FirstOrDefault(v => v is IValidationFragmentRequired) as IValidationFragmentRequired);
+  var verplicht = val != null ? val.Required : false;
+}
+
+@if (Model.MogelijkeAntwoorden == null || !Model.MogelijkeAntwoorden.Any()) {
+  <p>@Model.Label<br /><b>ERROR:</b> Lijst mist of is leeg, required bij Checkbox</p>
+} else {
+  <div class="@(verplicht ? "required-checkbox-group" : null)">
+    <div class="vraag">
+      <label>@Model.Label</label>
+    </div>
+    @if (Model.Toelichting.IsNotNullOrEmpty()) {
+    @Html.ParseBBToHtml(Model.Toelichting, AdvieskeuzeCode.Util.BBFormatter.Universeel)
+    }
+
+    @if (renderHelper.ListMulti) {
+    @Html.CheckBoxMultiFor(m => m.ValueMultiInt, Model.MogelijkeAntwoorden, "- geen -")
+    }
+    else if (renderHelper.ListInt) {
+    @Html.CheckBoxGroupFor(m => m.ValueInt, Model.MogelijkeAntwoorden, true, true)
+    }
+    else if (renderHelper.ListString) {
+    @Html.CheckBoxGroupFor(m => m.ValueString, Model.MogelijkeAntwoorden, true, true)
+    }
+    else if (renderHelper.ListGuid) {
+    @Html.CheckBoxGroupFor(m => m.ValueGuid, Model.MogelijkeAntwoorden, true, true)
+    }
+    else {
+    <p><b>ERROR:</b> kan lijsttype niet bepalen of lijsttype niet ondersteund bij Checkbox</p>
+    }
+    <span class="field-validation-error hidden">Selecteer minimaal één van de opties</span>
+  </div>
+}
+@Html.ValidationMessage(Model.GetAntwoordFieldName())
+
+@if (verplicht) {
+  <script>
+    queue.wait(function() {
+      $(function() {
+        $("form").submit(function(e) {
+          $('.required-checkbox-group').each(function() {
+            var errorElement = $(this).find('.field-validation-error');
+            if ($(this).find(':checkbox:checked').length === 0) {
+              errorElement.show();
+              e.preventDefault();
+            } else {
+              errorElement.hide();
+            }
+          });
+        });
+
+        $(".required-checkbox-group").change(function(e) {
+          var errorElement = $(this).find('.field-validation-error');
+          if ($(this).find(':checkbox:checked').length === 0) {
+            errorElement.show();
+          } else {
+            errorElement.hide();
+          }
+        });
+      });
+    });
+  </script>
+}

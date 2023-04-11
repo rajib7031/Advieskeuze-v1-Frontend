@@ -1,0 +1,10 @@
+﻿@using AdvieskeuzeCode.BI.Advieskeuze.FaqModel
+@model FaqIndex.FaqVraagIndividueel
+
+<div class="grid pt1">
+  <div class="grid-cell100">
+    <h1>@Model.Titel</h1>
+    <p>@Html.ShowMultilineText(Model.Tekst)</p>
+    <p>@Html.RouteLink("< Terug naar het overzicht", AdvieskeuzeRoutes.FaqOverzicht())</p>
+  </div>
+</div>

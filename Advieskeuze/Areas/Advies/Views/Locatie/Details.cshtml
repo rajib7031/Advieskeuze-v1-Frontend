@@ -1,0 +1,590 @@
+﻿@using Advieskeuze.Data.Domain.ViewModel.Locaties
+@using SharedCode
+@model KantoorDetailModel
+
+@{
+  string cdn = GewrapteSettings.CDNUrl;
+  var controller = ViewContext.Controller as Advieskeuze.Data.BaseController;
+  var caHelper = controller.Environment.CampagneActiviteit;
+  Guid? caID = caHelper.Data != null ? caHelper.Data.ID : new Nullable<Guid>();
+  var heeftBeeldmateriaal = Model.Kantoor.AfbeeldingLogoID.HasValue || (Model.Fotos != null && Model.Fotos.Any());
+  var heeftGechecktstempelOFCampagne = Model.Kantoor.IsDataGecontroleerd;
+  if (caID.HasValue) {
+    heeftGechecktstempelOFCampagne = true; // We tonen per jul2021 contactgegevens alleen MET stempel, vooralsnog even in combinatie met GEEN campagne.
+  }
+}
+
+<div class="white-bg border-bottom">
+  <div class="grid">
+    <div class="grid-cell100 nopadding">
+      <div class="fl">
+        @if (Model.Productgroep != null) {
+          <span class="breadcrumbs">
+            @Html.RouteLink("Home", AdvieskeuzeRoutes.Home())
+            <span class="light-text"> &nbsp;>&nbsp; </span>
+            @Html.RouteLink(Model.Productgroep.Naam, AdvieskeuzeRoutes.ProductgroepHome(Model.Productgroep))
+            <span class="light-text"> &nbsp;>&nbsp; </span>
+          </span>
+          @Html.RouteLink("Zoekresultaat", AdvieskeuzeRoutes.Zoekresultaat(Model.Productgroep))
+        }
+        else {
+          <span class="breadcrumbs">
+            @Html.RouteLink("Zoek een dienstverlener", AdvieskeuzeRoutes.Home())
+          </span>
+        }
+      </div>
+      <div class="fr">
+        @if (Model.Productgroep != null) {
+          <span class="light-text"> &lt;&nbsp; </span>
+          @Html.RouteLink("Terug naar het overzicht", AdvieskeuzeRoutes.Zoekresultaat(Model.Productgroep))
+        }
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
+
+<div itemscope itemtype="http://schema.org/LocalBusiness">
+  <div class="grid pt1">
+    @if (Model.Kantoor.HeeftCoordinaat) {
+      <div class="hidden" itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
+        <meta itemprop="latitude" content="@Model.Kantoor.Latitude" />
+        <meta itemprop="longitude" content="@Model.Kantoor.Longitude" />
+      </div>
+    }
+
+    <div class="@(heeftBeeldmateriaal ? "grid-cell50" : "grid-cell100")">
+      <div class="w90p">
+        <h1 class="mb1" id="scrollto-algemeen" itemprop="name">@Model.Kantoor.Naam</h1>
+      </div>
+      <div class="w10p">
+        @if (Model.Kantoor.IsDataGecontroleerd) {
+          <img src="@cdn/content/base/images/badges/duimpje.png" alt="Gecheckt door Advieskeuze.nl" title="Gecheckt door Advieskeuze.nl" width="30" class="fl ml1 mt05" />
+        }
+      </div>
+      <div class="clear"></div>
+      @if (Model.Kantoor.IsVrij && string.IsNullOrEmpty(Model.Kantoor.Omschrijving) && string.IsNullOrEmpty(Model.Kantoor.OmschrijvingZakelijk)) {
+        <div>Over dit bedrijf is geen aanvullende informatie bekend.<br />Is dit jouw bedrijf? <a href="https://extranet.advieskeuze.nl/locaties/aanmelden/viaadvieskeuze/@(Model.Kantoor.ID.ToString())" target="_blank">Update</a> de gegevens</div>
+      }
+      @if (Model.Kantoor.IsActief && string.IsNullOrEmpty(Model.Kantoor.Omschrijving) && string.IsNullOrEmpty(Model.Kantoor.OmschrijvingZakelijk)) {
+        <div>Over dit bedrijf is geen aanvullende informatie bekend.</div>
+      }
+      @if (Model.FocusZakelijk) {
+        if (!string.IsNullOrEmpty(Model.Kantoor.OmschrijvingZakelijk)) {
+          <p itemprop="description">@Html.ShowMultilineText(Model.Kantoor.OmschrijvingZakelijk)</p>
+        }
+        else if (!string.IsNullOrEmpty(Model.Kantoor.Omschrijving)) {
+          <p itemprop="description">@Html.ShowMultilineText(Model.Kantoor.Omschrijving)</p>
+        }
+        else {
+          <p>&nbsp;</p>
+        }
+      }
+      else {
+        if (!string.IsNullOrEmpty(Model.Kantoor.Omschrijving)) {
+          <p itemprop="description">@Html.ShowMultilineText(Model.Kantoor.Omschrijving)</p>
+        }
+        else if (!string.IsNullOrEmpty(Model.Kantoor.OmschrijvingZakelijk)) {
+          <p itemprop="description">@Html.ShowMultilineText(Model.Kantoor.OmschrijvingZakelijk)</p>
+        }
+        else {
+          <p> &nbsp;</p>
+        }
+      }
+    </div>
+    @if (heeftBeeldmateriaal) {
+      var count = 0;
+      <div class="grid-cell50">
+        @if (Model.Kantoor.AfbeeldingLogoID.HasValue) {
+          count++;
+          <link itemprop="logo" href="@Model.Kantoor.LogoUrl" />
+          <div class="fl mr1 mb1 fotolimiter nooverflow">
+            @Html.Image(Model.Kantoor.AfbeeldingLogo, string.Format("Afbeelding van {0}", Model.Kantoor.Naam), "", 275)
+          </div>
+        }
+        @foreach (var b in Model.Fotos.Take(Model.Kantoor.AfbeeldingLogoID.HasValue ? 3 : 4)) {
+          count++;
+          <div class="fl @(count == 1 || count == 3 ? "mr1" : "") mb1 fotolimiter nooverflow">
+            @Html.Image(b, string.Format("Foto van {0}", Model.Kantoor.Naam), "Geen foto", 275)
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="grid">
+    @if (Model.Kantoor.IsDataGecontroleerd) {
+      <div class="grid-cell33">
+        <h2>Gecheckt door Advieskeuze.nl</h2>
+        <p class="mb2">Advieskeuze.nl heeft alle belangrijke gegevens van dit kantoor gecontroleerd (@Html.RouteLink("meer informatie", AdvieskeuzeRoutes.LocatieBetrouwbaarheidsstempel(Model.KantoorLink, Model.Productgroep))).</p>
+        <img src="@cdn/content/base/images/badges/gechecktstempel.png" alt="Gecheckt-stempel" title="Gecheckt-stempel" />
+      </div>
+    }
+
+    <div class="@(Model.Kantoor.IsDataGecontroleerd ? "grid-cell33" : (Model.Kantoor.HeeftEmailadres ? "grid-cell67" : "grid-cell100"))">
+      <h2 class="mb1" id="scrollto-contact">Contactgegevens</h2>
+      @if (Model.Kantoor.ToonAdres) {
+        <div class="w10rem">Adres :</div>
+        <div class="fl" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+          <div itemprop="streetAddress">@Model.Kantoor.Adres</div>
+          <span itemprop="postalCode">@Model.Kantoor.Postcode</span>
+          <span itemprop="addressLocality">@Model.Kantoor.Plaats</span>
+          <meta itemprop="addressCountry" content="nl" />
+        </div>
+        <div class="clear"></div>
+      }
+      @if (!string.IsNullOrEmpty(Model.Kantoor.Telefoonnummer)) {
+        <div class="w10rem">Telefoon :</div>
+        if (heeftGechecktstempelOFCampagne) {
+          <div class="fl" itemprop="telephone" id="telefoonnummer1">@Model.Kantoor.Telefoonnummer</div>
+        }
+        else {
+          <div class="fl" itemprop="telephone">
+            @if (string.IsNullOrEmpty(Model.Kantoor.Emailadres) || !Model.Kantoor.HeeftEmailadres) {
+              <span>Onbekend</span>
+            }
+            else {
+              @Html.RouteLink("Terugbelverzoek", AdvieskeuzeRoutes.Adviesgesprek(Model.KantoorLink, Model.Productgroep), new { @class = "blauw" })
+            }
+          </div>
+        }
+        <div class="clear"></div>
+      }
+      @if (!string.IsNullOrEmpty(Model.Kantoor.TelefoonMobiel) && heeftGechecktstempelOFCampagne) {
+        <div class="w10rem">Mobiel :</div>
+        <div class="fl" itemprop="telephone" id="telefoonnummer2">@Model.Kantoor.TelefoonMobiel</div>
+        <div class="clear"></div>
+      }
+      <div class="w10rem">E-mail :</div>
+      <div class="fl" itemprop="email" id="email" content="@Model.Kantoor.Emailadres">
+        @if (string.IsNullOrEmpty(Model.Kantoor.Emailadres) || !Model.Kantoor.HeeftEmailadres) {
+          <span>Onbekend</span>
+        }
+        else {
+          @Html.RouteLink(heeftGechecktstempelOFCampagne ? Model.Kantoor.Emailadres.TrimLength(34, "...") : "Stuur contactverzoek", AdvieskeuzeRoutes.Adviesgesprek(Model.KantoorLink, Model.Productgroep), new { @class = "blauw" });
+        }
+      </div>
+      <div class="clear"></div>
+      @if (heeftGechecktstempelOFCampagne) {
+        <div class="w10rem">Website :</div>
+        <div class="fl">
+          @if (!String.IsNullOrEmpty(Model.Kantoor.WebsiteUrl)) {
+            <link itemprop="url" href="@Model.Kantoor.WebsiteUrl" />
+            <span id="url">@Html.WebsiteLink(Model.Kantoor.WebsiteUrl.TrimLength(34, "..."), Model.Kantoor.WebsiteUrl)</span>
+          }
+          else {
+            <span>Onbekend</span>
+          }
+        </div>
+        <div class="clear"></div>
+      }
+      else {
+        <link itemprop="url" href="@Model.Kantoor.WebsiteUrl" />
+      }
+      <br />
+      @if (Model.Kantoor.HeeftSocialLinks && heeftGechecktstempelOFCampagne) {
+        <div id="scrollto-social-media">
+          @Html.LinkedInLinkFlat(Model.Kantoor.LinkedInUrl, "mr03")
+          @Html.TwitterLinkFlat(Model.Kantoor.TwitterAccount, "mr03")
+          @Html.FacebookLinkFlat(Model.Kantoor.FacebookUrl, "mr03")
+          @Html.InstagramLinkFlat(Model.Kantoor.InstagramNaam, "mr03")
+          @Html.YouTubeChannelLinkFlat(Model.Kantoor.YouTubeChannel, "mr03")
+        </div>
+      }
+    </div>
+
+    @if (Model.Kantoor.HeeftEmailadres) {
+      <div class="grid-cell33">
+        <h2 class="mb1">Maak een afspraak</h2>
+        @foreach (var contactOptie in Model.ContactOpties) {
+          @Html.Partial("controls/_ContactOptie" + contactOptie.ContactOptieType, new Tuple<KantoorDetailModel, AdvieskeuzeCode.BI.Common.LocatieModel.KantoorContactOpties>(Model, contactOptie))
+        }
+        @if (Model.Kantoor.WebcamAdvies) {
+          if (string.IsNullOrEmpty(Model.Kantoor.WebcamUrl)) {
+            <p>Wij kunnen advies geven via de webcam.</p>
+          }
+          else {
+            string url = Model.Kantoor.WebcamUrl;
+            if (!url.ToLower().StartsWith("http")) {
+              url = "http://" + url;
+            }
+            string button = Model.Kantoor.WebcamButton;
+            if (string.IsNullOrEmpty(button)) {
+              button = "Advies op afstand";
+            }
+            <div class="mt1"><a href="@url" id="webcam" class="base-button button-solid-green w100p" target="_blank">@button</a></div>
+          }
+        }
+      </div>
+    }
+
+    @if (Model.Kantoor.IsVrij && !caID.HasValue && Model.Productgroep == null) {
+      <div class="grid-cell100">
+        <h2>Wil je een ander bedrijf kiezen?</h2>
+        <div class="mt1">@Html.RouteLink("Zoek een adviseur", AdvieskeuzeRoutes.Home(Model.Kantoor.Plaats), new { @class = "base-button button-solid-blue" })</div>
+      </div>
+    }
+  </div>
+
+  <div class="grid">
+    <div class="grid-cell50">
+      <h2 class="mb1" id="scrollto-openingstijden">Openingstijden</h2>
+      @if (Model.Openingstijden.Any()) {
+        <table>
+          @foreach (var o in Model.Openingstijden) {
+            <tr valign="top">
+              <td width="120">@o.Dag</td>
+              <td>
+                @foreach (var t in o.Tijden) {
+                  <span>@t</span>
+                  <br />
+                }
+              </td>
+              <td>
+                @if (o.Savonds) {
+                  if (!o.Tijden.Any(t => t.Contains("afspraak"))) {
+                    <span>, in de avond op afspraak</span>
+                  }
+                }
+              </td>
+            </tr>
+          }
+        </table>
+      }
+      else {
+        <p>Er zijn geen openingstijden bekend.</p>
+      }
+      @if (!string.IsNullOrEmpty(Model.Kantoor.AdviesTalen)) {
+        <p>@Model.Kantoor.Naam kan je te woord staan in het @Model.Kantoor.AdviesTalen</p>
+      }
+    </div>
+    <div class="grid-cell50">
+      @if (Model.Kantoor.ToonAdres && !Model.Kantoor.HeeftLandelijkeDekking) {
+        <div class="nooverflow">
+          @Html.StaticGoogleMap(Model.Kantoor.Naam, Model.Kantoor.AdresForGeoCoding, 565, 250)
+        </div>
+        <meta itemprop="map" content="https://maps.google.nl/maps?q=@(Model.Kantoor.AdresForGeoCoding)" />
+      }
+      @if (Model.Kantoor.GratisParkeren.HasValue) {
+        <p>In de buurt is het @(Model.Kantoor.GratisParkeren.Value ? "gratis parkeren" : "betaald parkeren").</p>
+      }
+      @if (Model.Kantoor.HeeftLandelijkeDekking) {
+        <h2>Landelijk</h2>
+        <p>Dit bedrijf is een landelijk werkende dienstverlener met:</p>
+        <ul>
+          <li>Meerdere (aangesloten) adviseurs</li>
+          <li>Voldoende dekking in Nederland</li>
+          <li>Mogelijkheid voor telefonisch en webcam advies</li>
+          <li>Betaald dienstenpakket van Advieskeuze.nl</li>
+        </ul>
+      }
+      @if (!string.IsNullOrEmpty(Model.ViaLink.GezochtVanuit) && Model.Kantoor.ToonAdres) {
+        <p>@Html.GoogleRoutebeschrijvingLink(Model.ViaLink.GezochtVanuit, Model.Kantoor.AdresForGeoCoding)</p>
+      }
+    </div>
+  </div>
+
+  @if (Model.Medewerkers.Any()) {
+    <div class="grid">
+      <div class="grid-cell100">
+        <h2 id="scrollto-medewerkers" class="mb1">Medewerkers</h2>
+        @foreach (var a in Model.Medewerkers) {
+          <div class="w20p mb1 h18rem">
+            <a href="@AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.ShowAdviseur(Model.KantoorLink, a, Model.Productgroep))">@Html.Image(a.Foto, string.Format("Foto van {0}", a.VolledigeNaam), "", 180, 180, true, a.IsMan, true)</a><br />
+            <div class="bold">@Html.RouteLink(a.VolledigeNaam, AdvieskeuzeRoutes.ShowAdviseur(Model.KantoorLink, a, Model.Productgroep))</div>
+            <div class="mr1 nooverflow">@a.Functie.TrimLength(50, "...")</div>
+          </div>
+        }
+        <div class="clear"></div>
+        @if (Model.MedewerkersOverige.Any()) {
+          <a href="#" class="base-button button-solid-blue showRelatedContentOnClick" data-rel="leesmeermedewerker" data-hideparent="true">Toon alle medewerkers</a>
+          <div id="leesmeermedewerker" class="hidden">
+            <h2 class="mb1">Ook werkzaam bij @Model.Kantoor.Naam</h2>
+            @foreach (var a in Model.MedewerkersOverige) {
+              <div class="w20p mb1 h18rem">
+                <a href="@AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.ShowAdviseur(Model.KantoorLink, a, Model.Productgroep))">@Html.Image(a.Foto, string.Format("Foto van {0}", a.VolledigeNaam), "", 180, 180, true, a.IsMan, true)</a><br />
+                <div class="bold">@Html.RouteLink(a.VolledigeNaam, AdvieskeuzeRoutes.ShowAdviseur(Model.KantoorLink, a, Model.Productgroep))</div>
+                <div class="mr1">@a.Functie.TrimLength(50, "...")</div>
+              </div>
+            }
+          </div>
+          <div class="clear"></div>
+        }
+      </div>
+    </div>
+  }
+
+  <div class="grid">
+    <div class="grid-cell100">
+      <h2 id="scrollto-reviews" class="mb1">Reviews</h2>
+      <div class="w25p">
+        @if (Model.Score.AantalTotaal > 0) {
+          if (Model.Score.HeeftScore) {
+            <div class="fl" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+              <div class="scoreLarge" itemprop="ratingValue" content="@Model.Score.WaardeDisplay"><span>@Model.Score.WaardeDisplay</span></div>
+              <meta itemprop="worstRating" content="1" />
+              <meta itemprop="bestRating" content="10" />
+              <meta itemprop="reviewCount" content="@Model.Score.AantalTotaal" />
+            </div>
+          }
+          else {
+            <span class="hidden" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+              <meta itemprop="ratingValue" content="@Model.Score.WaardeGeenScoreDisplay(Model.RecenteReviews)" />
+              <meta itemprop="worstRating" content="1" />
+              <meta itemprop="bestRating" content="10" />
+              <meta itemprop="reviewCount" content="@Model.Score.AantalTotaal" />
+            </span>
+          }
+          <div class="fl tooltip">
+            <span><img src="@(cdn)/content/flat/images/icon_info_small.png" title="Info" alt="Info"></span>
+            <span>Een review is een persoonlijke ervaring van een consument. Alle reviews samen leiden tot een rapportcijfer. Houd er rekening mee dat niet alle consumenten hun ervaringen delen. Hierdoor is dit rapportcijfer geen gegeven, maar een subjectieve waarde.</span>
+          </div>
+          <div class="clear"></div>
+        }
+        else {
+          <p>@Model.Kantoor.Naam heeft nog geen reviews.</p>
+        }
+      </div>
+      <div class="w50p">
+        @foreach (var score in Model.Score.AantalPerProductgroep) {
+          <div class="fl w50p">@score.Productgroep.TrimLength(40, "...")</div>
+          <div class="fl w50p">: @score.Aantal</div>
+        }
+        <div>&nbsp;</div>
+        <div class="clear"></div>
+      </div>
+      <div class="w25p">
+        @Html.RouteLink("Geef een review", AdvieskeuzeRoutes.Beoordeling(Model.KantoorLink), new { @class = "base-button button-solid-blue w100p" })
+        @if (Model.Score.AantalTotaal > 5) {
+          @Html.RouteLink("Bekijk alle " + Model.Score.AantalTotaal + " reviews", AdvieskeuzeRoutes.ShowBeoordelingen(Model.KantoorLink), new { @class = "base-button button-hollow-blue w100p mt1" })
+        }
+        <div class="clear"></div>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+  @foreach (var review in Model.RecenteReviews) {
+    <div class="grid">
+      <div class="grid-cell100">
+        @Html.Partial("Controls/_Review", new Tuple<AdvieskeuzeCode.DataModel.Beoordeling, bool, bool, bool>(review, false, true, false))
+      </div>
+    </div>
+  }
+  @if (Model.ReviewPortals.Any()) {
+    <div class="grid">
+      <div class="grid-cell100">
+        <h2 class="mb1">@Model.Kantoor.Naam is ook vindbaar op</h2>
+        @foreach (var portal in Model.ReviewPortals) {
+          <div class="fl mr1">
+            <div><a href="@portal.URL" target="_blank" rel="nofollow">@Html.Image(portal.ReviewPortal.LogoID, portal.ReviewPortal.Naam, "Geen logo", 150)</a></div>
+            <b>@portal.ReviewPortal.Naam</b><br />
+            <div><a href="@portal.URL" target="_blank" rel="nofollow">Bekijk</a></div>
+          </div>
+        }
+        <div class="clear"></div>
+      </div>
+    </div>
+  }
+  <div class="grid">
+    <div class="grid-cell50">
+      @if (Model.FocusZakelijk) {
+        if (Model.TarievenZakelijk.Any() || (Model.ActiefTarief != null && Model.ActiefTarief.IsZakelijk)) {
+          <h2 class="mb1">Tarieven zakelijk</h2>
+          if (Model.ActiefTarief != null && Model.ActiefTarief.IsZakelijk) {
+            @Html.Partial("_Tarief", Model.ActiefTarief)
+            <br />
+          }
+          foreach (var t in Model.TarievenZakelijk) {
+            @Html.Partial("_Tarief", t)
+          }
+        }
+        if (Model.TarievenParticulier.Any() || (Model.ActiefTarief != null && !Model.ActiefTarief.IsZakelijk)) {
+          <h2 class="mt2 mb1">Tarieven particulier</h2>
+          if (Model.ActiefTarief != null && !Model.ActiefTarief.IsZakelijk) {
+            @Html.Partial("_Tarief", Model.ActiefTarief)
+            <br />
+          }
+          foreach (var t in Model.TarievenParticulier) {
+            @Html.Partial("_Tarief", t)
+          }
+        }
+      }
+      else {
+        if (Model.TarievenParticulier.Any() || (Model.ActiefTarief != null && !Model.ActiefTarief.IsZakelijk)) {
+          <h2 class="mb1">Tarieven particulier</h2>
+          if (Model.ActiefTarief != null && !Model.ActiefTarief.IsZakelijk) {
+            @Html.Partial("_Tarief", Model.ActiefTarief)
+            <br />
+          }
+          foreach (var t in Model.TarievenParticulier) {
+            @Html.Partial("_Tarief", t)
+          }
+        }
+        if (Model.TarievenZakelijk.Any() || (Model.ActiefTarief != null && Model.ActiefTarief.IsZakelijk)) {
+          <h2 class="mt2 mb1">Tarieven zakelijk</h2>
+          if (Model.ActiefTarief != null && Model.ActiefTarief.IsZakelijk) {
+            @Html.Partial("_Tarief", Model.ActiefTarief)
+            <br />
+          }
+          foreach (var t in Model.TarievenZakelijk) {
+            @Html.Partial("_Tarief", t)
+          }
+        }
+      }
+      @if (!string.IsNullOrEmpty(Model.Kantoor.DvdUrl)) {
+        <p>Bekijk de @Html.WebsiteLink("algemene dienstenwijzer", Model.Kantoor.DvdUrl) van @Model.Kantoor.Naam.</p>
+      }
+      @if (Model.Kantoor.OrientatieGesprekGratis.HasValue && Model.Kantoor.OrientatieGesprekGratis.Value) {
+        <p>Het eerste gesprek bij @Model.Kantoor.Naam is gratis. Je mag verwachten dat er geen geld in rekening wordt gebracht voor bijvoorbeeld de kennismaking, globale indicatie van kosten of informatie over mogelijke opties.</p>
+      }
+
+      @if (Model.Kantoor.HeeftEmailadres) {
+        @Html.RouteLink("Maak een afspraak", AdvieskeuzeRoutes.Adviesgesprek(Model.KantoorLink), new { @class = "base-button button-solid-blue mt1" })
+      }
+    </div>
+    <div class="grid-cell50">
+      @if (Model.LocatieRegisters.Any()) {
+        <h2 class="mb1">Branche- en keurmerkregisters</h2>
+        foreach (var keurmerk in Model.LocatieRegisters) {
+          <div class="w33p">
+            <div>@Html.RouteLink(keurmerk.Kwaliteitcontrole.KorteNaam, AdvieskeuzeRoutes.OverRegister(keurmerk.Kwaliteitcontrole.Slug))</div>
+            @if (!string.IsNullOrEmpty(keurmerk.Registratiecode)) {
+              <div>@keurmerk.Registratiecode</div>
+            }
+            <a href="@AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.OverRegister(keurmerk.Kwaliteitcontrole.Slug))">@Html.Image(keurmerk.Kwaliteitcontrole.LogoID, keurmerk.Kwaliteitcontrole.Naam, null, 140, 140, false)</a><br />
+          </div>
+        }
+        <div class="clear"></div>
+      }
+      @if (!string.IsNullOrEmpty(Model.Kantoor.KVKNummer)) {
+        <h2>KVK inschrijving</h2>
+        <p>
+          @Model.Kantoor.Naam is bij de KVK ingeschreven met KVK-nummer @Model.Kantoor.KVKNummer.
+          @if (Model.Kantoor.JaarVanOprichting.HasValue) {
+            <span>Het bedrijf is opgericht in @Model.Kantoor.JaarVanOprichtingDisplay.</span>
+          }
+        </p>
+      }
+    </div>
+  </div>
+
+  @if (Model.Fotos.Any()) {
+    <div class="grid">
+      <div class="grid-cell100 nooverflow">
+        <h2 id="scrollto-fotos-en-video" class="mb1">Foto's</h2>
+        @if (Model.Kantoor.FotoID.HasValue) {
+          <link itemprop="image" href="@Model.Kantoor.FotoUrl" />
+        }
+        @foreach (var b in Model.Fotos) {
+          <div class="w20p h15rem">
+            @Html.Image(b, string.Format("Foto van {0}", Model.Kantoor.Naam), "Geen foto", 220)
+          </div>
+        }
+        <div class="clear"></div>
+        @if (!string.IsNullOrEmpty(Model.Kantoor.YoutubeUrl)) {
+          <h2 class="mb1">Video</h2>
+          <ul>
+            <li><a href="@Model.Kantoor.YoutubeUrl" target="_blank">Bekijk de video op YouTube</a></li>
+          </ul>
+        }
+      </div>
+    </div>
+  }
+
+  @if (Model.Blogs.Any()) {
+    var headerBlog = Model.Blogs.First();
+    <div class="grid">
+      <div class="grid-cell100 nooverflow">
+        <img src="@cdn/content/flat/images/blogimages/@(headerBlog.Afbeelding).jpg" width="1186" />
+        <h2 class="mb1">Blogs</h2>
+        <ul>
+          @foreach (var blog in Model.Blogs) {
+            <li>@Html.RouteLink(blog.Titel, AdvieskeuzeRoutes.BlogLezen(blog.Slug)) (door @blog.Auteur : @blog.Datum.ToShortDateString())</li>
+          }
+        </ul>
+      </div>
+    </div>
+  }
+
+  @if (Model.Partners.Any()) {
+    var count = Model.Partners.Count();
+    var skip = 6;
+    <div class="grid">
+      <div class="grid-cell100">
+        <h2 id="scrollto-samenwerkingen" class="mb1">Samenwerkende dienstverleners</h2>
+        @foreach (var relatie in Model.Partners.OrderBy(p => p.Naam).Take(skip)) {
+          <div class="w50p mb1">
+            <div class="w20p">
+              @Html.Image(relatie.AfbeeldingId, relatie.Naam, relatie.Naam, 100, 100, true)
+            </div>
+            <div class="w80p">
+              <h3>@relatie.Naam</h3>
+              <div>@relatie.Omschrijving.TrimLength(250, "...")</div>
+              <a href="@relatie.AdvieskeuzePaginaUrl" target="_blank">Bekijk op Advieskeuze.nl</a>
+            </div>
+            <div class="clear"></div>
+          </div>
+        }
+        @if (count > skip) {
+          <a href="#" class="base-button mt1 button-solid-blue showRelatedContentOnClick" data-rel="leesmeerpartners" data-hideparent="true">Toon alle dienstverleners</a>
+          <div id="leesmeerpartners" class="hidden">
+            @foreach (var relatie in Model.Partners.OrderBy(p => p.Naam).Skip(skip)) {
+              <div class="w50p mb1">
+                <div class="w20p">
+                  @Html.Image(relatie.AfbeeldingId, relatie.Naam, relatie.Naam, 100, 100, true)
+                </div>
+                <div class="w80p">
+                  <h3>@relatie.Naam</h3>
+                  <div>@relatie.Omschrijving.TrimLength(250, "...")</div>
+                  <a href="@relatie.AdvieskeuzePaginaUrl" target="_blank">Bekijk op Advieskeuze.nl</a>
+                </div>
+                <div class="clear"></div>
+              </div>
+            }
+          </div>
+          <div class="clear"></div>
+        }
+
+      </div>
+    </div>
+  }
+
+  <div class="center mb1">
+    <a href="#">Terug naar boven</a>
+  </div>
+</div>
+
+<script>
+  queue.wait(function () {
+    $('#telefoonnummer1').on('mousedown', function () {
+      $.ajax({
+        type: "GET",
+        url: '@AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.UitklikLog(Model.Kantoor.ID.ToString(), 1))&caID=@(caID)'
+      });
+    });
+    $('#telefoonnummer2').on('mousedown', function () {
+      $.ajax({
+        type: "GET",
+        url: '@AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.UitklikLog(Model.Kantoor.ID.ToString(), 1))&caID=@(caID)'
+      });
+    });
+    $('#email').on('mousedown', function () {
+      $.ajax({
+        type: "GET",
+        url: '@AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.UitklikLog(Model.Kantoor.ID.ToString(), 2))&caID=@(caID)'
+      });
+    });
+    $('#url').on('mousedown', function () {
+      $.ajax({
+        type: "GET",
+        url: '@AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.UitklikLog(Model.Kantoor.ID.ToString(), 3))&caID=@(caID)'
+      });
+    });
+    $('#webcam').on('mousedown', function () {
+      $.ajax({
+        type: "GET",
+        url: '@AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.UitklikLog(Model.Kantoor.ID.ToString(), 4))&caID=@(caID)'
+      });
+    });
+  });
+</script>

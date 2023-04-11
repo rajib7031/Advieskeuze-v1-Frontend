@@ -1,0 +1,46 @@
+﻿@model AdvieskeuzeCode.Models.EmailComposeModel
+
+<div class="grid pt1">
+  <div class="grid-cell50">
+    <h1>We horen graag van je!</h1>
+    <p>Heb je een vraag of opmerking over onze website, dan kun je contact met ons opnemen via onderstaand contactformulier. Wij zullen zo snel mogelijk reageren.</p>
+  </div>
+
+  <div class="grid-cell50">
+    <h2>Advieskeuze.nl</h2>
+    <p>
+      Spacelab 41<br />
+      3824 MR Amersfoort<br />
+      KvK : 54112346<br />
+      info@advieskeuze.nl
+    </p>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    @using (Html.BeginForm()) {
+      @Html.Honeypot("FirstName")
+      <div class="vraag">
+        <label>Je e-mailadres</label>
+      </div>
+      @Html.TextBoxFor(m => m.Van)
+      @Html.ValidationMessageFor(m => m.Van)
+
+      @Html.VraagLabelFor(m => m.Body)
+      @Html.TextAreaFor(m => m.Body)
+      @Html.ValidationMessageFor(m => m.Body)
+      @Html.SubmitButton("Verzenden")
+    }
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2>Wanneer krijg je antwoord?</h2>
+    <p>
+      Je krijgt uiterlijk de volgende dag antwoord van ons.<br />
+      Heb je een vraag voor een adviseur of andere dienstverlener? @Html.RouteLink("Zoek dan hier", AdvieskeuzeRoutes.Home()) de dienstverlener van jouw keuze op.
+    </p>
+  </div>
+</div>

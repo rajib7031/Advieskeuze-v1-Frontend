@@ -1,0 +1,41 @@
+﻿@using AdvieskeuzeCode.Routes
+@using AdvieskeuzeCode.Mvc
+@using SharedCode.Mvc
+@model Advieskeuze.Areas.Expert.Models.HomeModel
+
+<div class="expertvisual zoekvisual h18rem">
+  <div>&nbsp;</div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <div class="mb2">@Html.RouteLink("Ga terug naar het overzicht", AdvieskeuzeRoutes.ExpertplatformZoeken(null))</div>
+    <div class="fr">deze vraag is gesteld op @Model.Vraag.DatumDisplayShort</div>
+    <h1>@Model.Vraag.Titel</h1>
+    <div class="clear"></div>
+    <hr />
+    <p>@Html.ShowMultilineText(Model.Vraag.Omschrijving)</p>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    <h2>Gegeven antwoorden</h2>
+    @if (!Model.Antwoorden.Any()) {
+      <p>Er zijn nog geen antwoorden gegeven.</p>
+    }
+  </div>
+</div>
+
+@if (Model.Antwoorden.Any()) {
+  foreach (var a in Model.Antwoorden) {
+    <div class="grid">
+      <div class="grid-cell100">
+        <div class="i">@Html.RouteLink(a.Adviseur.VolledigeNaam, AdvieskeuzeRoutes.ExpertDetails(a.Adviseur.Slug))</div>
+        <div class="nooverflow">
+          @Html.ParseBBToHtml(a.Omschrijving, AdvieskeuzeCode.Util.BBFormatter.Universeel)
+        </div>
+      </div>
+    </div>
+  }
+}

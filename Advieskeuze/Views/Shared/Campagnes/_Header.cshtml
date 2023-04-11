@@ -1,0 +1,12 @@
+﻿@if (CampagneActiviteitContext.Current.HelperGebruikHeaderLogo) {
+  <div class="grid">
+    <div class="grid-cell100">
+      @if (CampagneActiviteitContext.Current.HelperGebruikHeaderLink) {
+        <a href="@CampagneActiviteitContext.Current.HelperHeaderLink" target="_blank">@Html.Image(CampagneActiviteitContext.Current.HelperHeaderLogoID, "logo", "", null, 120, false)</a>
+      }
+      else {
+        @Html.Image(CampagneActiviteitContext.Current.HelperHeaderLogoID, "logo", "", null, 120, false)
+      }
+    </div>
+  </div>
+}

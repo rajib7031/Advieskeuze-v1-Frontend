@@ -1,0 +1,23 @@
+﻿@using SharedCode
+@model Advieskeuze.Data.Domain.ViewModel.Home.HomeFront
+
+@{
+  var cdn = GewrapteSettings.CDNUrl;
+}
+
+<div class="homevisual zoekvisualhome">
+  <div class="grid pt1">
+    <div class="grid-cell33 mb2 mt2">
+      <h1 class="mb1 blue-text">Zoek een dienstverlener:</h1>
+      @using (Html.BeginForm()) {
+        @Html.TextBox("locatie", null, new { @placeholder = "vul een postcode of plaats in", @class = "input100" })
+        <div>&nbsp;</div>
+        @Html.DropDownListFor(m => m.HomeProductgroep, Model.ParticuliereProductgroepenLijst, "hypotheekadviseur, notaris, ...", new { @class = "input100" })
+        <div class="fr mt1">
+          <input type="submit" class="" value="Zoek" />
+        </div>
+        <div class="clear"></div>
+      }
+    </div>
+  </div>
+</div>

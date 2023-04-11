@@ -1,0 +1,146 @@
+﻿@using SharedCode
+@model Advieskeuze.Models.Base.TarievenModel
+@{
+  string cdn = GewrapteSettings.CDNUrl;
+}
+
+<div class="white-bg border-bottom">
+  <div class="grid">
+    <div class="grid-cell100 nopadding">
+      <div class="fl">
+        <span class="breadcrumbs">
+          @Html.RouteLink("Home", AdvieskeuzeRoutes.Home()) <span class="light-text"> &nbsp;>&nbsp; </span>
+        </span>
+        @if (AdvieskeuzeViewContext.CurrentProductgroep != null) {
+          <span class="breadcrumbs">
+            @Html.RouteLink(AdvieskeuzeViewContext.CurrentProductgroep.Naam, AdvieskeuzeRoutes.ProductgroepHome(AdvieskeuzeViewContext.CurrentProductgroep)) <span class="light-text"> &nbsp;>&nbsp; </span>
+          </span>
+          @Html.RouteLink("Zoekresultaat", AdvieskeuzeRoutes.Zoekresultaat(AdvieskeuzeViewContext.CurrentProductgroep)) <span class="light-text"> &nbsp;>&nbsp; </span>
+        }
+        @Html.RouteLink(Model.Locatie.Naam, AdvieskeuzeRoutes.ShowLocatie(Model.Locatie))
+      </div>
+      <div class="fr">
+        <span class="light-text"> &lt;&nbsp; </span>
+        @Html.RouteLink("Terug naar de kantoorpagina", AdvieskeuzeRoutes.ShowLocatie(Model.Locatie))
+      </div>
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
+
+<div class="grid pt1">
+  <div class="grid-cell100">
+    <h1 class="mb1">Tarieven van @Model.Locatie.Naam : @Model.Scope.Naam</h1>
+    @if (!Model.HeeftTarieven) {
+      <p>Er is geen tariefinformatie bekend.</p>
+    }
+
+    @if (Model.LocatieScope.Verkorttarief.HasValue) {
+      <div class="w30p">Verkort advies</div>
+      <div class="w5p">
+        <div class="fl tooltip">
+          <span><img src="@(cdn)/content/flat/images/icon_info_small.png" title="Info" alt="Info"></span>
+          <span>Een verkort adviestraject wordt ook wel deeladvies genoemd. Je mag verwachten dat deze kosten in rekening worden gebracht voor bijvoorbeeld een globale indicatie van kosten en informatie over mogelijke opties.</span>
+        </div>
+      </div>
+      <div class="w30p">: @Model.LocatieScope.Verkorttarief.Value.ToString("c")</div>
+      <div class="clear"></div>
+    }
+    @if (Model.LocatieScope.Adviestarief.HasValue) {
+      <div class="w30p">Advies</div>
+      <div class="w5p">
+        <div class="fl tooltip">
+          <span><img src="@(cdn)/content/flat/images/icon_info_small.png" title="Info" alt="Info"></span>
+          <span>Dit zijn de kosten voor het advies zoals bijvoorbeeld vermeld in het relevante dienstverleningsdocument (DVD) of tariefoverzicht.</span>
+        </div>
+      </div>
+      <div class="w30p">: @Model.LocatieScope.Adviestarief.Value.ToString("c")</div>
+      <div class="clear"></div>
+    }
+    @if (Model.LocatieScope.Afsluitentarief.HasValue) {
+      <div class="w30p">Afsluiten</div>
+      <div class="w5p">
+        <div class="fl tooltip">
+          <span><img src="@(cdn)/content/flat/images/icon_info_small.png" title="Info" alt="Info"></span>
+          <span>Dit zijn de kosten gericht op het afsluiten van een (financieel) product zoals vermeld in het relevante dienstverleningsdocument (DVD) of tariefoverzicht.</span>
+        </div>
+      </div>
+      <div class="w30p">: @Model.LocatieScope.Afsluitentarief.Value.ToString("c")</div>
+      <div class="clear"></div>
+    }
+    @if (Model.LocatieScope.Combinatietarief.HasValue) {
+      <div class="w30p">Combinatie</div>
+      <div class="w5p">
+        <div class="fl tooltip">
+          <span><img src="@(cdn)/content/flat/images/icon_info_small.png" title="Info" alt="Info"></span>
+          <span>Dit zijn de kosten voor de combinatie advies en afsluiten zoals bijvoorbeeld vermeld in het relevante dienstverleningsdocument (DVD) of tariefoverzicht.</span>
+        </div>
+      </div>
+      <div class="w30p">: @Model.LocatieScope.Combinatietarief.Value.ToString("c")</div>
+      <div class="clear"></div>
+    }
+    @if (Model.LocatieScope.Maatwerktarief.HasValue) {
+      <div class="w30p">Maatwerk</div>
+      <div class="w5p">
+        <div class="fl tooltip">
+          <span><img src="@(cdn)/content/flat/images/icon_info_small.png" title="Info" alt="Info"></span>
+          <span>Dit zijn de kosten voor maatwerkadvies. Je mag verwachten dat deze kosten in rekening worden gebracht voor uitgebreid advies en service in complexe(re) situaties.</span>
+        </div>
+      </div>
+      <div class="w30p">: @Model.LocatieScope.Maatwerktarief.Value.ToString("c")</div>
+      <div class="clear"></div>
+    }
+    @if (Model.LocatieScope.Servicetarief.HasValue) {
+      <div class="w30p">Service</div>
+      <div class="w5p">
+        <div class="fl tooltip">
+          <span><img src="@(cdn)/content/flat/images/icon_info_small.png" title="Info" alt="Info"></span>
+          <span>Dit zijn de abonnementskosten per jaar voor onderhoud, beheer en service. Je mag verwachten dat deze kosten (na akkoord) in rekening worden gebracht voor periodiek klantcontact.</span>
+        </div>
+      </div>
+      <div class="w30p">: @Model.LocatieScope.Servicetarief.Value.ToString("c")</div>
+      <div class="clear"></div>
+    }
+    @if (Model.LocatieScope.Uurtarief.HasValue) {
+      <div class="w30p">Uurtarief</div>
+      <div class="w5p">
+        <div class="fl tooltip">
+          <span><img src="@(cdn)/content/flat/images/icon_info_small.png" title="Info" alt="Info"></span>
+          <span>Dit zijn de kosten per uur voor de dienstverlening van een medewerker van het kantoor. Je mag verwachten dat de totale kosten in rekening worden gebracht op basis van het afgesproken uurtarief en de daadwerkelijke tijdbesteding.</span>
+        </div>
+      </div>
+      <div class="w30p">: @Model.LocatieScope.Uurtarief.Value.ToString("c")</div>
+      <div class="clear"></div>
+    }
+  </div>
+
+  @if (!string.IsNullOrEmpty(Model.LocatieScope.ToelichtingOpTarief) || !string.IsNullOrEmpty(Model.LocatieScope.ToelichtingUrl)) {
+    <div class="grid-cell100 nooverflow">
+      @if (!string.IsNullOrEmpty(Model.LocatieScope.ToelichtingOpTarief)) {
+        <h2>Toelichting op de tarieven</h2>
+        <p>@Html.ShowMultilineText(Model.LocatieScope.ToelichtingOpTarief)</p>
+      }
+
+      @if (!string.IsNullOrEmpty(Model.LocatieScope.ToelichtingUrl)) {
+        <h3>Dienstverleningsdocument</h3>
+        <ul>
+          <li><a href="@Model.LocatieScope.ToelichtingUrl" target="_blank">@Model.LocatieScope.ToelichtingUrl.TrimLength(100, "...")</a></li>
+        </ul>
+      }
+    </div>
+  }
+
+  @if (Model.Specialisten.Any()) {
+    <div class="grid-cell100">
+      <h2 class="mb1">Specialisten, @Model.Scope.AdviseurNaamMeervoud</h2>
+      @foreach (var specialist in Model.Specialisten) {
+        <div class="w20p">
+          <a href="@AdvieskeuzeRoutes.ToAbsoluteUrl(AdvieskeuzeRoutes.ShowAdviseur(Model.Locatie, specialist, Model.Scope))">@Html.Image(specialist.Foto, string.Format("Foto van {0}", specialist.VolledigeNaam), "", 180, 180, true, specialist.IsMan, false)</a><br />
+          <b>@Html.RouteLink(specialist.VolledigeNaam, AdvieskeuzeRoutes.ShowAdviseur(Model.Locatie, specialist, Model.Scope))</b><br />
+        </div>
+      }
+      <div class="clear"></div>
+    </div>
+  }
+</div>
+

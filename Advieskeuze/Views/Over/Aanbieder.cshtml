@@ -1,0 +1,57 @@
+﻿@using AdvieskeuzeCode.DataModel
+@model Company
+
+@{
+  var cdn = SharedCode.GewrapteSettings.CDNUrl;
+}
+
+<div class="grid pt1">
+  <div class="grid-cell67">
+    <h1>@Html.RouteLink("Aanbieders", AdvieskeuzeRoutes.OverAanbieders()) : @Model.Name</h1>
+    <p>@Html.ShowMultilineText(Model.Description)</p>
+  </div>
+  <div class="grid-cell33 center">
+    <div>@Html.Image(Model.LogoId, Model.Name, "", 200)</div>
+    @if (!string.IsNullOrEmpty(Model.Website)) {
+      <div>&nbsp;</div>
+      @Html.WebsiteLink("Bezoek de website van " + Model.Name, Model.Website)
+    }
+  </div>
+</div>
+
+@if (Model.IsPartner) {
+  <div class="grid">
+    <div class="grid-cell100">
+      <h2>Samenwerking met Advieskeuze.nl</h2>
+      <div>@Html.ShowMultilineText(Model.Relation)</div>
+      <img src="@cdn/content/base/images/badges/partnervan.png" alt="Partner van Advieskeuze.nl" title="Partner van Advieskeuze.nl" class="fr" />
+    </div>
+  </div>
+}
+
+@if (Model.Adres != null) {
+  <div class="grid">
+    <div class="grid-cell100">
+      <h2 class="mb1">Bezoekadres</h2>
+      <div>@Model.Adres.StraatEnNummer</div>
+      <div>@Model.Adres.PostcodePlaats</div>
+      <br />
+      <div class="grid-cell67">
+        @Html.StaticGoogleMap(Model.Name, Model.Adres.ForGeoCoding, 800, 300)<br />
+      </div>
+    </div>
+  </div>
+}
+
+@if (Model.CompanyScope.Any()) {
+  <div class="grid">
+    <div class="grid-cell100">
+      <h2>@Model.Name biedt de volgende producten aan:</h2>
+      <ul>
+        @foreach (var p in Model.CompanyScope) {
+          <li>@Html.RouteLink(p.Scope.NaamMeervoud, AdvieskeuzeRoutes.ProductgroepHome(p.Scope))</li>
+        }
+      </ul>
+    </div>
+  </div>
+}

@@ -1,0 +1,70 @@
+﻿@using Advieskeuze.Data.Domain.ViewModel.Beoordeling
+@using SharedCode
+@model BeoordelingVragenPagina
+
+<div class="blue-bg">
+  <div class="grid pt1">
+    <div class="grid-cell100 blue-bg voortgangBalk">
+      @for (int i = 0; i < Model.Data.Titels.Count() - 1; i++) {
+        var containergrootte = 100 / (Model.Data.Titels.Count() - 1);
+        var item = Model.Data.Titels.ElementAt(i);
+        <div class="w@(containergrootte)p pb05 pt05">
+          <span class="stap@(Model.Data.PaginaNr == item.PaginaNr ? " huidige" : "")"><span class="nummer">@(i+1)</span>@(item.Titel)</span>
+        </div>
+      }
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="grid-cell100">
+    @if (Model.Data.PaginaNr == 4 && !string.IsNullOrEmpty(Model.Data.Toelichting)) {
+      <h1>@Model.Data.Toelichting</h1>
+    }
+    else {
+      <h1>Beoordeel je @Model.Data.BeoordeeldeEntiteit</h1>
+    }
+    @Html.ValidationSummary(true)
+    <div class="beoordelingFormulier">
+      @using (Html.BeginForm()) {
+        @Html.Honeypot("FirstName")
+        @Html.HiddenFor(m => m.Data.SessieID)
+        if (Model.BedankjesOrganisaties.Any()) {
+          @Html.TryPartial("Controls/Promotie/_" + String.Join(String.Empty, Model.BedankjesOrganisaties) + "Review")
+        }
+        if (Model.Data.PaginaNr == 0 && Model.GebruikPartialController) {
+          @Html.TryPartial(Model.GebruikPartialNaamDeel, Model.Data)
+        }
+        else if (Model.Data.Toelichting.IsNotNullOrEmpty() && Model.Data.PaginaNr != 4) {
+          @Html.ParseBBToHtml(Model.Data.Toelichting, AdvieskeuzeCode.Util.BBFormatter.Universeel)
+          <hr />
+        }
+        if (Model.Data.PaginaNr > 0) {
+          @Html.PartialFor(m => m.Data, "Controls/VraagAntwoord/_Vragen")
+        }
+        if (Model.Data.IsVerzendenPagina) {
+          <div class="i">
+            <div class="mt2 mb1">
+              <input type="checkbox" id="verklaring-checkbox" /> Ik verklaar dat ik deze review heb ingevuld op basis van mijn eigen ervaring met deze dienstverlener en dat de review mijn oprechte mening bevat. Ik ben geen familie van een eigenaar of medewerker van dit bedrijf en ik heb geen (zakelijke) belangen bij het geven van deze review. Er is mij niets aangeboden in ruil voor deze review. Ik begrijp dat Advieskeuze.nl mijn review verwijdert als deze niet aan eerder genoemde voorwaarden voldoet.
+            </div>
+          </div>
+          <script>
+            queue.wait(function () {
+              $("input[type='submit']").attr("disabled", true);
+              $("#verklaring-checkbox").change(function () {
+                if ($("#verklaring-checkbox:checked").length > 0) {
+                  $("input[type='submit']").attr("disabled", false);
+                } else {
+                  $("input[type='submit']").attr("disabled", true);
+                }
+              });
+            });
+          </script>
+        }
+        @Html.SubmitButton(Model.Data.IsVerzendenPagina ? "Verzenden" : "Verder", false, true)
+      }
+      <div class="clear"></div>
+    </div>
+  </div>
+</div>

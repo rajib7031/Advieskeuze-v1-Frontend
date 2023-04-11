@@ -1,0 +1,17 @@
+﻿@using AdvieskeuzeCode.BI.Advieskeuze.VraagAntwoordModel
+@using Advieskeuze.Data.VraagAntwoord
+@using SharedCode
+@model VraagAntwoordEnginePagina.Vraag
+
+@{
+  var renderHelper = new VraagRenderHelper<VraagAntwoordEnginePagina.Vraag>(Model, ViewData);
+}
+
+<div class="vraag">
+  <label>@Model.Label</label>
+</div>
+@if (@Model.Toelichting.IsNotNullOrEmpty()) {
+  @Html.ParseBBToHtml(Model.Toelichting, AdvieskeuzeCode.Util.BBFormatter.Universeel)
+}
+@Html.NumberBoxFor(m => m.ValueInt, Model.Validatie)
+@Html.ValidationMessage(Model.GetAntwoordFieldName())

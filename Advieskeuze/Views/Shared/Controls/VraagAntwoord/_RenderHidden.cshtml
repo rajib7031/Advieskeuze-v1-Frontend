@@ -1,0 +1,34 @@
+﻿@using AdvieskeuzeCode.BI.Advieskeuze.VraagAntwoordModel
+@using Advieskeuze.Data.VraagAntwoord
+@using AdvieskeuzeCode.DataModel
+@model VraagAntwoordEnginePagina.Vraag
+
+@{
+  var renderHelper = new VraagRenderHelper<VraagAntwoordEnginePagina.Vraag>(Model, ViewData);
+  
+  switch (Model.DataType) {
+    case VraagType.Boolean:
+      @Html.HiddenFor(m => m.ValueBool);
+      break;
+    case VraagType.Datum:
+      @Html.HiddenFor(m => m.ValueDatetime);
+      break;
+    case VraagType.Email:
+    case VraagType.Postcode:
+    case VraagType.Telefoon:
+    case VraagType.URL:
+    case VraagType.Tekst:
+      @Html.HiddenFor(m => m.ValueString);
+      break;
+    case VraagType.GUID:
+      @Html.HiddenFor(m => m.ValueGuid);
+      break;
+    case VraagType.MultiNummer:
+      @Html.HiddenFor(m => m.ValueMultiInt);
+      break;
+    case VraagType.Nummer:
+    case VraagType.Valuta:
+      @Html.HiddenFor(m => m.ValueInt);
+      break;
+  }
+}

@@ -1,0 +1,66 @@
+﻿@using Advieskeuze.Data.Domain.ViewModel.Beoordeling
+@model BeoordelingBevestigen
+
+<div class="grid pt1">
+  @if (Model.HasCustomLandingPage) {
+  <div class="grid-cell67">
+    <h2>Bedankt tekst</h2>
+    <p>@Html.ShowMultilineText(Model.CampagneActiviteit.ReviewThanksContent)</p>
+    <p><a href="@Model.CampagneActiviteit.ReviewThanksContent">Ga naar de site van @Model.CampagneActiviteit.Organisatie.Naam</a></p>
+  </div>
+    <div class="grid-cell33">
+      @Html.Image(Model.CampagneActiviteit.Organisatie.LogoID, "Logo", "Logo", null)
+      <p>[LOGO]</p>
+      <br /><br />
+      <a href="@Model.CampagneActiviteit.ReviewThanksContent" class="base-button button-solid-blue">Bekijk de site van @Model.CampagneActiviteit.Organisatie.Naam</a>
+    </div>
+  }
+  else {
+    <div class="grid-cell100">
+      <h1>Bedankt voor jouw review!</h1>
+      <p>
+        Jouw review is belangrijk: door ervaringen te delen, help je elkaar bij het kiezen van een goede dienstverlener.<br />
+        Wij waarderen het als je onderstaande optionele vragen wilt beantwoorden:
+      </p>
+      @if (Model.BedankjesRelevant) {
+        if (Model.BedankjeVraagStellen) {
+          @Html.Partial("_bedankjes", Model.Bedankjes, new ViewDataDictionary { { "Link", Model.Link }, })
+        }
+        else {
+          <p>Het bedankje is per e-mail naar je verstuurd.</p>
+        }
+      }
+    </div>
+
+    <div class="grid-cell100">
+      @if (Model.DemografieVragenStellen) {
+        <div id="DemografieVragen">
+          @using (Html.BeginForm(AdvieskeuzeRoutes.BeoordelingDemografie(Model.Link))) {
+            @Html.ValidationSummary(false)
+            @Html.EditorFor(m => m.DemografieData)
+            <div class="mt1 fr">
+              <input type="submit" value="Opslaan" />
+            </div>
+            <div class="clear"></div>
+          }
+          <script>
+            queue.wait(function () {
+              $(function () {
+                $("#DemografieVragen form").on("submit", function (e) {
+                  e.preventDefault();
+                  $.post(this.action, $(this).serialize()).done(function (data) {
+                    $("#DemografieVragen").empty().append("<div>" + data.Bericht + "</div>");
+                  });
+                  return false;
+                });
+              });
+            });
+          </script>
+        </div>
+      }
+      else {
+        <h2>Veel dank!</h2>
+      }
+    </div>
+  }
+</div>
